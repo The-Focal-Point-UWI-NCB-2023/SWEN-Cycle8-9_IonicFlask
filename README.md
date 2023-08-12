@@ -33,5 +33,11 @@ flask db upgrade
 flask db downgrade
 ```
 
+## Testing
+- Using pytest with pytest-cov. <a href="https://testdriven.io/blog/flask-pytest/">Reference</a>
+```bash
+python -m pytest --cov=app
+```
+
 ## CI/CD
-- Using pre-commit hook for file auto-formatting
+- Using <a href="https://pre-commit.com/">pre-commit</a>  hook for file auto-formatting
