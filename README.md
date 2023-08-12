@@ -41,3 +41,9 @@ python -m pytest --cov=app
 
 ## CI/CD
 - Using <a href="https://pre-commit.com/">pre-commit</a>  hook for file auto-formatting
+    - Lints code
+    - Autocorrects format to pep8 standard
+    - Runs pytest
+
+- Deployed to <a href="https://focalpoint-app.onrender.com/api/">HERE</a>
+    - Configured to deploy on changes to main
