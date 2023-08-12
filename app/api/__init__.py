@@ -5,12 +5,14 @@ from .rest import rest
 from ..models import db
 
 # Initialize API
-api = Blueprint('api', __name__, url_prefix='/api')
+api = Blueprint("api", __name__, url_prefix="/api")
+
 
 # Create initial route
-@api.route('/')
+@api.route("/")
 def api_index():
-    return { 'message': db.engine.driver}
+    return {"message": db.engine.driver}
+
 
 # Register API Endpoints
 api.register_blueprint(auth)
