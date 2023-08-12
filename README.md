@@ -32,3 +32,6 @@ flask db upgrade
 ```bash
 flask db downgrade
 ```
+
+## CI/CD
+- Using pre-commit hook for file auto-formatting
