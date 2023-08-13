@@ -19,6 +19,7 @@ class Products(BaseTable):
     image = db.Column(db.String(100))
     status = db.Column(db.String(10))
     user_id = db.Column(db.Integer,db.ForeignKey('users.id'))
+    line_items = db.relationship('Order', secondary='line_items', backref='products', lazy=True)
 
     def get_id(self):
         try:
@@ -48,7 +49,8 @@ class Users(BaseTable):
     email = db.Column(db.String(100))
     password = db.Column(db.String(256))
     role = db.Column(db.String(5))
-    orders = db.relationship('Orders',backref='user') #creates the relationships
+    orders = db.relationship('Orders',backref='user',lazy=True) #creates the relationships
+    products = db.relationship('Product', backref='user', lazy=True)
 
     def get_id(self):
         try:
@@ -74,6 +76,7 @@ class Orders(BaseTable):
     billing_address = db.Column(db.String(256))
     total_amount = db.Column(db.Float(10,2))
     status = db.Column(db.String(10))
+    line_items = db.relationship('Product', secondary='lineitems', backref='orders', lazy=True)
 
     def get_id(self):
         try:
