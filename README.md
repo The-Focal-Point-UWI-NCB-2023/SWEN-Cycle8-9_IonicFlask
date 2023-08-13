@@ -48,6 +48,14 @@ python -m pytest --cov=app
 - Deployed to <a href="https://focalpoint-app.onrender.com/api/">HERE</a>
     - Configured to deploy on changes to main
 
+# Folder Structure
+- api - All API endpoints here
+- models - ORM configuration and classes
+- static - CSS, JS, Images, all static files
+- templates - SSR templates
+- tests - Unit tests for entire application
+- views - SSR template endpoints
+
 # Requirements
 
 ## Unauthenticated Users

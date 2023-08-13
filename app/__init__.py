@@ -3,6 +3,7 @@ from flask_migrate import Migrate
 from .config import Config
 from .models import db
 from .api import api
+from .views import views
 
 """
 App Factory
@@ -11,11 +12,13 @@ App Factory
 
 
 def create_app():
-    app = Flask(__name__)
+    app = Flask(__name__, static_folder="./static")
 
     app.config.from_object(Config)
 
+    # Register API & Templates
     app.register_blueprint(api)
+    app.register_blueprint(views)
 
     return app
 
