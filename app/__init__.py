@@ -1,11 +1,12 @@
 from flask import Flask, jsonify
 from flask_migrate import Migrate
-from .config import Config
+from flask_login import LoginManager
+from flask_wtf.csrf import CSRFProtect
+from .config.config import Config
+from .config.login_manager import login_manager
 from .models import db
 from .api import api
 from .views import views
-from flask_login import LoginManager
-from flask_wtf.csrf import CSRFProtect
 
 """
 App Factory
@@ -19,7 +20,6 @@ def create_app():
     # Register API & Templates
     app.register_blueprint(api)
     app.register_blueprint(views)
-        
 
     return app
 
@@ -30,8 +30,5 @@ db.init_app(app)
 migrate = Migrate(app, db)
 
 # Initialize Flask-Login Manager
-login_manager = LoginManager()
 login_manager.init_app(app)
-login_manager.login_view = 'login'  # Specify what page to load for NON-AUTHED users
-
-
+login_manager.login_view = "login"  # Specify what page to load for NON-AUTHED users
