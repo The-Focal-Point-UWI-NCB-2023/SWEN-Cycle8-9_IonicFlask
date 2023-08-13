@@ -1,5 +1,12 @@
 # UWI-NCB Agile Scrum Cycle 8 & 9 Assignment
 
+## Development Workflow
+1) Create a branch from dev with the issue id and a title for example : **FA-31/User-API-Endpoints**
+
+2) Merge to Dev
+
+3) Merge from Dev -> Main
+
 ## API Setup
 
 - Create virtual environment
