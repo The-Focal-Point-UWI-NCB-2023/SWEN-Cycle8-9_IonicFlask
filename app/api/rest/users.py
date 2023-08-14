@@ -30,3 +30,45 @@ def create_user():
     
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+    
+@users.route('/<int:user_id>', methods=['PUT'])
+def update_user(user_id):
+    try:
+        user = Users.query.get(user_id)
+
+        if not user:
+            return jsonify({'error': 'User not found'}), 404
+
+        data = request.form
+        if 'full_name' in data:
+            user.full_name = data['full_name']
+        if 'email' in data:
+            user.email = data['email']
+        if 'password' in data:
+            # hashed_password = generate_password_hash(data['password'], method='pbkdf2:sha256')
+            user.password = data['password']
+        if 'role' in data:
+            user.role = data['role']
+
+        db.session.commit()
+
+        return jsonify({'message': 'User updated successfully'}), 200
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@users.route('/<int:user_id>', methods=['DELETE'])
+def delete_users(user_id):
+    try:
+        user = Users.query.get(user_id)
+
+        if not user:
+            return jsonify({'error': 'User not found'}), 404
+
+        db.session.delete(user)
+        db.session.commit()
+
+        return jsonify({'message': 'User deleted successfully'}), 200
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
