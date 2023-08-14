@@ -8,7 +8,7 @@ class Products(BaseTable):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(40))
     description = db.Column(db.TEXT())
-    price = db.Column(db.Float(10,2))
+    price = db.Column(db.Numeric(10,2))
     image = db.Column(db.String(100))
     status = db.Column(db.String(10))
     user_id = db.Column(db.Integer,db.ForeignKey('users.id'))
