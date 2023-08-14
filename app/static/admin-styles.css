@@ -21,3 +21,30 @@
     flex-direction: row;
     justify-content: space-between;
 }
+
+.admin-product-card{
+    display: flex!important;
+    flex-direction: row!important;
+    margin-bottom: 3%!important;
+}
+
+.admin-product-card > img {
+    width: 30%;
+}
+
+.action-items-prod{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.action-items-prod > * {
+    margin-left: 1%;
+}
+
+.action-items-prod > * > *:hover {
+    color: blue;
+    cursor: pointer;
+    width: 35px!important;
+    height: 35px!important;
+}
