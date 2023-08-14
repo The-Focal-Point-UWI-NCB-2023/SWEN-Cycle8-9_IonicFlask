@@ -11,6 +11,13 @@ def get_users():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
     
+
+@users.route('/<int:user_id>', methods=['GET'])
+def get_role(user_id):
+    user = Users.query(user_id)
+    return jsonify({'user_id': user.id, 'role': user.role})
+    
+    
 @users.route('/', methods=['POST'])
 def create_user():
     try:
