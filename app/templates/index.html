@@ -1,20 +1,31 @@
-{% extends "base.html" %}
-{% block content %}
-<link rel="stylesheet" href="{{ url_for('static', filename='styles/index.css') }}">
+{% extends "base.html" %} {% block content %}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='styles/index.css') }}"
+/>
 
 <div class="landing-page-container">
-    <h1>Focal Frames</h1>
-    <img src="{{ url_for('static', filename='images/thefocalpoints_Logo.jpg') }}"/>
-    <p>
-        "Welcome to Focal Frames, your premier destination for stylish eyewear that blends fashion and function seamlessly. We believe that glasses are more than just a necessity – they're a statement of your unique style and personality. At Focal Frames, we curate a diverse collection of frames that cater to all tastes, whether you're looking for sophisticated elegance or trendy chic. Explore our handpicked selection and discover eyewear that not only enhances your vision but also complements your individuality. Step into a world where clarity meets creativity, and find the perfect frames to frame your world."
-    </p>
-    <p>- ChatGPT</p>
-
-    <div class="landing-btn-group">
-        <button>Login</button>
-        <button>Register</button>
-    </div>
+  <h1>Focal Frames</h1>
+  <img
+    src="{{ url_for('static', filename='images/thefocalpoints_Logo.jpg') }}"
+  />
+  <p>
+    "Welcome to Focal Frames, your premier destination for stylish eyewear that
+    blends fashion and function seamlessly. We believe that glasses are more
+    than just a necessity – they're a statement of your unique style and
+    personality. At Focal Frames, we curate a diverse collection of frames that
+    cater to all tastes, whether you're looking for sophisticated elegance or
+    trendy chic. Explore our handpicked selection and discover eyewear that not
+    only enhances your vision but also complements your individuality. Step into
+    a world where clarity meets creativity, and find the perfect frames to frame
+    your world."
+  </p>
+  <p>- ChatGPT</p>
+  <p>Test</p>
+  <div class="landing-btn-group">
+    <button>Login</button>
+    <button>Register</button>
+  </div>
 </div>
-
 
 {% endblock %}
