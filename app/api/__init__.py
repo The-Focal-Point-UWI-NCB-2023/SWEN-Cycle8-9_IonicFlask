@@ -5,7 +5,7 @@ from .payment import payment
 from ..models import db
 
 # Initialize API
-api_blueprint = Blueprint("api", __name__, url_prefix="/api")
+api_blueprint = Blueprint("api", __name__, url_prefix="/v1/api")
 
 api = Api(
     api_blueprint,
