@@ -4,6 +4,7 @@ from .config import Config
 from .models import db
 from .api import api
 from .views import views
+from .seeder import seed_database
 
 """
 App Factory
@@ -27,3 +28,6 @@ def create_app():
 app = create_app()
 db.init_app(app)
 migrate = Migrate(app, db)
+
+# Run Database Seeder
+seed_database(app)
