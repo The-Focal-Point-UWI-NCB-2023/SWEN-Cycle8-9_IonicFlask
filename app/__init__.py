@@ -2,7 +2,7 @@ from flask import Flask, jsonify
 from flask_migrate import Migrate
 from .config import Config
 from .models import db
-from .api import api
+from .api import api_blueprint
 from .views import views
 
 """
@@ -17,7 +17,7 @@ def create_app():
     app.config.from_object(Config)
 
     # Register API & Templates
-    app.register_blueprint(api)
+    app.register_blueprint(api_blueprint)
     app.register_blueprint(views)
 
     return app

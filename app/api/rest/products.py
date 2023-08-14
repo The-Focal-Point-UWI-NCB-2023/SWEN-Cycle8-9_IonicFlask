@@ -1,120 +1,82 @@
-from app.api.rest import Blueprint,jsonify,request,Products,db
+from app.api import Namespace, Resource, fields, reqparse
+from app.models import Products, db
 
-products = Blueprint("products", __name__, url_prefix="/v1/products")
+products_ns = Namespace("products", description="Products namespace")
 
-@products.route('/', methods=['GET'])
-def get_products():
-    try:
+product_model = products_ns.model(
+    "Product",
+    {
+        "id": fields.Integer,
+        "name": fields.String,
+        "description": fields.String,
+        "price": fields.Float,
+        "image": fields.String,
+        "status": fields.String,
+        "user_id": fields.Integer,
+    },
+)
+
+product_parser = reqparse.RequestParser()
+product_parser.add_argument("name", type=str, required=True, help="Name is required")
+product_parser.add_argument(
+    "description", type=str, required=True, help="Description is required"
+)
+product_parser.add_argument(
+    "price", type=float, required=True, help="Price is required"
+)
+product_parser.add_argument("image", type=str, required=True, help="Image is required")
+product_parser.add_argument(
+    "status", type=str, required=True, help="Status is required"
+)
+product_parser.add_argument(
+    "user_id", type=int, required=True, help="User ID is required"
+)
+
+
+@products_ns.route("/")
+class ProductsResource(Resource):
+    @products_ns.marshal_list_with(product_model)
+    def get(self):
         products = Products.query.all()
-        product_list = [{
-            'id': product.id,
-            'name': product.name,
-            'description': product.description,
-            'price': product.price,
-            'image': product.image,
-            'status': product.status,
-            'user_id': product.user_id
-        } for product in products]
-        
-        return jsonify(products=product_list), 200
+        return products
 
-    except Exception as e:
-        return jsonify(error=str(e)), 500
-
-@products.route('/', methods=['POST'])
-def create_product():
-    try:
-        name = request.form['name']
-        description = request.form['description']
-        price = request.form['price']
-        image = request.form['image']
-        status = request.form['status']
-        user_id = request.form['user_id']
-
-        if not all([name, description, price, image, status, user_id]):
-            return jsonify({'error': 'Missing required data'}), 400
-
-        new_product = Products(
-            name=name,
-            description=description,
-            price=price,
-            image=image,
-            status=status,
-            user_id=user_id
-        )
-
+    @products_ns.expect(product_parser)
+    @products_ns.marshal_with(product_model)
+    def post(self):
+        args = product_parser.parse_args()
+        new_product = Products(**args)
         db.session.add(new_product)
         db.session.commit()
+        return new_product, 201
 
-        return jsonify({'message': 'Product successfully added'}), 201
 
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
-
-@products.route('/<int:product_id>', methods=['GET'])
-def get_product(product_id):
-    try:
+@products_ns.route("/<int:product_id>")
+@products_ns.response(404, "Product not found")
+@products_ns.param("product_id", "Product ID")
+class ProductResource(Resource):
+    @products_ns.marshal_with(product_model)
+    def get(self, product_id):
         product = Products.query.get(product_id)
-        
-        if product is None:
-            return jsonify({'error': 'Product not found'}), 404
-        
-        specific_product = {
-            'id': product.id,
-            'name': product.name,
-            'description': product.description,
-            'price': product.price,
-            'image': product.image,
-            'status': product.status,
-            'user_id': product.user_id
-        }
-        
-        return jsonify(specific_product), 200
-    
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
-    
-
-@products.route('/<int:product_id>', methods=['DELETE'])
-def delete_product(product_id):
-    try:
-        product = Products.query.get(product_id)
-
         if not product:
-            return jsonify({'error': 'Product not found'}), 404
+            products_ns.abort(404, message="Product not found")
+        return product
 
-        db.session.delete(product)
-        db.session.commit()
-
-        return jsonify({'message': 'Product deleted successfully'}), 200
-
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
-    
-
-@products.route('/<int:product_id>', methods=['PUT'])
-def update_product(product_id):
-    try:
+    @products_ns.response(204, "Product deleted")
+    def delete(self, product_id):
         product = Products.query.get(product_id)
+        if product:
+            db.session.delete(product)
+            db.session.commit()
+            return "", 204
 
+    @products_ns.expect(product_parser)
+    @products_ns.marshal_with(product_model)
+    def put(self, product_id):
+        product = Products.query.get(product_id)
         if not product:
-            return jsonify({'error': 'Product not found'}), 404
-
-        data = request.form
-        if 'name' in data:
-            product.name = data['name']
-        if 'description' in data:
-            product.description = data['description']
-        if 'price' in data:
-            product.price = float(data['price'])
-        if 'image' in data:
-            product.image = data['image']
-        if 'status' in data:
-            product.status = data['status']
-
+            products_ns.abort(404, message="Product not found")
+        args = product_parser.parse_args()
+        for key, value in args.items():
+            setattr(product, key, value)
         db.session.commit()
-
-        return jsonify({'message': 'Product updated successfully'}), 200
-
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return product

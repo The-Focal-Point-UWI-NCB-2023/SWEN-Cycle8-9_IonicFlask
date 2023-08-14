@@ -1,17 +1,16 @@
-from flask import Blueprint, jsonify, request
-from app.models import *
-from app.api.rest.users import users
-from app.api.rest.products import products
-from app.api.rest.orders import orders
-from app.api.rest.line_items import line_items
+from app.api.rest.users import users_ns
+from app.api.rest.products import products_ns
+from app.api import api, Namespace, Resource, fields, reqparse
 
-rest = Blueprint("rest", __name__, url_prefix="/rest")
+# Create the rest namespace
+rest_ns = Namespace("rest", description="REST namespace")
 
-rest.register_blueprint(users)
-rest.register_blueprint(products)
-rest.register_blueprint(orders)
-rest.register_blueprint(line_items)
+# Add the individual namespaces to api namespace
+api.add_namespace(users_ns)
+api.add_namespace(products_ns)
 
-@rest.route("/")
-def rest_index():
-    return {"message": "Restful Endpoint"}
+
+@rest_ns.route("/")
+class RestIndex(Resource):
+    def get(self):
+        return {"message": "Restful Endpoint"}
