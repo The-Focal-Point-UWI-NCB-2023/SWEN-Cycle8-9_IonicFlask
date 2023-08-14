@@ -1,0 +1,30 @@
+.header{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px;
+}
+
+.header > ul{
+    list-style-type: none;
+}
+
+.header > ul > li:hover{
+    transform: scale(1.2);
+}
+
+.header > ul > li > a{
+    text-decoration: none;
+}
+
+.nav{
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+}
+
+.login{
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+}
