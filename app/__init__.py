@@ -29,5 +29,11 @@ app = create_app()
 db.init_app(app)
 migrate = Migrate(app, db)
 
+
+"""
 # Run Database Seeder
+- Set SEEDER=ON .env variable
+- Set ENVIRONMENT=development .env variable
+- Rerun app to seed database with fake data. Remember to set SEEDER=OFF to stop the seeder from running
+"""
 seed_database(app)
