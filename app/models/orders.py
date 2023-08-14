@@ -8,9 +8,9 @@ class Orders(BaseTable):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer,db.ForeignKey('users.id'))
     billing_address = db.Column(db.String(256))
-    total_amount = db.Column(db.Float(10,2))
+    total_amount = db.Column(db.Numeric(10,2))
     status = db.Column(db.String(10))
-    # line_items = db.relationship('Product', backref='orders', lazy=True)
+    line_items = db.relationship('Line_Items', backref='order')
 
     def get_id(self):
         try:
