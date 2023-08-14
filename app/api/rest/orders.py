@@ -54,6 +54,7 @@ def view_order(order_id):
         return jsonify({'error': str(e)}), 500
     
 
+"""route to update an order"""
 @orders.route('/<int:order_id>', methods=['PUT'])
 def update_order(order_id):
     try:
@@ -79,6 +80,7 @@ def update_order(order_id):
         return jsonify({'error': str(e)}), 500
 
 
+"""route to delete an order"""
 @orders.route('/<int:order_id>', methods=['DELETE'])
 def delete_order(order_id):
     try:
