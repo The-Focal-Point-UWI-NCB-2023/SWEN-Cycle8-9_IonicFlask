@@ -1,0 +1,18 @@
+.landing-page-container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 30px;
+    text-align: center;
+}
+
+.landing-page-container > p{
+    margin: 0 20vw;
+}
+
+.landing-btn-group{
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+}
