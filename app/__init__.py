@@ -31,4 +31,4 @@ migrate = Migrate(app, db)
 
 # Initialize Flask-Login Manager
 login_manager.init_app(app)
-login_manager.login_view = "login"  # Specify what page to load for NON-AUTHED users
+login_manager.login_view = "views.login"  # Specify what page to load for NON-AUTHED users

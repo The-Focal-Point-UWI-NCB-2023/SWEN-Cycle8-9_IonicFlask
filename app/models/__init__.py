@@ -49,8 +49,8 @@ class Users(BaseTable):
     email = db.Column(db.String(100))
     password = db.Column(db.String(256))
     role = db.Column(db.String(5))
-    #orders = db.relationship('Orders',backref='user',lazy=True) #creates the relationships
-    #products = db.relationship('Product', backref='user', lazy=True)
+    orders = db.relationship('Orders',backref='user',lazy=True) #creates the relationships
+    products = db.relationship('Products', backref='user', lazy=True)
 
     def is_authenticated(self): 
         return True
