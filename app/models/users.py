@@ -10,7 +10,7 @@ class Users(BaseTable):
     full_name = db.Column(db.String(100))
     email = db.Column(db.String(100))
     password = db.Column(db.String(256))
-    role = db.Column(db.String(5))
+    role = db.Column(db.Integer)
     orders = db.relationship('Orders',backref='user',lazy=True) #creates the relationships
     products = db.relationship('Products', backref='user', lazy=True)
 
