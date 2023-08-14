@@ -1,13 +1,13 @@
 from app.api.rest import Blueprint,jsonify,request,Users,db
 
-users = Blueprint("users", __name__, url_prefix="/users")
+users = Blueprint("users", __name__, url_prefix="/v1/users")
 
 @users.route('/', methods=['GET'])
 def get_users():
     try:
         users = Users.query.all()
         user_list = [{"id": user.id, "full_name": user.full_name, "email": user.email, "role": user.role} for user in users]
-        return jsonify(user_list), 200
+        return jsonify(users=user_list), 200
     except Exception as e:
         return jsonify({'error': str(e)}), 500
     

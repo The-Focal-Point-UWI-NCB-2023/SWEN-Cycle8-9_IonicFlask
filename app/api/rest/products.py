@@ -1,6 +1,6 @@
 from app.api.rest import Blueprint,jsonify,request,Products,db
 
-products = Blueprint("products", __name__, url_prefix="/products")
+products = Blueprint("products", __name__, url_prefix="/v1/products")
 
 @products.route('/', methods=['GET'])
 def get_products():
