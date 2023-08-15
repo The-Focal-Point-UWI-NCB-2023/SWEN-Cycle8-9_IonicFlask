@@ -190,3 +190,25 @@ def product_info(product_id):
     return render_template(
         "components/product-view.html", product=products[int(product_id)]
     )
+
+
+@views.route("/cart/<int:userId>")
+def cart(userId):
+    return render_template(
+        "cart.html",  userId=userId,products=cart_prods
+    )
+
+cart_prods = [
+    {
+        "id": 1,
+        "name": "Monitor",
+        "price": 10.00,
+        "image": "product1.jpg"
+    },
+    {
+        "id": 2,
+        "name": "Product 2",
+        "price": 20.00,
+        "image": "product2.jpg"
+    }
+    ]
