@@ -38,7 +38,7 @@ def login():
                 "message": "User found"
             }]
             #headers = {'X-CSRF-Token': generate_csrf()}
-            return jsonify(response), 200
+            return jsonify(response = response), 200
         
         else:
             response = {
