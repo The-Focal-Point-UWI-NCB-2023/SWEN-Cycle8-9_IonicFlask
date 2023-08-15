@@ -7,6 +7,9 @@ class Line_Items(db.Model):
     order_id = db.Column(db.Integer,db.ForeignKey('orders.id'))
     product_id = db.Column(db.Integer,db.ForeignKey('products.id'))
     qty = db.Column(db.Integer())
+
+    # order = db.relationship('Orders', backref='lineitems')
+    # product = db.relationship('Products', back_populates='lineitems')
     
 
     def get_id(self):
