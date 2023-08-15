@@ -1,3 +1,4 @@
+import sys
 from flask import Flask, jsonify
 from flask_migrate import Migrate
 from flask_login import LoginManager
@@ -44,4 +45,5 @@ login_manager.login_view = (
 - Set ENVIRONMENT=development .env variable
 - Rerun app to seed database with fake data. Remember to set SEEDER=OFF to stop the seeder from running
 """
-seed_database(app)
+if "pytest" not in sys.modules:
+    seed_database(app)

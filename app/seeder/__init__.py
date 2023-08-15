@@ -88,5 +88,10 @@ def seed_database(app: Flask):
 
             s.bulk_save_objects(line_items)
 
+            # Save Changes
             s.commit()
+
+            # Turn seeder off for further reloads
+            os.environ["SEEDER"] = "OFF"
+
             print("===!!DATABASE SEEDED WITH FAKE DATA!!===")
