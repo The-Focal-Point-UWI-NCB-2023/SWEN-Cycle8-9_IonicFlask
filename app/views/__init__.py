@@ -65,5 +65,4 @@ products = [
 
 @views.route('/products/<product_id>')
 def product_info(product_id):
-    print(product_id)
     return render_template('components/product-view.html', product=products[int(product_id)])
