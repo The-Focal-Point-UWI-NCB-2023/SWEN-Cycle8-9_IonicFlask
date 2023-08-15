@@ -13,6 +13,9 @@ from functools import wraps
 
 auth = Blueprint("auth", __name__, url_prefix="/auth")
 
+## Use is_authenticated to check if user is logged in
+## use is_active to check if user is active
+## @login_required to scope a route to only logged in users
 
 @auth.route("/")
 def auth_index():
@@ -54,7 +57,7 @@ def register():
         full_name = Regform.full_name.data
         email = Regform.email.data
         password = Regform.password.data
-        role = "admin" ## Setting the role to admin for now
+        role = 1 ## Setting the role to admin for now
 
         try:
             user = Users(full_name=full_name, email=email, password=password, role=role)
@@ -85,6 +88,13 @@ def load_user(id):
     return db.session.execute(db.select(Users).filter_by(id=id)).scalar()
 
 
+# def admin_required(f):
+#     @wraps(f)
+#     def decorated_function(*args, **kwargs):
+#         if current_user.role != 1:
+#             return jsonify(message="You are not authorized to access this page"), 401
+#         return f(*args, **kwargs)
+#     return decorated_function
 
 
 
