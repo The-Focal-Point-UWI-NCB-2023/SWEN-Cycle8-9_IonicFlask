@@ -32,7 +32,6 @@ product_parser.add_argument(
     "user_id", type=int, required=True, help="User ID is required"
 )
 
-
 @products_ns.route("/")
 class ProductsResource(Resource):
     @products_ns.marshal_list_with(product_model)
