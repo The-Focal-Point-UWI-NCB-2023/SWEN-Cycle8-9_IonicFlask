@@ -8,6 +8,7 @@ click==8.1.6
 colorama==0.4.6
 coverage==7.2.7
 distlib==0.3.7
+Faker==19.3.0
 filelock==3.12.2
 flake8==6.1.0
 Flask==2.3.2
@@ -42,6 +43,7 @@ pyflakes==3.1.0
 PyJWT==2.6.0
 pytest==7.4.0
 pytest-cov==4.1.0
+python-dateutil==2.8.2
 python-dotenv==1.0.0
 pytz==2023.3
 PyYAML==6.0.1
