@@ -12,6 +12,7 @@ rest.register_blueprint(products)
 rest.register_blueprint(orders)
 rest.register_blueprint(line_items)
 
+
 @rest.route("/")
 def rest_index():
     return {"message": "Restful Endpoint"}
