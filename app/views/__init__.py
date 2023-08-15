@@ -14,7 +14,7 @@ def index():
 # api.register_blueprint()
 
 @views.route('/products')
-def products():
+def view_products():
     """Render the the page to display list of products"""
     return  render_template('components/products.html', products=products)
 
@@ -65,4 +65,5 @@ products = [
 
 @views.route('/products/<product_id>')
 def product_info(product_id):
+    print(product_id)
     return render_template('components/product-view.html', product=products[int(product_id)])
