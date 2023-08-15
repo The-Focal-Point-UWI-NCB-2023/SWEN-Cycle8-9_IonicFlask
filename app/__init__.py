@@ -28,8 +28,8 @@ def create_app():
 
 # Initialize App and DB
 app = create_app()
-db.init_app(app)
-migrate = Migrate(app, db)
+#db.init_app(app)
+#migrate = Migrate(app, db)
 
 
 # Initialize Flask-Login Manager
