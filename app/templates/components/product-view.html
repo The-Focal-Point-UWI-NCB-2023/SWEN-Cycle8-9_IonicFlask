@@ -1,33 +1,28 @@
-<link rel="stylesheet" href="{{ url_for('static', filename='css/products.css') }}">
+{% extends 'base.html' %}
 
-{% block main %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/products.css') }}">
 
-<div class="product-detail-card">
-  <div class="card">
-    <div class="left-card">
-      <img
-        class="prod-image"
-        src="{{url_for('static', filename=product.image)}}"
-      />
-    </div>
-    <div class="right-card">
-      <p class="b">{{ product.title }}</p>
-      <p class="b">${{ product.price }}</p>
-      <p>{{ product.product_details }}</p>
-      <div class="purchase-details">
-        <label class="p-det" for="quantity">Quantity</label>
-        <input
-          class="p=det"
-          type="number"
-          id="quantity"
-          name="quantity"
-          min="1"
-          value="1"
-        />
-        <button>Add to Cart</button>
+{% block content %}
+<div class="container">
+  <div class="card mb-3">
+      <div class="row">
+        <div class="col-md-4">
+          <img src="{{ url_for('static', filename= product['image']) }}" alt="{{ product['title'] }}" class="img-fluid rounded-start"  id="prod-img">
+        </div>
+        <div class="col-md-8">
+          <div class="card-body">
+              <h4 class="card-title">{{ product['title'] }}</h4>
+              <p class="card-text">${{ product['price'] }}</p>
+              <p class="card-text">{{ product['description'] }}</p>
+              <div class="form-group">
+                  <label for="quantity">Quantity</label>
+                  <input type="number" id="quantity" name="quantity" class="form-control" id="qty" value="1" min="1">
+              </div>
+              <br/>
+              <button class="btn btn-primary">Add to Cart</button>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
 </div>
-
 {% endblock %}
