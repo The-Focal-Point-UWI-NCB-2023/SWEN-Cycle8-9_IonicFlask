@@ -59,7 +59,7 @@ class ProductsResource(Resource):
 @products_ns.route("/<int:product_id>")
 @products_ns.response(404, "Product not found")
 @products_ns.response(409, "Invalid field syntax")
-@products_ns.param("product_id", "Product ID")
+@products_ns.param("product_id", "A unique identifier associated with a product")
 class ProductResource(Resource):
     @products_ns.marshal_with(product_model)
     def get(self, product_id):

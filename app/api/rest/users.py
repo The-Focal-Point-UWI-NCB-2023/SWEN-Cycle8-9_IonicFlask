@@ -52,7 +52,7 @@ class UsersResource(Resource):
 @users_ns.route("/<int:user_id>")
 @users_ns.response(409, "Invalid field syntax")
 @users_ns.response(404, "User not found")
-@users_ns.param("user_id", "User ID")
+@users_ns.param("user_id", "A unique identifier associated with a user")
 class UserResource(Resource):
     @users_ns.marshal_with(user_model)
     def get(self, user_id):

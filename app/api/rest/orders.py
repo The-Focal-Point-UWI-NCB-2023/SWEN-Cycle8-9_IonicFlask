@@ -46,6 +46,7 @@ class OrderListResource(Resource):
 
 @orders_ns.response(404, "Order not found")
 @orders_ns.response(409, "Invalid field syntax")
+@orders_ns.param("order_id", "A unique identifier associated with an order")
 @orders_ns.route('/<int:order_id>')
 class OrderResource(Resource):
     def get(self, order_id):

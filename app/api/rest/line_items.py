@@ -45,6 +45,7 @@ class LineItemsResource(Resource):
 
 @line_items_ns.response(404, "Line Item not found")
 @line_items_ns.response(409, "Invalid field syntax")
+@line_items_ns.param("line_item_id", "A unique identifier associated with a line item")
 @line_items_ns.route('/<int:line_item_id>')
 class LineItemDetailResource(Resource):
     def get(self, line_item_id):
