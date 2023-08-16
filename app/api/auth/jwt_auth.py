@@ -1,10 +1,12 @@
 from flask import Blueprint, request, jsonify, g
-#from app.api.auth import users
 import jwt
 from datetime import datetime, timedelta
 from functools import wraps
 import os
-#from app import app
+
+# Use @login_required to scope a route to a logged in user.
+# Use @admin_required to scope a route to an admin user.
+# Use @requires_auth to scope a route to a user with a valid JWT token.
 
 jwt_auth = Blueprint("jwt_auth", __name__, url_prefix="/v1/jwt_auth")
 
