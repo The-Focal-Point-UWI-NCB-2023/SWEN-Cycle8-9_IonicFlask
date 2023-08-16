@@ -1,24 +1,29 @@
-{% extends 'base.html' %}
-
+{% extends "base.html" %}
 <link rel="stylesheet" href="{{ url_for('static', filename='styles/products.css') }}">
 
 {% block content %}
+
 <h1 class="display-5 fw-bold">Products</h1>
-<div class="container">
-    <div class="row mt-3">
-        {% for product in products %}
-            <div class="col-md-4">
-                <div class="card mb-4" id="products-view">
-                    <a href="{{ url_for('views.product_info', product_id=product['id']) }}">
-                    <img src="{{ url_for('static', filename=product['image']) }}" class="card-img-top" alt="{{ product['title'] }}">
-                    <div class="card-body ">
-                        <span><h5 class="card-title">{{ product['title'] }}</h5></span>
-                        <span><p class="card-text">${{ product['price'] }}</p></span>
-                    </div>
-                </a>
-                </div>
-            </div>
-        {% endfor %}
+
+<div class="grid-container">
+  {% for product in products: %}
+
+  <a href="{{ url_for('views.product_info', product_id=product.id) }}">
+    <div class="product-card">
+      <div class="product-image">
+        <img
+          class="prod-image"
+          src="{{url_for('static', filename=product.image)}}"
+        />
+      </div>
+      <div class="product-bottom">
+        <p>{{ product.title }}</p>
+        <p>${{ product.price }}</p>
+      </div>
     </div>
+  </a>
+
+  {% endfor %}
 </div>
 {% endblock %}
+
