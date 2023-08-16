@@ -52,7 +52,9 @@ python -m pytest --cov=app
     - Autocorrects format to pep8 standard
     - Runs pytest
 
-- Deployed to <a href="https://focalpoint-app.onrender.com/api/">HERE</a>
+- Staging Environment <a href="https://focalpoint-app-staging.onrender.com/">HERE</a>
+
+- Deployed to <a href="https://focalpoint-app.onrender.com/">HERE</a>
     - Configured to deploy on changes to main
 
 # Folder Structure

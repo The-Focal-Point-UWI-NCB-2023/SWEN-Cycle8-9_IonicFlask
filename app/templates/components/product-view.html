@@ -1,0 +1,33 @@
+<link rel="stylesheet" href="{{ url_for('static', filename='css/products.css') }}">
+
+{% block main %}
+
+<div class="product-detail-card">
+  <div class="card">
+    <div class="left-card">
+      <img
+        class="prod-image"
+        src="{{url_for('static', filename=product.image)}}"
+      />
+    </div>
+    <div class="right-card">
+      <p class="b">{{ product.title }}</p>
+      <p class="b">${{ product.price }}</p>
+      <p>{{ product.product_details }}</p>
+      <div class="purchase-details">
+        <label class="p-det" for="quantity">Quantity</label>
+        <input
+          class="p=det"
+          type="number"
+          id="quantity"
+          name="quantity"
+          min="1"
+          value="1"
+        />
+        <button>Add to Cart</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
