@@ -1,4 +1,5 @@
-from app.models import db,datetime
+from app.models import db, datetime
+
 
 class BaseTable(db.Model):
     __abstract__ = True

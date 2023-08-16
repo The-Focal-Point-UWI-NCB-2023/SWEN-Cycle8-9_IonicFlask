@@ -3,14 +3,13 @@ from app.models import db
 
 
 class Orders(BaseTable):
-
-    __tablename__ = 'orders'
+    __tablename__ = "orders"
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer,db.ForeignKey('users.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
     billing_address = db.Column(db.String(256))
-    total_amount = db.Column(db.Numeric(10,2))
+    total_amount = db.Column(db.Numeric(10, 2))
     status = db.Column(db.String(10))
-    line_items = db.relationship('Line_Items', backref='order')
+    line_items = db.relationship("Line_Items", backref="order")
 
     def get_id(self):
         try:
@@ -19,11 +18,10 @@ class Orders(BaseTable):
             return str(self.id)  # python 3 support
 
     def __repr__(self):
-        return '<Orders %r>' % (self.id)
+        return "<Orders %r>" % (self.id)
 
-    def __init__(self,user_id,billing_address,total_amount,status):        
+    def __init__(self, user_id, billing_address, total_amount, status):
         self.user_id = user_id
         self.billing_address = billing_address
         self.total_amount = total_amount
         self.status = status
-
