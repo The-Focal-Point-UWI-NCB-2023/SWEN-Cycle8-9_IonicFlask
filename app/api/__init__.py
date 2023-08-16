@@ -5,13 +5,13 @@ from .payment import payment
 from ..models import db
 
 # Initialize API
-api_blueprint = Blueprint("api", __name__, url_prefix="/v1/api")
+api_blueprint = Blueprint("api", __name__, url_prefix="/api")
 
 api = Api(
     api_blueprint,
     version="1.0",
-    title="Mini REST API",
-    description="A mini REST API",
+    title="FOCAL FRAMES API",
+    description="The Offical Api of the Focal Frames E-commerce Store",
 )
 
 from .rest import *

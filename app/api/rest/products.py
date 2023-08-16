@@ -1,18 +1,19 @@
+from flask_restx import abort
 from app.api import Namespace, Resource, fields, reqparse
 from app.models import Products, db
 
-products_ns = Namespace("products", description="Products namespace")
-
+products_ns = Namespace("products", path="/v1/rest/products", 
+    description="API operations related to managing product information, including adding, retrieving, updating, and deleting products. This namespace provides endpoints to interact with product data, allowing administrators to manage product listings, pricing, availability, and details. Products can be searched by ID, and their name, description, price, image, status, and user ID information are accessible for administration purposes.")
 product_model = products_ns.model(
     "Product",
     {
-        "id": fields.Integer,
-        "name": fields.String,
-        "description": fields.String,
-        "price": fields.Float,
-        "image": fields.String,
-        "status": fields.String,
-        "user_id": fields.Integer,
+        "id": fields.Integer(description="Product ID"),
+        "name": fields.String(description="Name of the product"),
+        "description": fields.String(description="Description of the product"),
+        "price": fields.Float(description="Price of the product"),
+        "image": fields.String(description="Image URL of the product"),
+        "status": fields.String(description="Status of the product"),
+        "user_id": fields.Integer(description="User ID associated with the product"),
     },
 )
 
@@ -37,17 +38,22 @@ class ProductsResource(Resource):
     @products_ns.marshal_list_with(product_model)
     def get(self):
         products = Products.query.all()
+        if products == []:
+            abort(404,message='No products found')
         return products
+        
 
     @products_ns.expect(product_parser)
     @products_ns.marshal_with(product_model)
     def post(self):
         args = product_parser.parse_args()
         new_product = Products(**args)
-        db.session.add(new_product)
-        db.session.commit()
-        return new_product, 201
-
+        try:
+            db.session.add(new_product)
+            db.session.commit()
+            return new_product, 201
+        except Exception as e:
+            abort(409, message="Invalid field input")
 
 @products_ns.route("/<int:product_id>")
 @products_ns.response(404, "Product not found")
@@ -57,8 +63,25 @@ class ProductResource(Resource):
     def get(self, product_id):
         product = Products.query.get(product_id)
         if not product:
-            products_ns.abort(404, message="Product not found")
+            abort(404, message="Product not found")
         return product
+
+
+    @products_ns.expect(product_parser)
+    @products_ns.marshal_with(product_model)
+    def put(self, product_id):
+        product = Products.query.get(product_id)
+        if product:
+            try:
+                args = product_parser.parse_args()
+                for key, value in args.items():
+                    setattr(product, key, value)
+                db.session.commit()
+            except Exception as e:
+                abort(409, message="Invalid field input")
+        elif product is None:
+            abort(404, message="Product not found")
+        
 
     @products_ns.response(204, "Product deleted")
     def delete(self, product_id):
@@ -67,15 +90,5 @@ class ProductResource(Resource):
             db.session.delete(product)
             db.session.commit()
             return "", 204
-
-    @products_ns.expect(product_parser)
-    @products_ns.marshal_with(product_model)
-    def put(self, product_id):
-        product = Products.query.get(product_id)
-        if not product:
-            products_ns.abort(404, message="Product not found")
-        args = product_parser.parse_args()
-        for key, value in args.items():
-            setattr(product, key, value)
-        db.session.commit()
-        return product
+        elif product is None:
+            abort(404,message='Product with this ID does not exist')

@@ -1,7 +1,7 @@
 from app.api import Namespace, Resource, fields, reqparse
 from app.models import Orders, db
 
-orders_ns = Namespace('orders', description='Operations related to orders')
+orders_ns = Namespace('orders',path="/v1/rest/orders", description='Operations related to orders')
 
 order_model = orders_ns.model(
     "Order",

@@ -2,7 +2,7 @@ from app.api import Namespace, Resource, fields, reqparse
 from app.models import Line_Items, db
 
 
-line_items_ns = Namespace('line_items', description='Operations related to line items')
+line_items_ns = Namespace('line_items', path="/v1/rest/line_items", description='Operations related to line items')
 
 line_items_model = line_items_ns.model(
     "Line Item",
