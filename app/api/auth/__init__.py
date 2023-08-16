@@ -20,11 +20,14 @@ import jwt
 from functools import wraps
 from app.api.auth.jwt_auth import jwt_auth, generate_token, requires_auth
 
+# Use @login_required to scope a route to a logged in user.
+# Use @admin_required to scope a route to an admin user.
+# Use @requires_auth to scope a route to a user with a valid JWT token.
+
 
 auth = Blueprint("auth", __name__, url_prefix="/auth")
 
 auth.register_blueprint(jwt_auth)
-
 
 @auth.route("/")
 def auth_index():
@@ -68,7 +71,7 @@ def register():
         full_name = Regform.full_name.data
         email = Regform.email.data
         password = Regform.password.data
-        role = 1  ## Setting the role to admin for now
+        role = 0  ## Default role is 0 for customer and 1 for admin
 
         try:
             user = Users(full_name=full_name, email=email, password=password, role=role)
