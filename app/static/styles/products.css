@@ -38,10 +38,10 @@ body {
 }
 
 .product-image:hover .prod-image {
-    transform: scale(1.03); 
+    transform: scale(1.03); /* Adjust the scale factor as needed */
   }
 
-  a{
+a{
     text-decoration: none;
     color: black;
 }
@@ -86,5 +86,5 @@ body {
 }
 
 .purchase-details button:hover {
-    background-color: rgba(0, 0, 255, 0.603); 
+    background-color: rgba(0, 0, 255, 0.603); /* Darker shade of purple */
 }

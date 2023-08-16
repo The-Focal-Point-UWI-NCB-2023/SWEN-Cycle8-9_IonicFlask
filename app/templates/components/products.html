@@ -1,9 +1,7 @@
-<link
-  rel="stylesheet"
-  href="{{ url_for('static', filename='css/products.css') }}"
-/>
+{% extends "base.html" %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/products.css') }}">
 
-{% block main %}
+{% block content %}
 
 <h1 class="display-5 fw-bold">Products</h1>
 
@@ -28,3 +26,4 @@
   {% endfor %}
 </div>
 {% endblock %}
+
