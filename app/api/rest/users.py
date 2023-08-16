@@ -1,5 +1,4 @@
-from flask_restx import abort
-from app.api import Namespace, Resource, fields, reqparse
+from app.api import Namespace, Resource, fields, reqparse, abort
 from app.models import Users, db
 
 users_ns = Namespace("users", path="/v1/rest/users",
@@ -8,7 +7,7 @@ users_ns = Namespace("users", path="/v1/rest/users",
 user_model = users_ns.model(
     "User",
     {
-        "id": fields.Integer(description="User ID"),
+        "id": fields.Integer(description="The unique identifier for a user"),
         "full_name": fields.String(description="Full name of the user"),
         "email": fields.String(description="Email address of the user"),
         "role": fields.Integer(description="Role of the user (1 or 0)"),
@@ -23,9 +22,11 @@ user_parser.add_argument("email", type=str, required=True, help="Email is requir
 user_parser.add_argument(
     "password", type=str, required=True, help="Password is required"
 )
-user_parser.add_argument("role", type=str, required=True, help="Role is required")
+user_parser.add_argument("role", type=int, required=True, help="Role is required")
 
 
+@users_ns.response(409, "Invalid field syntax")
+@users_ns.response(404, "User not found")
 @users_ns.route("/")
 class UsersResource(Resource):
     @users_ns.marshal_list_with(user_model)

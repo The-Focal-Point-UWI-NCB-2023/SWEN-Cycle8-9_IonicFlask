@@ -1,5 +1,4 @@
-from flask_restx import abort
-from app.api import Namespace, Resource, fields, reqparse
+from app.api import Namespace, Resource, fields, reqparse,abort
 from app.models import Products, db
 
 products_ns = Namespace("products", path="/v1/rest/products", 
@@ -7,7 +6,7 @@ products_ns = Namespace("products", path="/v1/rest/products",
 product_model = products_ns.model(
     "Product",
     {
-        "id": fields.Integer(description="Product ID"),
+        "id": fields.Integer(description="The unique identifier for a product"),
         "name": fields.String(description="Name of the product"),
         "description": fields.String(description="Description of the product"),
         "price": fields.Float(description="Price of the product"),
@@ -33,6 +32,8 @@ product_parser.add_argument(
     "user_id", type=int, required=True, help="User ID is required"
 )
 
+@products_ns.response(404, "Product not found")
+@products_ns.response(409, "Invalid field syntax")
 @products_ns.route("/")
 class ProductsResource(Resource):
     @products_ns.marshal_list_with(product_model)
@@ -57,6 +58,7 @@ class ProductsResource(Resource):
 
 @products_ns.route("/<int:product_id>")
 @products_ns.response(404, "Product not found")
+@products_ns.response(409, "Invalid field syntax")
 @products_ns.param("product_id", "Product ID")
 class ProductResource(Resource):
     @products_ns.marshal_with(product_model)
