@@ -21,11 +21,30 @@
     your world."
   </p>
   <p>- ChatGPT</p>
-  <p>Test</p>
-  <div class="landing-btn-group">
-    <button>Login</button>
-    <button>Register</button>
+
+  {% if current_user.is_authenticated %}
+  <div>
+    <strong>Welcome back {{ current_user.full_name }}!!</strong>
+    {% if current_user.role == 0 %}
+    <strong
+      >Start shopping
+      <a href="{{ url_for('views.view_products') }}">now</a></strong
+    >
+    {% else %}
+    <strong
+      >Vist the
+      <a href="{{ url_for('views.admin') }}">Admin Dashboard</a></strong
+    >
+    {% endif %}
   </div>
+
+  {% else %}
+  <strong
+    ><a href="{{ url_for('views.login') }}">Register</a> or
+    <a href="{{ url_for('views.register') }}">Login</a> now to start
+    shopping!</strong
+  >
+  {% endif %}
 </div>
 
 {% endblock %}
