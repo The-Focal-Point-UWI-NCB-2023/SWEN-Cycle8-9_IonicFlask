@@ -1,7 +1,9 @@
-<link rel="stylesheet" href="{{ url_for('static', filename='css/products.css') }}">
+{% extends 'base.html' %}
 
-{% block main %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/products.css') }}">
 
+
+{% block content %}
 <div class="product-detail-card">
   <div class="card">
     <div class="left-card">
@@ -29,5 +31,4 @@
     </div>
   </div>
 </div>
-
 {% endblock %}
