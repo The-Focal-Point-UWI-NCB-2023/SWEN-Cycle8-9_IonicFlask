@@ -94,8 +94,6 @@ class Logout(Resource):
 def load_user(id):
     return db.session.execute(db.select(Users).filter_by(id=id)).scalar()
 
-auth.register_blueprint(jwt_auth)
-
 # def admin_required(f):
 #     @wraps(f)
 #     def decorated_function(*args, **kwargs):
