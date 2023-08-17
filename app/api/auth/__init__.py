@@ -103,7 +103,7 @@ def load_user(id):
 #         return f(*args, **kwargs)
 #     return decorated_function
 
-@admin_required
+# @admin_required
 @api.doc(security='apiKey')
 @auth_ns.route('/admin')
 class AdminProtected(Resource):
