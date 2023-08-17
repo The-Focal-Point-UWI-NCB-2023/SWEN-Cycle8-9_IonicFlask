@@ -6,6 +6,7 @@ from app.models import Users
 from app.forms import LoginForm, RegisterForm
 from flask_login import login_user, logout_user
 
+
 # Initialize API
 views = Blueprint("views", __name__, url_prefix="/")
 
@@ -81,7 +82,10 @@ def logout():
 # views.register_blueprint()
 @views.route("/admin")
 def admin():
+    response = requests.get("http://127.0.0.1:8080/api/v1/users") 
+    print(response)
     return render_template(
+
         "admin-dashboard.html", headers=user_headers, users=test_users
     )
 
