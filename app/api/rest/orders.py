@@ -1,104 +1,81 @@
-from app.api.rest import Blueprint, jsonify, request, Orders, db
+from app.api import Namespace, Resource, fields, reqparse,abort
+from app.models import Orders, db
 
-orders = Blueprint("orders", __name__, url_prefix="/v1/orders")
+orders_ns = Namespace('orders',path="/v1/rest/orders", 
+    description="API operations related to managing order information, including creating, retrieving, updating, and deleting orders. This namespace provides endpoints to interact with order data, enabling administrators to manage order details, user associations, billing addresses, total amounts, and status updates. Orders can be searched by ID, and their user ID, billing address, total amount, and status information are accessible for administration purposes.")
+order_model = orders_ns.model(
+    "Order",
+    {
+        "id": fields.Integer(description='The unique identifier for an order'),
+        "user_id": fields.Integer(description='The ID of the user who placed the order'),
+        "billing_address": fields.String(description='The billing address for the order'),
+        "total_amount": fields.String(description='The total amount of the order'),
+        "status": fields.String(description='The status of the order'),
+    },
+)
 
-"""route to create/make an order"""
+orders_parser = reqparse.RequestParser()
+orders_parser.add_argument('user_id', type=int, required=True, help='User ID is required')
+orders_parser.add_argument('billing_address', required=True, help='Billing address is required')
+orders_parser.add_argument('total_amount', type=float, required=True, help='Total amount is required')
+orders_parser.add_argument('status', required=True, help='Status is required')
+
+@orders_ns.response(404, "Order not found")
+@orders_ns.response(409, "Invalid field syntax")
+@orders_ns.route('/')
+class OrderListResource(Resource):
+
+    @orders_ns.marshal_list_with(order_model)
+    def get(self):
+        orders = Orders.query.all()
+        if orders == []:
+            abort(404,message='No orders found')
+        return orders
+    
+    @orders_ns.marshal_list_with(order_model)
+    @orders_ns.expect(orders_parser)
+    def post(self):
+        try:
+            args = orders_parser.parse_args()
+            new_order = Orders(**args)
+            db.session.add(new_order)
+            db.session.commit()
+            return new_order, 201
+        except Exception as e:
+            abort(409, message="Invalid field input")
+
+@orders_ns.response(404, "Order not found")
+@orders_ns.response(409, "Invalid field syntax")
+@orders_ns.param("order_id", "A unique identifier associated with an order")
+@orders_ns.route('/<int:order_id>')
+class OrderResource(Resource):
+    def get(self, order_id):
+        order = order_id.query.get(order_id)
+        if order:
+            return order
+        elif not order:
+            abort(404, message="Order not found")
 
 
-@orders.route("/", methods=["POST"])
-def create_order():
-    try:
-        # user_id = get_current_user_id()
-        user_id = request.form["user_id"]
-        billing_address = request.form["billing_address"]
-        total_amount = request.form["total_amount"]
-        status = request.form["status"]
-
-        if not all([user_id, billing_address, total_amount, status]):
-            return jsonify({"error": "Missing required data"}), 400
-
-        new_order = Orders(
-            user_id=user_id,
-            billing_address=billing_address,
-            total_amount=total_amount,
-            status=status,
-        )
-
-        db.session.add(new_order)
-        db.session.commit()
-
-        return jsonify({"message": "Order successfully made"}), 201
-
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
-
-@orders.route("/<int:order_id>", methods=["GET"])
-def view_order(order_id):
-    # will have to check for role of user here and add line items aspect
-    try:
+    @orders_ns.expect(orders_parser)
+    def put(self, order_id):
         order = Orders.query.get(order_id)
+        if order:
+            try:
+                args = orders_parser.parse_args()
+                for key, value in args.items():
+                    setattr(order, key, value)
+                db.session.commit()
+            except Exception as e:
+                abort(409, message="Invalid field input")
+        elif order is None:
+            abort(404, message="Order not found")
 
-        if order is None:
-            return jsonify({"error": "Order was not found"}), 404
-
-        specific_order = {
-            "id": order.id,
-            "user_id": order.user_id,
-            "billing_address": order.billing_address,
-            "total_amount": order.total_amount,
-            "status": order.status,
-        }
-
-        return jsonify(specific_order), 200
-
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
-
-"""route to update an order"""
-
-
-@orders.route("/<int:order_id>", methods=["PUT"])
-def update_order(order_id):
-    try:
+    def delete(self, order_id):
         order = Orders.query.get(order_id)
-
-        if not order:
-            return jsonify({"error": "Order was not found"}), 404
-
-        data = request.form
-
-        if "billing_address" in data:
-            order.billing_address = data["billing_address"]
-        if "total_amount" in data:
-            order.total_amount = data["total_amount"]
-        if "status" in data:
-            order.status = data["status"]
-
-        db.session.commit()
-
-        return jsonify({"message": "Order updated successfully"}), 200
-
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
-
-"""route to delete an order"""
-
-
-@orders.route("/<int:order_id>", methods=["DELETE"])
-def delete_order(order_id):
-    try:
-        order = Orders.query.get(order_id)
-
-        if not order:
-            return jsonify({"error": "Order was not found"}), 404
-
-        db.session.delete(order)
-        db.session.commit()
-
-        return jsonify({"message": "Order deleted successfully"}), 200
-
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        if order:
+            db.session.delete(order)
+            db.session.commit()
+            return "", 204
+        elif order is None:
+            abort(404,message='Order with this ID does not exist')

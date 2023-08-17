@@ -1,30 +1,50 @@
-{% extends "base.html" %}
-{% block content %}
-<link rel="stylesheet" href="{{ url_for('static', filename='styles/index.css') }}">
+{% extends "base.html" %} {% block content %}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='styles/index.css') }}"
+/>
 
 <div class="landing-page-container">
-    <h1>Focal Frames</h1>
-    <img src="{{ url_for('static', filename='images/thefocalpoints_Logo.jpg') }}"/>
-    <p>
-        "Welcome to Focal Frames, your premier destination for stylish eyewear that blends fashion and function seamlessly. We believe that glasses are more than just a necessity – they're a statement of your unique style and personality. At Focal Frames, we curate a diverse collection of frames that cater to all tastes, whether you're looking for sophisticated elegance or trendy chic. Explore our handpicked selection and discover eyewear that not only enhances your vision but also complements your individuality. Step into a world where clarity meets creativity, and find the perfect frames to frame your world."
-    </p>
-    <p>- ChatGPT</p>
+  <h1>Focal Frames</h1>
+  <img
+    src="{{ url_for('static', filename='images/thefocalpoints_Logo.jpg') }}"
+  />
+  <p>
+    "Welcome to Focal Frames, your premier destination for stylish eyewear that
+    blends fashion and function seamlessly. We believe that glasses are more
+    than just a necessity – they're a statement of your unique style and
+    personality. At Focal Frames, we curate a diverse collection of frames that
+    cater to all tastes, whether you're looking for sophisticated elegance or
+    trendy chic. Explore our handpicked selection and discover eyewear that not
+    only enhances your vision but also complements your individuality. Step into
+    a world where clarity meets creativity, and find the perfect frames to frame
+    your world."
+  </p>
+  <p>- ChatGPT</p>
 
-    {% if current_user.is_authenticated  %}
-        <div>
-            <strong>Welcome back {{ current_user.full_name }}!!</strong>
-            {% if current_user.role == 0 %}
-                <strong>Start shopping <a href="{{ url_for('views.view_products') }}">now</a></strong>
-            {% else %}
-                <strong>Vist the <a href="{{ url_for('views.admin') }}">Admin Dashboard</a></strong>
-            {% endif %}
-        </div>
-
+  {% if current_user.is_authenticated %}
+  <div>
+    <strong>Welcome back {{ current_user.full_name }}!!</strong>
+    {% if current_user.role == 0 %}
+    <strong
+      >Start shopping
+      <a href="{{ url_for('views.view_products') }}">now</a></strong
+    >
     {% else %}
-        <strong><a href="{{ url_for('views.login') }}">Register</a> or <a href="{{ url_for('views.register') }}">Login</a> now to start shopping!</strong>
+    <strong
+      >Vist the
+      <a href="{{ url_for('views.admin') }}">Admin Dashboard</a></strong
+    >
     {% endif %}
+  </div>
 
+  {% else %}
+  <strong
+    ><a href="{{ url_for('views.login') }}">Register</a> or
+    <a href="{{ url_for('views.register') }}">Login</a> now to start
+    shopping!</strong
+  >
+  {% endif %}
 </div>
-
 
 {% endblock %}

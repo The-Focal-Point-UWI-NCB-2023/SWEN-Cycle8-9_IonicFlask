@@ -14,3 +14,5 @@ class Config(object):
         "postgres://", "postgresql://"
     )
     SQLALCHEMY_TRACK_MODIFICATIONS = False  # This is just here to suppress a warning from SQLAlchemy as it will soon be removed
+    # RESTX_ERROR_404_HELP = os.environ.get('RESTX_ERROR_404_HELP') #Not working for some reason
+    RESTX_ERROR_404_HELP=False

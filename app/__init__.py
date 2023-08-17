@@ -6,7 +6,7 @@ from flask_wtf.csrf import CSRFProtect
 from .config.config import Config
 from .config.login_manager import login_manager
 from .models import db
-from .api import api
+from .api import api_blueprint
 from .views import views
 from .seeder import seed_database
 
@@ -20,7 +20,7 @@ def create_app():
     app = Flask(__name__, static_folder="./static")
     app.config.from_object(Config)
     # Register API & Templates
-    app.register_blueprint(api)
+    app.register_blueprint(api_blueprint)
     app.register_blueprint(views)
 
     return app

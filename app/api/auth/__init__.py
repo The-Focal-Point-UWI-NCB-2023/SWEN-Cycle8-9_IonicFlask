@@ -1,129 +1,125 @@
-from flask import (
-    Blueprint,
-    render_template,
-    redirect,
-    url_for,
-    request,
-    flash,
-    jsonify,
-    g,
-)
-from flask_login import login_required, current_user, login_user, logout_user
-from app.forms import LoginForm, RegisterForm
-from app.models import Users
-from app import db
-from app.config.login_manager import login_manager
+from flask import request, flash, redirect, url_for
+from app.api import api, Namespace, Resource, fields, reqparse,abort
+from flask_login import login_required, login_user, logout_user, current_user
 from werkzeug.security import check_password_hash
+from app.models import Users, db
+from app.config.login_manager import login_manager
+from app.api.auth.jwt_auth import *
 from datetime import datetime
-from flask_wtf.csrf import generate_csrf
-import jwt
 from functools import wraps
-from app.api.auth.jwt_auth import jwt_auth, generate_token, requires_auth
+from app.api.auth.jwt_auth import GenerateToken  # Import the GenerateToken class
+# from app import csrf
 
-# Use @login_required to scope a route to a logged in user.
-# Use @admin_required to scope a route to an admin user.
-# Use @requires_auth to scope a route to a user with a valid JWT token.
+# Define the auth namespace
+auth_ns = Namespace('auth', path='/v1/auth', description='Authentication operations')
 
+# User model for registering
+user_model = auth_ns.model('User', {
+    'full_name': fields.String(required=True, description='Full name of the user'),
+    'email': fields.String(required=True, description='Email address of the user'),
+    'password': fields.String(required=True, description='Password of the user'),
+})
 
-auth = Blueprint("auth", __name__, url_prefix="/auth")
+# User login request parser
+login_parser = reqparse.RequestParser()
+login_parser.add_argument('email', required=True, help='Email address')
+login_parser.add_argument('password', required=True, help='Password')
 
-auth.register_blueprint(jwt_auth)
+# Register request parser
+register_parser = reqparse.RequestParser()
+register_parser.add_argument('full_name', required=True, help='Full name')
+register_parser.add_argument('email', required=True, help='Email address')
+register_parser.add_argument('password', required=True, help='Password')
 
-@auth.route("/")
-def auth_index():
-    return {"message": "Auth Endpoint"}
+# ... Your other imports and setup ...
 
+@auth_ns.route('/')
+class AuthIndex(Resource):
+    def get(self):
+        return {'message': 'Auth Endpoint'}
 
-@auth.route("/login", methods=["POST"])
-def login():
-    form = LoginForm()
-    # if request.method=='POST' and form.validate_on_submit():
-    if request.method == "POST":
-        email = form.email.data
-        password = form.password.data
+@auth_ns.route('/login')
+class Login(Resource):
+    @auth_ns.expect(login_parser)
+    def post(self):
+        args = login_parser.parse_args()
+        email = args['email']
+        password = args['password']
         user = db.session.execute(db.select(Users).filter_by(email=email)).scalar()
 
         if user is not None and check_password_hash(user.password, password):
             login_user(user)
-            jwt_token = generate_token(user.id, user.email, user.role, user.password) #Generating the payload of the token based on the user's info
-            tk = jwt_token.get_json()['token'] #Getting the token from the response
-            response = [{
-                "token": tk, #Sending the token back to the user // In this case this would just be sending back to testing views endpoint to see if it works 
-                "message": "User found"
-            }]
-            #headers = {'X-CSRF-Token': generate_csrf()}
-            return jsonify(response = response), 200
-        
+            generate_token_resource = generate_token(user.id,user.email,user.role,user.password)
+            token_response = generate_token_resource
+            tk = token_response.get('token')
+            
+            response = {
+                'token': tk,
+                'message': 'User found'
+            }
+            return response, 200
         else:
             response = {
-                "message": "Username or Password is incorrect."
+                'message': 'Username or Password is incorrect.'
             }
-            return jsonify(response), 401
+            return response, 401
 
-    return jsonify(response=form.errors), 400
-
-
-@auth.route("/register", methods=["POST"])
-def register():
-    Regform = RegisterForm()
-    #if request.method=='POST' and form.validate_on_submit():
-    if request.method == "POST":
-        full_name = Regform.full_name.data
-        email = Regform.email.data
-        password = Regform.password.data
-        role = 0  ## Default role is 0 for customer and 1 for admin
-
+@auth_ns.route('/register')
+class Register(Resource):
+    @auth_ns.expect(register_parser)
+    @auth_ns.marshal_with(user_model)
+    def post(self):
+        user_data = register_parser.parse_args()
+        full_name = user_data['full_name']
+        email = user_data['email']
+        password = user_data['password']
+        role = 0  # Setting the role to user for now
         try:
             user = Users(full_name=full_name, email=email, password=password, role=role)
             db.session.add(user)
             db.session.commit()
-            response = {"message": "User created"}
+            return user, 201
+        except Exception as e:
+            abort(409, message="Invalid field input")
 
-            return jsonify(response), 201
-        except:
-            response = {"message": "User not created"}
-            return jsonify(response), 409
-    return jsonify(response=Regform.errors), 400
-
-
-@auth.route("/logout", methods=["GET", "POST"])
 @login_required
-def logout():
-    logout_user()
-    flash("You have been logged out.", "success")
-    return redirect(url_for("views.login"))
-
+@auth_ns.route('/logout')
+class Logout(Resource):
+    def post(self):
+        logout_user()
+        flash('You have been logged out.', 'success')
+        return redirect(url_for('views.login'))
 
 @login_manager.user_loader
 def load_user(id):
     return db.session.execute(db.select(Users).filter_by(id=id)).scalar()
 
+auth.register_blueprint(jwt_auth)
 
-## Admin required decorator
-def admin_required(f):
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if current_user.role != 1:
-            return jsonify(message="You are not authorized to access this page"), 401
-        return f(*args, **kwargs)
-    return decorated_function
+# def admin_required(f):
+#     @wraps(f)
+#     def decorated_function(*args, **kwargs):
+#         if current_user.role != 1:
+#             return {'message':  'You are not authorized to view this page.'}, 200
+#         return f(*args, **kwargs)
+#     return decorated_function
 
+# @admin_required
+@api.doc(security='apiKey')
+@auth_ns.route('/admin')
+class AdminProtected(Resource):
+    def get(self):
+        if current_user.role == 1:
+            return {'message':  'You are authorized to view this page.'}, 200
+        else:
+            abort(401, message='You are not authorized to view this page')
 
-## Testing Requires auth and admin required decorator
-@auth.route("/admin_protected", methods=["GET", "POST"])
 @requires_auth
-@admin_required
-def admin_protected():
-    return jsonify(message="You are authorized to view this page."), 200
+@api.doc(security='apiKey')
+@auth_ns.route('/test')
+class TestProtected(Resource):
+    def get(self):
+        return {'message': 'You are authorized to view this page.'}, 200
 
-## Testing Requires auth decorator (This is based on if a JWT token is supplied or not)
-@auth.route("/test_protected", methods=["GET", "POST"])
-@requires_auth
-def test():
-    return jsonify(message="You are authorized to view this page."), 200
-
-
-
-
-
-     
+# Add namespaces to the API
+api.add_namespace(auth_ns)
