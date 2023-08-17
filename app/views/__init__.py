@@ -35,13 +35,11 @@ def login():
 
         if response.status_code == 200:
             user = db.session.execute(db.select(Users).filter_by(email=email)).scalar()
-            print('test')
             login_user(user)
-
             return redirect(url_for("views.index"))
+        
         elif response.status_code == 401:
             flash("Username or Password is incorrect.")
-            print('error')
 
     return render_template("login.html", form=form)
 

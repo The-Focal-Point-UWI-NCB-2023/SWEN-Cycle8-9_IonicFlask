@@ -76,6 +76,19 @@ class Protected(Resource):
     def get(self):
         return {'message': 'You are authorized to view this page.'}
 
+def generate_token(id,email,role,password):
+    timestamp = datetime.utcnow()
+    payload = {
+        "user_id": id,
+        "email": email,
+        "role": role,
+        "password": password,
+        "iat": timestamp,
+        "exp": timestamp + timedelta(minutes=10)
+    }
+    token = jwt.encode(payload, encode_key, algorithm='HS256')
+    return {'token': token}
+
 # Add the jwt_auth_ns namespace to your main API
 api.add_namespace(jwt_auth_ns)
 

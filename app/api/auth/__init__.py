@@ -49,8 +49,8 @@ class Login(Resource):
 
         if user is not None and check_password_hash(user.password, password):
             login_user(user)
-            generate_token_resource = GenerateToken()
-            token_response = generate_token_resource.post()
+            generate_token_resource = generate_token(user.id,user.email,user.role,user.password)
+            token_response = generate_token_resource
             tk = token_response.get('token')
             
             response = {
@@ -104,7 +104,7 @@ def load_user(id):
 
 @api.doc(security='apiKey')
 @auth_ns.route('/admin')
-# @admin_required
+# @admin_required   
 class AdminProtected(Resource):
     def get(self):
         return {'message':  'You are authorized to view this page.'}, 200
