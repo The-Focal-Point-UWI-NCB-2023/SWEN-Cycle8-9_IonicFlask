@@ -29,17 +29,19 @@ def login():
         password = form.password.data
 
         response = requests.post(
-            "http://127.0.0.1:8080/api/auth/login",
+            "http://127.0.0.1:8080/api/v1/auth/login",
             data={"email": email, "password": password},
         )
 
         if response.status_code == 200:
             user = db.session.execute(db.select(Users).filter_by(email=email)).scalar()
+            print('test')
             login_user(user)
 
             return redirect(url_for("views.index"))
         elif response.status_code == 401:
             flash("Username or Password is incorrect.")
+            print('error')
 
     return render_template("login.html", form=form)
 
@@ -56,7 +58,7 @@ def register():
         email = form.email.data
         password = form.password.data
         response = requests.post(
-            "http://127.0.0.1:8080/api/auth/register",
+            "http://127.0.0.1:8080/api/v1/auth/register",
             data={"full_name": full_name, "email": email, "password": password},
         )  # Port # might be different for you
 

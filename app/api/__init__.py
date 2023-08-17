@@ -1,6 +1,5 @@
 from flask import Blueprint, jsonify
 from flask_restx import Api, Resource, Namespace, fields, reqparse, abort
-from .auth import auth
 from .payment import payment
 from ..models import db
 
@@ -15,3 +14,4 @@ api = Api(
 )
 
 from .rest import * 
+from .auth import *
