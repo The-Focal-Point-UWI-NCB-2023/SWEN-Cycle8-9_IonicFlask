@@ -94,20 +94,24 @@ class Logout(Resource):
 def load_user(id):
     return db.session.execute(db.select(Users).filter_by(id=id)).scalar()
 
+
 # def admin_required(f):
 #     @wraps(f)
 #     def decorated_function(*args, **kwargs):
 #         if current_user.role != 1:
-#             abort(401, message="You are not authorized to access this page")
+#             return {'message':  'You are not authorized to view this page.'}, 200
 #         return f(*args, **kwargs)
 #     return decorated_function
 
+@admin_required
 @api.doc(security='apiKey')
 @auth_ns.route('/admin')
-# @admin_required   
 class AdminProtected(Resource):
     def get(self):
-        return {'message':  'You are authorized to view this page.'}, 200
+        if current_user.role == 1:
+            return {'message':  'You are authorized to view this page.'}, 200
+        else:
+            abort(401, message='You are not authorized to view this page')
 
 @requires_auth
 @api.doc(security='apiKey')
