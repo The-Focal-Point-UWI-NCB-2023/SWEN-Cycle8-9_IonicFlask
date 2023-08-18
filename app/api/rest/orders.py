@@ -1,5 +1,6 @@
+from flask_login import current_user
 from app.api import Namespace, Resource, fields, reqparse,abort
-from app.models import Orders, db
+from app.models import Orders, db, Line_Items
 
 orders_ns = Namespace('orders',path="/v1/rest/orders", 
     description="API operations related to managing order information, including creating, retrieving, updating, and deleting orders. This namespace provides endpoints to interact with order data, enabling administrators to manage order details, user associations, billing addresses, total amounts, and status updates. Orders can be searched by ID, and their user ID, billing address, total amount, and status information are accessible for administration purposes.")
@@ -11,6 +12,7 @@ order_model = orders_ns.model(
         "billing_address": fields.String(description='The billing address for the order'),
         "total_amount": fields.String(description='The total amount of the order'),
         "status": fields.String(description='The status of the order'),
+        "line_items": fields.String(description='The items of the order')
     },
 )
 
@@ -49,9 +51,23 @@ class OrderListResource(Resource):
 @orders_ns.param("order_id", "A unique identifier associated with an order")
 @orders_ns.route('/<int:order_id>')
 class OrderResource(Resource):
+    @orders_ns.marshal_list_with(order_model)
     def get(self, order_id):
-        order = order_id.query.get(order_id)
-        if order:
+        order = Orders.query.get(order_id)
+        
+        if order and current_user.role == 1:
+            order_items = Line_Items.query.filter_by(order_id=order_id).all()
+            line_items = [{'product_id': item.id,'product_name': item.product.name,'qty': item.qty} for item in order_items]
+            specific_order = {
+            'id': order.id,
+            'user_id': order.user_id,
+            'billing_address': order.billing_address,
+            'total_amount': order.total_amount,
+            'status': order.status,
+            'line_items': line_items
+            }
+            return specific_order
+        elif order:
             return order
         elif not order:
             abort(404, message="Order not found")

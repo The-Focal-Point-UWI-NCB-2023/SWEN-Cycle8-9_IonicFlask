@@ -48,6 +48,7 @@ class LineItemsResource(Resource):
 @line_items_ns.param("line_item_id", "A unique identifier associated with a line item")
 @line_items_ns.route('/<int:line_item_id>')
 class LineItemDetailResource(Resource):
+    @line_items_ns.marshal_list_with(line_items_model)
     def get(self, line_item_id):
         line_item = Line_Items.query.get(line_item_id)
         if line_item:
