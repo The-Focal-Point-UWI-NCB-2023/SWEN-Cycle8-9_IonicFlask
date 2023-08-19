@@ -1,9 +1,7 @@
-import styles from './Register.module.scss';
+import styles from './Register.module.scss'
 
 const Register: React.FC = () => {
-    return (
-        <h2>Register Page</h2>
-    )
+    return <h2>Register Page</h2>
 }
 
-export default Register;
+export default Register
