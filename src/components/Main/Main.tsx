@@ -7,15 +7,13 @@ import Footer from '../Footer/Footer'
 const Main: React.FC<PropsWithChildren> = (props) => {
     return (
         <IonPage>
-            <Header/>
+            <Header />
 
-            <IonContent fullscreen > 
-                <main className={styles.main}>
-                    {props.children}
-                </main>
+            <IonContent fullscreen>
+                <main className={styles.main}>{props.children}</main>
             </IonContent>
-            
-            <Footer/>
+
+            <Footer />
         </IonPage>
     )
 }
