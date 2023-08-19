@@ -7,6 +7,17 @@
 
 3) Merge from Dev -> Main
 
+## Ionic Setup
+- Install dependencies
+```bash
+npm install
+```
+
+- Start Dev Server
+```bash
+npm run dev
+```
+
 ## API Setup
 
 - Create virtual environment
