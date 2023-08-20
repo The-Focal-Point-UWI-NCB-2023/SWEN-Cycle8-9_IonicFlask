@@ -19,6 +19,7 @@ const Products: React.FC = () => {
                 <IonGrid fixed className={styles.productGroup}>
                     {productItems.map((product) => (
                         <ProductCard
+                            id={product.id}
                             title={product.name}
                             price={product.price}
                             image={product.image}

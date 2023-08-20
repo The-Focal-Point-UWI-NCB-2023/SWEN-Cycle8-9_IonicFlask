@@ -1,4 +1,5 @@
 interface Product {
+    id: number
     name: string
     image: string
     price: number
@@ -24,6 +25,7 @@ const names = [
 for (let i = 0; i < 12; i++) {
     const randomInt = Math.round(Math.random() * (5 - 1)) + 1
     productItems.push({
+        id: i,
         name: names[randomInt],
         image: randomInt.toString(),
         price: (randomInt + 1) * 200,
