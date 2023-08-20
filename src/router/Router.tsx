@@ -32,8 +32,8 @@ import Settings from '../pages/Settings/Settings'
 
 const Router: React.FC = () => {
     //Auth Check
-    const isAuthed = false
-    const isAdmin = false
+    const isAuthed = true
+    const isAdmin = true
 
     return (
         <IonReactRouter>
