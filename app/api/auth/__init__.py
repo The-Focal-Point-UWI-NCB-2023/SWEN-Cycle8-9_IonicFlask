@@ -8,7 +8,7 @@ from app.api.auth.jwt_auth import *
 from datetime import datetime
 from functools import wraps
 from app.api.auth.jwt_auth import GenerateToken  # Import the GenerateToken class
-# from app import csrf
+from flask_wtf.csrf import generate_csrf
 
 # Define the auth namespace
 auth_ns = Namespace('auth', path='/v1/auth', description='Authentication operations')
@@ -121,5 +121,11 @@ class TestProtected(Resource):
     def get(self):
         return {'message': 'You are authorized to view this page.'}, 200
 
+@auth_ns.route("/csrf-token")
+class CSRFTokenResource(Resource):
+    def get(self):
+        csrf_token = generate_csrf()
+        return {"csrf_token": csrf_token}
+    
 # Add namespaces to the API
 api.add_namespace(auth_ns)

@@ -9,6 +9,8 @@ from .models import db
 from .api import api_blueprint
 from .views import views
 from .seeder import seed_database
+from flask_cors import CORS
+from flask_wtf.csrf import CSRFProtect
 
 """
 App Factory
@@ -22,7 +24,6 @@ def create_app():
     # Register API & Templates
     app.register_blueprint(api_blueprint)
     app.register_blueprint(views)
-
     return app
 
 
@@ -31,6 +32,10 @@ app = create_app()
 db.init_app(app)
 migrate = Migrate(app, db)
 
+CORS(app)
+
+csrf = CSRFProtect()
+csrf.init_app(app)
 
 # Initialize Flask-Login Manager
 login_manager.init_app(app)
