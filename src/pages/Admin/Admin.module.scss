@@ -1,0 +1,82 @@
+.adminContainer {
+  margin-top: 5%;
+ 
+}
+
+.buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.button {
+  background-color: #007bff;
+  color: white;
+  border-radius: 10px;
+}
+
+.headerRow {
+  padding: 0.5%;
+  margin-bottom: 1%;
+  margin-top: 1%;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  background-color: #007bff;
+  color: #F0EAD6;
+  border-radius: 10px;
+
+}
+
+.headerCol {
+  font-weight: bold;
+  text-align: center;
+  padding: 15px 0;
+}
+
+.userRow {
+  padding: 2%;
+  margin-bottom: 3%;
+  margin-top: 1%;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+.userRow > *{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.actionCol {
+  text-align: center;
+}
+
+.addIcon {
+  height: 30px;
+  width: 30px;
+  padding-right: 2%;
+  color: #28a745;
+  cursor: pointer;
+}
+
+.createIcon {
+  height: 30px;
+  width: 30px;
+  padding-right: 2%;
+  color: blue;
+  cursor: pointer;
+}
+
+.delIcon {
+  height: 30px;
+  width: 30px;
+  padding-right: 2%;
+  color:  red;
+  cursor: pointer;
+}
+
+.prodAdd{
+  background-color:#28a745;
+  width: 100%;
+}
+
+
