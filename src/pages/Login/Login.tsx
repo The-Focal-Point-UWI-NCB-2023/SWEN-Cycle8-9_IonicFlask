@@ -42,7 +42,7 @@ const Login: React.FC = () => {
         getCsrfToken()
     }, [])
 
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    const loginUser = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
 
         try {
@@ -93,7 +93,7 @@ const Login: React.FC = () => {
     return (
         <Main>
             <h2>Login Page</h2>
-            <form id="login-form" onSubmit={handleSubmit} method="post">
+            <form id="login-form" onSubmit={loginUser} method="post">
                 <IonList>
                     <IonItem>
                         <IonInput

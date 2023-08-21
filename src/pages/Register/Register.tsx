@@ -2,9 +2,14 @@ import { IonButton, IonInput, IonItem, IonList, useIonToast } from '@ionic/react
 import { useState, useEffect } from 'react'
 import Main from '../../components/Main/Main'
 import styles from './Register.module.scss'
-import { use } from 'chai'
+import { Redirect } from 'react-router'
+
 
 const Register: React.FC = () => {
+
+    const [name, setName] = useState<string>('')
+    const [email, setEmail] = useState<string>('')
+    const [password, setPassword] = useState<string>('')
 
     const [error, setError] = useState<string>('')
     const [success, setSuccess] = useState<string>('')
@@ -33,25 +38,28 @@ const Register: React.FC = () => {
         getCsrfToken();
     }, []);
 
-    useEffect(() => {
-        console.log("CSRF Token: ", csrfToken);
-    }, []); // This effect will run whenever csrfToken changes
 
-
-    const handleSubmit = async (e: any) => {
+    const RegisterUser = async (e: any) => {
         e.preventDefault();
         console.log('submitting');
         try {
-            const form = document.querySelector('#register-form') as HTMLFormElement;
-            const formData = new FormData(form);
-            console.log(formData);
-            fetch('http://localhost:8080/api/v1/auth/register', {
+            const requestBody = {
+                name: name,
+                email: email,
+                password: password,
+            }
+
+            const response = fetch('http://localhost:8080/api/v1/auth/register', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken,
                 },
-                body: JSON.stringify(Object.fromEntries(formData))
-            })
+                credentials: 'include',
+                mode: 'cors',
+                body: JSON.stringify(JSON.stringify(requestBody))
+                }
+            )
                 .then(async (response) => {
                     if (response.status === 200) {
                         const data = await response.json()
@@ -62,6 +70,7 @@ const Register: React.FC = () => {
                             duration: 3000,
                             color: "success"
                         })
+                        window.location.href = '/login';
                     } else {
                         const data = await response.json()
                         console.log(data);
@@ -85,22 +94,40 @@ const Register: React.FC = () => {
     return (
         <Main>
             <h1>Register</h1>
-            <form id="register-form" onSubmit={handleSubmit}>
+            <form id="register-form" onSubmit={RegisterUser}>
                 <div className={styles.formGroup}>
                 <IonList>
                     <IonItem>
-                        <IonInput name="name" type="text" placeholder="Name" required />
+                        <IonInput 
+                         type="text"
+                         placeholder="Name" 
+                         value={name}
+                         onIonChange={(e) => setName(e.detail.value!)}
+                         required 
+                         />
                     </IonItem>
                     <IonItem>
-                        <IonInput name="email" type="email" placeholder="Email" required />
+                        <IonInput 
+                        type="email" 
+                        placeholder="Email" 
+                        value={email}
+                        onIonChange={(e) => setEmail(e.detail.value!)}
+                        required 
+                        />
                     </IonItem>
                     <IonItem>
-                        <IonInput name="password" type="password" placeholder="Password" required />
+                        <IonInput 
+                            type="password"
+                            placeholder="Password" 
+                            value={password}
+                            onIonChange={(e) => setPassword(e.detail.value!)}
+                            required 
+                        />
                     </IonItem>
-                    <IonItem>
+                    {/* <IonItem>
                         <IonInput name="password_confirmation" type="password" placeholder="Confirm Password" required />
-                    </IonItem>
-                    <IonButton color="primary" onClick={(e) => { handleSubmit(e) }}>Register</IonButton>
+                    </IonItem> */}
+                    <IonButton color="primary" onClick={(e) => { RegisterUser(e) }}>Register</IonButton>
                 </IonList>
 
                 </div>
