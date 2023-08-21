@@ -96,9 +96,6 @@ const Login: React.FC = () => {
             <IonList>
                 
                 <IonItem>
-                    <IonInput label= 'Full Name' name='name' placeholder='Enter your full name' required/>
-                </IonItem>
-                <IonItem>
                     <IonInput label= 'Email' name='email' placeholder='eg. test@gmail.com' required/>
                 </IonItem>
                 <IonItem>
