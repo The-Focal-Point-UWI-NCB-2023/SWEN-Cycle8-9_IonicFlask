@@ -127,7 +127,7 @@ export const orderData = {
     user_id: 20,
     billing_address: '123 Main St',
     total_amount: 50.0,
-    status: 'Pending',
+    status: 'Done',
 }
 
 // Example updated order data

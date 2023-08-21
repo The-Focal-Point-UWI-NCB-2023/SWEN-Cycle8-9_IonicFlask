@@ -58,22 +58,31 @@ const Admin: React.FC = () => {
     const [userss, setUsers] = useState<any>()
     const [lineitmess, setLineItems] = useState<LineItem>()
 
-    useEffect(() => {
-        fetchProducts()
-        fetchOrders()
-        fetchUsers()
-        fetchLineItems()
-    }, [])
+    // For testing to see if fetch api works
+    // useEffect(() => {
+    //     fetchProducts()
+    //     fetchOrders()
+    //     fetchUsers()
+    //     fetchLineItems()
+    //     fetchcreateOrder(orderData)
+    // }, [])
 
-    useEffect(() => {
-        console.log('Working prod')
-        console.log(productss)
-        console.log('before')
-        console.log(orderss)
-        console.log(userss)
-        console.log('next')
-        console.log(lineitmess)
-    }, [productss, orderss]) // Add productss as a dependency
+    // useEffect(() => {
+    //     console.log('Working prod')
+    //     console.log(productss)
+    //     console.log('before')
+    //     console.log(orderss)
+    //     console.log(userss)
+    //     console.log('next')
+    //     console.log(lineitmess)
+    // }, [productss, orderss])
+
+    const orderData = {
+        user_id: 20,
+        billing_address: 'Jason',
+        total_amount: 150.0,
+        status: 'Shipped',
+    }
 
     //Users Fetch
 
@@ -122,10 +131,10 @@ const Admin: React.FC = () => {
         }
     }
 
-    async function fetchUpdateProduct(orderID: string, newOrder: Order) {
+    async function fetchUpdateProduct(productId: string, newProduct: Product) {
         try {
             // Call your API to create the new product
-            const updatedProduct = await updateOrder(orderID, newOrder)
+            const updatedProduct = await updateProduct(productId, newProduct)
         } catch (error) {
             console.error('Error creating product:', error)
         }
