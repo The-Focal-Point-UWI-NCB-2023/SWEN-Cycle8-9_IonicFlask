@@ -53,12 +53,8 @@ const Register: React.FC = () => {
 
 
     return (
-
-        
-
-
         <Main>
-            <h2>Register Page</h2>
+            <h1>Register</h1>
         </Main>
     )
 }
