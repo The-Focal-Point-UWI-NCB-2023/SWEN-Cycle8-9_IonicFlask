@@ -4,6 +4,7 @@ from .payment import payment
 from ..models import db
 import os
 
+
 # Initialize API
 api_blueprint = Blueprint("api", __name__, url_prefix="/api")
 
