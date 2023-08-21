@@ -4,6 +4,8 @@ import {
     IonLabel,
     IonItemGroup,
     IonGrid,
+    IonRow,
+    IonCol,
 } from '@ionic/react'
 import Main from '../../components/Main/Main'
 import styles from './Products.module.scss'
@@ -16,15 +18,19 @@ const Products: React.FC = () => {
     return (
         <Main>
             <IonList>
-                <IonGrid fixed className={styles.productGroup}>
-                    {productItems.map((product) => (
-                        <ProductCard
-                            id={product.id}
-                            title={product.name}
-                            price={product.price}
-                            image={product.image}
-                        />
-                    ))}
+                <IonGrid fixed={true} className={styles.productGroup}>
+                    <IonRow class="ion-justify-content-around">
+                        {productItems.map((product) => (
+                            <IonCol size="12" size-sm="4">
+                                <ProductCard
+                                    id={product.id}
+                                    title={product.name}
+                                    price={product.price}
+                                    image={product.image}
+                                />
+                            </IonCol>
+                        ))}
+                    </IonRow>
                 </IonGrid>
             </IonList>
         </Main>
