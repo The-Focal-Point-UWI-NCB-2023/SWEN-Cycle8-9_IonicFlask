@@ -36,7 +36,7 @@ const Cart: React.FC = () => {
                 <IonCol>
                     <IonImg
                     src={'../../../uploads/' + prod.image + '.png'}
-                    className={styles.Cartimg}
+                    className={ styles.Cartimg}
                     >
                     </IonImg>
                 </IonCol>
