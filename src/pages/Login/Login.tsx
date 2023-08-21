@@ -92,7 +92,7 @@ const Login: React.FC = () => {
         <Main>
             <h2>Login</h2>
             <form id='login-form' onSubmit={handleSubmit} method='post'> 
-            <input type="hidden" name="csrf_token" value="{{ csrftoken() }}"/>
+            {/* <input type="hidden" name="csrf_token" value="{{ csrftoken() }}"/> */}
             <IonList>
                 
                 <IonItem>
