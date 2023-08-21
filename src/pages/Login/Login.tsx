@@ -15,12 +15,13 @@ const Login: React.FC = () => {
 
     async function getCsrfToken() {
         try {
-            const res = await fetch('http://localhost:8080/api/v1/auth/csrf-token', {
+            const response = await fetch('http://localhost:8080/api/v1/auth/csrf-token', {
                 method: 'GET',
                 credentials: 'include'
             })
-            if (res.status === 200) {
-                const data = await res.json()
+            //console.log(response.status);
+            if (response.status === 200) {
+                const data = await response.json()
                 setCsrfToken(data.csrf_token)
             } else {
                 throw new Error('Failed to fetch CSRF token')
@@ -42,13 +43,13 @@ const Login: React.FC = () => {
 
     const handleSubmit = async (e: any) => {
         e.preventDefault();
-        console.log('submitting');
+        //console.log('submitting');
         
         try {
-            console.log(csrfToken);
+            //console.log(csrfToken);
             const form = document.querySelector('#login-form') as HTMLFormElement;
             const formData = new FormData(form);
-            console.log(formData);
+            //console.log(formData);
     
             fetch('http://localhost:8080/api/v1/auth/login', {
                 method: 'POST',
@@ -60,7 +61,7 @@ const Login: React.FC = () => {
             })
             .then(resp => resp.json())
             .then(data => {
-                console.log(data, "This is the status and token", csrfToken);
+                //console.log(data, "This is the status and token", csrfToken);
                 if (data.message === 'User found') {
                     setSuccess('Login Successful');
                     present({
