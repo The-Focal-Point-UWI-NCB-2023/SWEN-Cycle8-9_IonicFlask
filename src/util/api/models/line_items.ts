@@ -1,3 +1,11 @@
+interface LineItem{
+  
+    order_id: number,
+    product_id: number,
+    qty: number,
+
+}
+
 async function getLineItems() {
     try {
       const response = await fetch("http://127.0.0.1:8080/api/v1/rest/line_items/", {
@@ -8,13 +16,14 @@ async function getLineItems() {
   
       const data = await response.json();
       console.log(data);
+      return data;
     } catch (error) {
       console.error('Error fetching line items:', error);
       throw error;
     }
   }
   
-  async function createLineItem(lineItemData) {
+  async function createLineItem(lineItemData:LineItem) {
     try {
       const response = await fetch("http://127.0.0.1:8080/api/v1/rest/line_items/", {
         method: "POST",
@@ -33,7 +42,7 @@ async function getLineItems() {
     }
   }
   
-  async function updateLineItem(lineItemId, updatedLineItemData) {
+  async function updateLineItem(lineItemId:string, updatedLineItemData:LineItem) {
     try {
       const response = await fetch(`http://127.0.0.1:8080/api/v1/rest/line_items/${lineItemId}`, {
         method: "PUT",
@@ -52,7 +61,7 @@ async function getLineItems() {
     }
   }
   
-  async function deleteLineItem(lineItemId) {
+  async function deleteLineItem(lineItemId:string) {
     try {
       const response = await fetch(`http://127.0.0.1:8080/api/v1/rest/line_items/${lineItemId}`, {
         method: "DELETE",
@@ -72,6 +81,21 @@ async function getLineItems() {
     }
   }
   
+  async function getLineItemById(lineItemId:string) {
+    try {
+        const response = await fetch(
+            `http://127.0.0.1:8080/api/v1/rest/line_items/${lineItemId}`
+        )
+        const data = await response.json()
+        console.log('Line Item by ID:', data)
+        return data;
+        
+    } catch (error) {
+        console.error('Error fetching line item:', error)
+        throw error
+    }
+}
+
   // Example line item data
   const lineItemData = {
     order_id: 9,
