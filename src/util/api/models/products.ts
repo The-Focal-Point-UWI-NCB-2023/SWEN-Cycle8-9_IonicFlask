@@ -1,3 +1,14 @@
+export interface Product{
+
+    name: string,
+    description: string,
+    price: number,
+    image: string,
+    status: string,
+    user_id: number,
+
+}
+
 export async function getProducts() {
     try {
         const response = await fetch(
@@ -10,7 +21,6 @@ export async function getProducts() {
         )
         const data = await response.json()
         console.log(data) // Logging the data for debugging purposes
-
         return data // Return the fetched data
     } catch (error) {
         console.error('Error fetching products:', error)
@@ -18,7 +28,7 @@ export async function getProducts() {
     }
 }
 
-async function createProduct(productData) {
+export async function createProduct(productData:Product) {
     try {
         const response = await fetch(
             'http://127.0.0.1:8080/api/v1/rest/products/',
@@ -37,13 +47,14 @@ async function createProduct(productData) {
 
         const data = await response.json()
         console.log('Created Product:', data)
+        return data // Return the fetched data
     } catch (error) {
         console.error('Error creating product:', error)
         throw error
     }
 }
 
-async function updateProduct(productId, updatedProductData) {
+export async function updateProduct(productId:String, updatedProductData:Product) {
     try {
         const response = await fetch(
             `http://127.0.0.1:8080/api/v1/rest/products/${productId}`,
@@ -58,33 +69,16 @@ async function updateProduct(productId, updatedProductData) {
             }
         )
 
-        const updatedProduct = await response.json()
-        console.log('Updated Product:', updatedProduct)
+        const data = await response.json()
+        console.log('Updated Product:', data)
+        return data // Return the fetched data
     } catch (error) {
         console.error('Error updating product:', error)
         throw error
     }
 }
 
-const productData = {
-    name: 'New Product',
-    description: 'A new product',
-    price: 19.99,
-    image: 'image.jpg',
-    status: 'TEST',
-    user_id: 20,
-}
-
-const updatedProductData = {
-    name: 'Updated Product Name',
-    description: 'Updated product description',
-    price: 29.99,
-    image: 'updated-image.jpg',
-    status: 'Updated status',
-    user_id: 20,
-}
-
-async function deleteProduct(productId) {
+export async function deleteProduct(productId:String) {
     try {
         const csrfToken = await getCsrfToken()
         const response = await fetch(
@@ -109,14 +103,13 @@ async function deleteProduct(productId) {
     }
 }
 
-export async function getProductById(productId) {
+export async function getProductById(productId:String) {
     try {
         const response = await fetch(
             `http://127.0.0.1:8080/api/v1/rest/products/${productId}`
         )
         const data = await response.json()
         console.log(data) // Logging the data for debugging purposes
-
         return data // Return the fetched data
     } catch (error) {
         console.error('Error fetching product:', error)
@@ -146,13 +139,6 @@ async function getCsrfToken() {
 // updateProduct(12, productData);
 // createProduct(productData)
 // getProducts()
-
 // getCsrfToken()
 
-// getCsrfToken()
-//   .then(csrfToken => {
-//     console.log('CSRF Token:', csrfToken);
-//   })
-//   .catch(error => {
-//     console.error('Error:', error);
-//   });
+
