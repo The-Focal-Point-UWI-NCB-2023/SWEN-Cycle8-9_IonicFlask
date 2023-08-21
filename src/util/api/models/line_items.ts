@@ -1,6 +1,6 @@
 import { getCsrfToken } from "../../constants"
 
-interface LineItem{
+export interface LineItem{
   
     order_id: number,
     product_id: number,
@@ -8,7 +8,7 @@ interface LineItem{
 
 }
 
-async function getLineItems() {
+export async function getLineItems() {
     try {
       
       const response = await fetch("http://127.0.0.1:8080/api/v1/rest/line_items/", {
@@ -26,7 +26,7 @@ async function getLineItems() {
     }
   }
   
-  async function createLineItem(lineItemData:LineItem) {
+  export async function createLineItem(lineItemData:LineItem) {
     try {
       const csrfToken = await getCsrfToken()
       const response = await fetch("http://127.0.0.1:8080/api/v1/rest/line_items/", {
@@ -49,7 +49,7 @@ async function getLineItems() {
     }
   }
   
-  async function updateLineItem(lineItemId:string, updatedLineItemData:LineItem) {
+  export async function updateLineItem(lineItemId:string, updatedLineItemData:LineItem) {
     try {
       const csrfToken = await getCsrfToken()
       const response = await fetch(`http://127.0.0.1:8080/api/v1/rest/line_items/${lineItemId}`, {
@@ -71,7 +71,7 @@ async function getLineItems() {
     }
   }
   
-  async function deleteLineItem(lineItemId:string) {
+  export async function deleteLineItem(lineItemId:string) {
     try {
       const csrfToken = await getCsrfToken()
       const response = await fetch(`http://127.0.0.1:8080/api/v1/rest/line_items/${lineItemId}`, {
@@ -95,7 +95,7 @@ async function getLineItems() {
     }
   }
   
-  async function getLineItemById(lineItemId:string) {
+  export async function getLineItemById(lineItemId:string) {
     try {
         const response = await fetch(
             `http://127.0.0.1:8080/api/v1/rest/line_items/${lineItemId}`

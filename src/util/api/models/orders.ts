@@ -1,6 +1,6 @@
 import { getCsrfToken } from "../../constants"
 
-interface Order{
+export interface Order{
 
     user_id: number,
     billing_address: string,
@@ -9,7 +9,7 @@ interface Order{
 
 }
 
-async function getOrders() {
+export async function getOrders() {
     try {
         const response = await fetch(
             'http://127.0.0.1:8080/api/v1/rest/orders/',
@@ -29,7 +29,7 @@ async function getOrders() {
     }
 }
 
-async function createOrder(orderData:Order) {
+export async function createOrder(orderData:Order) {
     try {
         const csrfToken = await getCsrfToken()
         const response = await fetch(
@@ -54,7 +54,7 @@ async function createOrder(orderData:Order) {
     }
 }
 
-async function updateOrder(orderId:string, updatedOrderData:Order) {
+export async function updateOrder(orderId:string, updatedOrderData:Order) {
     try {
         const csrfToken = await getCsrfToken()
         const response = await fetch(
@@ -79,7 +79,7 @@ async function updateOrder(orderId:string, updatedOrderData:Order) {
     }
 }
 
-async function deleteOrder(orderId:string) {
+export async function deleteOrder(orderId:string) {
     try {
         const csrfToken = await getCsrfToken()
         const response = await fetch(
@@ -107,7 +107,7 @@ async function deleteOrder(orderId:string) {
     }
 }
 
-async function getOrderById(orderId:string) {
+export async function getOrderById(orderId:string) {
     try {
         const response = await fetch(
             `http://127.0.0.1:8080/api/v1/rest/orders/${orderId}`
@@ -123,7 +123,7 @@ async function getOrderById(orderId:string) {
 }
 
 // Example order data
-const orderData = {
+export const orderData = {
     user_id: 20,
     billing_address: '123 Main St',
     total_amount: 50.0,
