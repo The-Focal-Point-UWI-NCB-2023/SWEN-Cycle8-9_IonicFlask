@@ -21,6 +21,7 @@ orders_parser.add_argument('user_id', type=int, required=True, help='User ID is 
 orders_parser.add_argument('billing_address', required=True, help='Billing address is required')
 orders_parser.add_argument('total_amount', type=float, required=True, help='Total amount is required')
 orders_parser.add_argument('status', required=True, help='Status is required')
+orders_parser.add_argument('X-CSRFToken', location='headers', required=False, help='CSRF Token')
 
 @orders_ns.response(404, "Order not found")
 @orders_ns.response(409, "Invalid field syntax")
@@ -39,6 +40,7 @@ class OrderListResource(Resource):
     def post(self):
         try:
             args = orders_parser.parse_args()
+            csrf_token = args.pop('X-CSRFToken', None)
             new_order = Orders(**args)
             db.session.add(new_order)
             db.session.commit()

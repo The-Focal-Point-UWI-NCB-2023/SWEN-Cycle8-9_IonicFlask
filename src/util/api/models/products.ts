@@ -1,4 +1,4 @@
-import { getCsrfToken } from "../../constants"
+import { getCsrfToken, api_url_rest } from "../../constants"
 
 export interface Product{
 
@@ -14,7 +14,7 @@ export interface Product{
 export async function getProducts() {
     try {
         const response = await fetch(
-            'http://127.0.0.1:8080/api/v1/rest/products/',
+            api_url_rest + `/products/`,
             {
                 headers: {
                     Authorization: 'Bearer', // Add your bearer token here
@@ -35,7 +35,7 @@ export async function createProduct(productData:Product) {
 
         const csrfToken = await getCsrfToken()
         const response = await fetch(
-            'http://127.0.0.1:8080/api/v1/rest/products/',
+            api_url_rest + `/products/`,
             {
                 method: 'POST',
                 headers: {
@@ -61,7 +61,7 @@ export async function updateProduct(productId:String, updatedProductData:Product
     try {
         const csrfToken = await getCsrfToken()
         const response = await fetch(
-            `http://127.0.0.1:8080/api/v1/rest/products/${productId}`,
+            api_url_rest + `products/${productId}`,
             {
                 method: 'PUT',
                 headers: {
@@ -87,7 +87,7 @@ export async function deleteProduct(productId:String) {
     try {
         const csrfToken = await getCsrfToken()
         const response = await fetch(
-            `http://127.0.0.1:8080/api/v1/rest/products/${productId}`,
+            api_url_rest + `products/${productId}`,
             {
                 method: 'DELETE',
                 headers: {
@@ -113,7 +113,7 @@ export async function deleteProduct(productId:String) {
 export async function getProductById(productId:String) {
     try {
         const response = await fetch(
-            `http://127.0.0.1:8080/api/v1/rest/products/${productId}`
+            api_url_rest + `products/${productId}`,
         )
         const data = await response.json()
         console.log(data) // Logging the data for debugging purposes

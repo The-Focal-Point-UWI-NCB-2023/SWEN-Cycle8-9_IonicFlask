@@ -1,4 +1,4 @@
-import { getCsrfToken } from "../../constants"
+import { getCsrfToken,api_url_rest } from "../../constants"
 
 export interface Order{
 
@@ -12,7 +12,7 @@ export interface Order{
 export async function getOrders() {
     try {
         const response = await fetch(
-            'http://127.0.0.1:8080/api/v1/rest/orders/',
+            api_url_rest + `orders/`,
             {
                 headers: {
                     Authorization: 'Bearer', // Add your bearer token here
@@ -33,7 +33,7 @@ export async function createOrder(orderData:Order) {
     try {
         const csrfToken = await getCsrfToken()
         const response = await fetch(
-            'http://127.0.0.1:8080/api/v1/rest/orders/',
+            api_url_rest + `orders/`,
             {
                 method: 'POST',
                 headers: {
@@ -58,7 +58,7 @@ export async function updateOrder(orderId:string, updatedOrderData:Order) {
     try {
         const csrfToken = await getCsrfToken()
         const response = await fetch(
-            `http://127.0.0.1:8080/api/v1/rest/orders/${orderId}`,
+            api_url_rest + `orders/${orderId}`,
             {
                 method: 'PUT',
                 headers: {
@@ -83,7 +83,7 @@ export async function deleteOrder(orderId:string) {
     try {
         const csrfToken = await getCsrfToken()
         const response = await fetch(
-            `http://127.0.0.1:8080/api/v1/rest/orders/${orderId}`,
+            api_url_rest + `orders/${orderId}`,
             {
                 method: 'DELETE',
                 headers: {
@@ -110,7 +110,7 @@ export async function deleteOrder(orderId:string) {
 export async function getOrderById(orderId:string) {
     try {
         const response = await fetch(
-            `http://127.0.0.1:8080/api/v1/rest/orders/${orderId}`
+            api_url_rest + `orders/${orderId}`,
         )
         const data = await response.json()
         console.log('Order by ID:', data)

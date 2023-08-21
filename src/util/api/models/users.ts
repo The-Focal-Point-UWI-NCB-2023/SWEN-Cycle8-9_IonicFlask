@@ -1,9 +1,9 @@
-import { getCsrfToken } from "../../constants"
+import { getCsrfToken, api_url_rest } from "../../constants"
 
 export async function getUsers() {
     try {
         const response = await fetch(
-            'http://127.0.0.1:8080/api/v1/rest/users/',
+            api_url_rest+`users/`,
             {
                 headers: {
                     Authorization: 'Bearer', // Add your bearer token here
