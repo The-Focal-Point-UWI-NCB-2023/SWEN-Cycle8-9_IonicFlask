@@ -122,7 +122,7 @@ const Admin: React.FC = () => {
         }
     }
 
-    async function fetchUpdateOrder(orderID: string, newOrder: Order) {
+    async function fetchUpdateProduct(orderID: string, newOrder: Order) {
         try {
             // Call your API to create the new product
             const updatedProduct = await updateOrder(orderID, newOrder)
@@ -169,7 +169,7 @@ const Admin: React.FC = () => {
         }
     }
 
-    async function fetchUpdateProduct(orderID: string, newOrder: Order) {
+    async function fetchUpdateOrder(orderID: string, newOrder: Order) {
         try {
             // Call your API to create the new product
             const updatedOrder = await updateOrder(orderID, newOrder)
@@ -200,7 +200,7 @@ const Admin: React.FC = () => {
         }
     }
 
-    async function fetchcreateLineItems(newLineItems: LineItem) {
+    async function fetchcreateLineItem(newLineItems: LineItem) {
         try {
             // Call your API to create the new product
             const createdOder = await createLineItem(newLineItems)
@@ -209,7 +209,7 @@ const Admin: React.FC = () => {
         }
     }
 
-    async function fetchDeleteLineItems(LineItemsID: string) {
+    async function fetchDeleteLineItem(LineItemsID: string) {
         try {
             // Call your API to create the new product
             const deletedLineItems = await deleteLineItem(LineItemsID)
@@ -218,7 +218,7 @@ const Admin: React.FC = () => {
         }
     }
 
-    async function fetchUpdateProduct(
+    async function fetchUpdateLineItem(
         LineItemsID: string,
         newLineItems: LineItem
     ) {
@@ -233,7 +233,7 @@ const Admin: React.FC = () => {
         }
     }
 
-    async function fetchLineItemsById(LineItemsID: string) {
+    async function fetchLineItemById(LineItemsID: string) {
         try {
             // Call your API to create the new product
             const fetchedLineItemsByID = await getLineItemById(LineItemsID)
