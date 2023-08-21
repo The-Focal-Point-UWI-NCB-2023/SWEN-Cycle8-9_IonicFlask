@@ -52,7 +52,7 @@ class Login(Resource):
             generate_token_resource = generate_token(user.id,user.email,user.role,user.password)
             token_response = generate_token_resource
             tk = token_response.get('token')
-            
+            #headers = {'X-CSRF-Token': generate_csrf()}
             response = {
                 'token': tk,
                 'message': 'User found'
@@ -127,5 +127,6 @@ class CSRFTokenResource(Resource):
         csrf_token = generate_csrf()
         return {"csrf_token": csrf_token}
     
+
 # Add namespaces to the API
 api.add_namespace(auth_ns)
