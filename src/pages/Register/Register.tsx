@@ -39,9 +39,9 @@ const Register: React.FC = () => {
     }, []);
 
 
-    const RegisterUser = async (e: any) => {
+    const RegisterUser = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        console.log('submitting');
+        
         try {
             const requestBody = {
                 name: name,
@@ -49,7 +49,7 @@ const Register: React.FC = () => {
                 password: password,
             }
 
-            const response = fetch('http://localhost:8080/api/v1/auth/register', {
+            const response = await fetch('http://localhost:8080/api/v1/auth/register', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -60,35 +60,60 @@ const Register: React.FC = () => {
                 body: JSON.stringify(JSON.stringify(requestBody))
                 }
             )
-                .then(async (response) => {
-                    if (response.status === 200) {
-                        const data = await response.json()
-                        console.log(data);
-                        setSuccess(data.message);
-                        present({
-                            message: success,
-                            duration: 3000,
-                            color: "success"
-                        })
-                        window.location.href = '/login';
-                    } else {
-                        const data = await response.json()
-                        console.log(data);
-                        setError(data.message);
-                        present({
-                            message: error,
-                            duration: 3000,
-                            color: "danger"
-                        })
-                    }
+
+            const data = await response.json()
+
+            if (response.ok ){
+                setSuccess(data.message);
+                present({
+                    message: "User Registered Successfully",
+                    duration: 3000,
+                    color: "success"
                 })
-                .catch((error) => {
-                    console.error(error)
+                window.location.href = '/login';
+                
+            }
+            else {
+                setError(data.message);
+                present({
+                    message: error,
+                    duration: 3000,
+                    color: "danger"
                 })
+            }
         } catch (error) {
             console.error(error)
         }
     }
+    //             .then(async (response) => {
+    //                 if (response.status === 200) {
+    //                     const data = await response.json()
+    //                     console.log(data);
+    //                     setSuccess(data.message);
+    //                     present({
+    //                         message: success,
+    //                         duration: 3000,
+    //                         color: "success"
+    //                     })
+    //                     window.location.href = '/login';
+    //                 } else {
+    //                     const data = await response.json()
+    //                     console.log(data);
+    //                     setError(data.message);
+    //                     present({
+    //                         message: error,
+    //                         duration: 3000,
+    //                         color: "danger"
+    //                     })
+    //                 }
+    //             })
+    //             .catch((error) => {
+    //                 console.error(error)
+    //             })
+    //     } catch (error) {
+    //         console.error(error)
+    //     }
+    // }
 
 
     return (
