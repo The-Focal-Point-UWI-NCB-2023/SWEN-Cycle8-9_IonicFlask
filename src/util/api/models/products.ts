@@ -1,3 +1,5 @@
+import { getCsrfToken } from "../../constants"
+
 export interface Product{
 
     name: string,
@@ -30,17 +32,18 @@ export async function getProducts() {
 
 export async function createProduct(productData:Product) {
     try {
+
+        const csrfToken = await getCsrfToken()
         const response = await fetch(
             'http://127.0.0.1:8080/api/v1/rest/products/',
             {
                 method: 'POST',
                 headers: {
-                    Authorization: `Bearer`,
-                    // "X-CSRF-Token": csrfToken,
                     'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken,
                 },
                 credentials: 'include',
-                mode: 'same-origin',
+                mode: 'cors',
                 body: JSON.stringify(productData),
             }
         )
@@ -56,15 +59,17 @@ export async function createProduct(productData:Product) {
 
 export async function updateProduct(productId:String, updatedProductData:Product) {
     try {
+        const csrfToken = await getCsrfToken()
         const response = await fetch(
             `http://127.0.0.1:8080/api/v1/rest/products/${productId}`,
             {
                 method: 'PUT',
                 headers: {
-                    Authorization: `Bearer`,
-                    // "X-CSRF-Token": csrfToken, // If you want to include CSRF token
                     'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken,
                 },
+                credentials: 'include',
+                mode: 'cors',
                 body: JSON.stringify(updatedProductData),
             }
         )
@@ -86,9 +91,11 @@ export async function deleteProduct(productId:String) {
             {
                 method: 'DELETE',
                 headers: {
-                    Authorization: `Bearer`,
-                    // "X-CSRF-Token": csrfToken,
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken,
                 },
+                credentials: 'include',
+                mode: 'cors',
             }
         )
 
@@ -117,22 +124,7 @@ export async function getProductById(productId:String) {
     }
 }
 
-async function getCsrfToken() {
-    try {
-        const tokenResponse = await fetch(
-            'http://127.0.0.1:8080/api/v1/auth/csrf-token',
-            {
-                credentials: 'include',
-            }
-        )
-        const tokenData = await tokenResponse.json()
-        const csrfToken = tokenData.csrf_token
-        return csrfToken
-    } catch (error) {
-        console.error('Error fetching CSRF token:', error)
-        throw error
-    }
-}
+
 
 // getProductById(13)
 // deleteProduct(13)

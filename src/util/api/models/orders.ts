@@ -1,3 +1,5 @@
+import { getCsrfToken } from "../../constants"
+
 interface Order{
 
     user_id: number,
@@ -29,14 +31,17 @@ async function getOrders() {
 
 async function createOrder(orderData:Order) {
     try {
+        const csrfToken = await getCsrfToken()
         const response = await fetch(
             'http://127.0.0.1:8080/api/v1/rest/orders/',
             {
                 method: 'POST',
                 headers: {
-                    Authorization: `Bearer`,
                     'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken,
                 },
+                credentials: 'include',
+                mode: 'cors',
                 body: JSON.stringify(orderData),
             }
         )
@@ -51,14 +56,17 @@ async function createOrder(orderData:Order) {
 
 async function updateOrder(orderId:string, updatedOrderData:Order) {
     try {
+        const csrfToken = await getCsrfToken()
         const response = await fetch(
             `http://127.0.0.1:8080/api/v1/rest/orders/${orderId}`,
             {
                 method: 'PUT',
                 headers: {
-                    Authorization: `Bearer`,
                     'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken,
                 },
+                credentials: 'include',
+                mode: 'cors',
                 body: JSON.stringify(updatedOrderData),
             }
         )
@@ -73,13 +81,18 @@ async function updateOrder(orderId:string, updatedOrderData:Order) {
 
 async function deleteOrder(orderId:string) {
     try {
+        const csrfToken = await getCsrfToken()
         const response = await fetch(
             `http://127.0.0.1:8080/api/v1/rest/orders/${orderId}`,
             {
                 method: 'DELETE',
                 headers: {
-                    Authorization: `Bearer`,
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken,
                 },
+                credentials: 'include',
+                mode: 'cors',
+
             }
         )
 
@@ -124,6 +137,7 @@ const updatedOrderData = {
     total_amount: 75.0,
     status: 'Shipped',
 }
+
 
 // Call the functions to interact with the orders API
 // getOrders();
