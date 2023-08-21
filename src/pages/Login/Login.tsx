@@ -15,6 +15,7 @@ const Login: React.FC = () => {
     const [error, setError] = useState<string>('')
     const [present] = useIonToast()
     const [csrfToken, setCsrfToken] = useState('')
+    const [jwt, setJwt] = useState('')
 
     async function getCsrfToken() {
         try {
@@ -41,7 +42,7 @@ const Login: React.FC = () => {
         getCsrfToken()
     }, [])
 
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    const loginUser = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
 
         try {
@@ -65,8 +66,11 @@ const Login: React.FC = () => {
             )
 
             const data = await response.json()
+            
 
             if (response.ok && data.message === 'User found') {
+                setJwt(data.token)
+                localStorage.setItem('jwt', data.token)
                 present({
                     message: 'Login Successful',
                     duration: 3000,
@@ -89,7 +93,7 @@ const Login: React.FC = () => {
     return (
         <Main>
             <h2>Login Page</h2>
-            <form id="login-form" onSubmit={handleSubmit} method="post">
+            <form id="login-form" onSubmit={loginUser} method="post">
                 <IonList>
                     <IonItem>
                         <IonInput
@@ -113,7 +117,7 @@ const Login: React.FC = () => {
                         Login
                     </IonButton>
                 </IonList>
-                <p className={styles.register}>
+                <p >
                     Don't have an account? <a href="/register">Register</a>
                 </p>
             </form>
