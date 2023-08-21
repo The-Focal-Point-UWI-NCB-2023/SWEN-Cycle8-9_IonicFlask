@@ -37,7 +37,7 @@ const Login: React.FC = () => {
     }, []);
     
     useEffect(() => {
-        console.log(csrfToken);
+        console.log("CSRF Token:",csrfToken);
     }, [csrfToken]); // This effect will run whenever csrfToken changes
 
 
@@ -46,7 +46,7 @@ const Login: React.FC = () => {
         //console.log('submitting');
         
         try {
-            //console.log(csrfToken);
+            //console.log( "csrfToken 2:",csrfToken);
             const form = document.querySelector('#login-form') as HTMLFormElement;
             const formData = new FormData(form);
             //console.log(formData);
@@ -61,7 +61,7 @@ const Login: React.FC = () => {
             })
             .then(resp => resp.json())
             .then(data => {
-                //console.log(data, "This is the status and token", csrfToken);
+                console.log(data);
                 if (data.message === 'User found') {
                     setSuccess('Login Successful');
                     present({
