@@ -80,6 +80,8 @@ const Register: React.FC = () => {
                 })
                 window.location.href = '/login'
             } else {
+                //console.log(data.message)
+
                 setError(data.message)
                 present({
                     message: error,
@@ -91,35 +93,6 @@ const Register: React.FC = () => {
             console.error(error)
         }
     }
-    //             .then(async (response) => {
-    //                 if (response.status === 200) {
-    //                     const data = await response.json()
-    //                     console.log(data);
-    //                     setSuccess(data.message);
-    //                     present({
-    //                         message: success,
-    //                         duration: 3000,
-    //                         color: "success"
-    //                     })
-    //                     window.location.href = '/login';
-    //                 } else {
-    //                     const data = await response.json()
-    //                     console.log(data);
-    //                     setError(data.message);
-    //                     present({
-    //                         message: error,
-    //                         duration: 3000,
-    //                         color: "danger"
-    //                     })
-    //                 }
-    //             })
-    //             .catch((error) => {
-    //                 console.error(error)
-    //             })
-    //     } catch (error) {
-    //         console.error(error)
-    //     }
-    // }
 
     return (
         <Main>
@@ -160,10 +133,11 @@ const Register: React.FC = () => {
                         <IonInput name="password_confirmation" type="password" placeholder="Confirm Password" required />
                     </IonItem> */}
                         <IonButton
+                            type='submit'
                             color="primary"
-                            onClick={(e) => {
-                                RegisterUser(e)
-                            }}
+                            // onClick={(e) => {
+                            //     //RegisterUser(e)
+                            // }}
                         >
                             Register
                         </IonButton>

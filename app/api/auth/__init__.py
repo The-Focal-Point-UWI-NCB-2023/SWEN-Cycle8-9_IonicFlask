@@ -74,6 +74,10 @@ class Register(Resource):
         email = user_data['email']
         password = user_data['password']
         role = 0  # Setting the role to user for now
+        existing_user = Users.query.filter_by(email=email).first()
+        if existing_user:
+
+            abort(409, message="User already exists")
         try:
             user = Users(full_name=full_name, email=email, password=password, role=role)
             db.session.add(user)
