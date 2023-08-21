@@ -1,12 +1,18 @@
 async function getProducts() {
-    const response = await fetch("http://127.0.0.1:8080/api/v1/rest/products/", {
-      headers: {
-        "Authorization": `Bearer`,
-      }
-    });
-    const data = await response.json();
-    console.log(data);
-  }
+    try {
+        const response = await fetch("http://127.0.0.1:8080/api/v1/rest/products/", {
+            headers: {
+                "Authorization": "Bearer", // Add your bearer token here
+            }
+        });
+
+        const data = await response.json();
+        console.log(data);
+    } catch (error) {
+        console.error('Error fetching products:', error);
+        throw error;
+    }
+}
 
 async function createProduct(productData) {
     try {
@@ -68,6 +74,7 @@ const updatedProductData = {
 
 async function deleteProduct(productId) {
   try {
+      const csrfToken = await getCsrfToken();
       const response = await fetch(`http://127.0.0.1:8080/api/v1/rest/products/${productId}`, {
           method: "DELETE",
           headers: {
@@ -110,8 +117,8 @@ async function getCsrfToken(){
     }
 }
 
-getProductById(13)
-// deleteProduct(12)
+// getProductById(13)
+deleteProduct(13)
 // updateProduct(12, productData);
 // createProduct(productData)
 
