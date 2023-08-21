@@ -1,126 +1,96 @@
-from app.api.rest import Blueprint, jsonify, request, Products, db
+from app.api import Namespace, Resource, fields, reqparse,abort
+from app.models import Products, db
 
-products = Blueprint("products", __name__, url_prefix="/v1/products")
+products_ns = Namespace("products", path="/v1/rest/products", 
+    description="API operations related to managing product information, including adding, retrieving, updating, and deleting products. This namespace provides endpoints to interact with product data, allowing administrators to manage product listings, pricing, availability, and details. Products can be searched by ID, and their name, description, price, image, status, and user ID information are accessible for administration purposes.")
+product_model = products_ns.model(
+    "Product",
+    {
+        "id": fields.Integer(description="The unique identifier for a product"),
+        "name": fields.String(description="Name of the product"),
+        "description": fields.String(description="Description of the product"),
+        "price": fields.Float(description="Price of the product"),
+        "image": fields.String(description="Image URL of the product"),
+        "status": fields.String(description="Status of the product"),
+        "user_id": fields.Integer(description="User ID associated with the product"),
+    },
+)
 
+product_parser = reqparse.RequestParser()
+product_parser.add_argument("name", type=str, required=True, help="Name is required")
+product_parser.add_argument(
+    "description", type=str, required=True, help="Description is required"
+)
+product_parser.add_argument(
+    "price", type=float, required=True, help="Price is required"
+)
+product_parser.add_argument("image", type=str, required=True, help="Image is required")
+product_parser.add_argument(
+    "status", type=str, required=True, help="Status is required"
+)
+product_parser.add_argument(
+    "user_id", type=int, required=True, help="User ID is required"
+)
 
-@products.route("/", methods=["GET"])
-def get_products():
-    try:
+@products_ns.response(404, "Product not found")
+@products_ns.response(409, "Invalid field syntax")
+@products_ns.route("/")
+class ProductsResource(Resource):
+    @products_ns.marshal_list_with(product_model)
+    def get(self):
         products = Products.query.all()
-        product_list = [
-            {
-                "id": product.id,
-                "name": product.name,
-                "description": product.description,
-                "price": product.price,
-                "image": product.image,
-                "status": product.status,
-                "user_id": product.user_id,
-            }
-            for product in products
-        ]
+        if products == []:
+            abort(404,message='No products found')
+        return products
+        
 
-        return jsonify(products=product_list), 200
+    @products_ns.expect(product_parser)
+    @products_ns.marshal_with(product_model)
+    def post(self):
+        args = product_parser.parse_args()
+        new_product = Products(**args)
+        try:
+            db.session.add(new_product)
+            db.session.commit()
+            return new_product, 201
+        except Exception as e:
+            abort(409, message="Invalid field input")
 
-    except Exception as e:
-        return jsonify(error=str(e)), 500
-
-
-@products.route("/", methods=["POST"])
-def create_product():
-    try:
-        name = request.form["name"]
-        description = request.form["description"]
-        price = request.form["price"]
-        image = request.form["image"]
-        status = request.form["status"]
-        user_id = request.form["user_id"]
-
-        if not all([name, description, price, image, status, user_id]):
-            return jsonify({"error": "Missing required data"}), 400
-
-        new_product = Products(
-            name=name,
-            description=description,
-            price=price,
-            image=image,
-            status=status,
-            user_id=user_id,
-        )
-
-        db.session.add(new_product)
-        db.session.commit()
-
-        return jsonify({"message": "Product successfully added"}), 201
-
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
-
-@products.route("/<int:product_id>", methods=["GET"])
-def get_product(product_id):
-    try:
+@products_ns.route("/<int:product_id>")
+@products_ns.response(404, "Product not found")
+@products_ns.response(409, "Invalid field syntax")
+@products_ns.param("product_id", "A unique identifier associated with a product")
+class ProductResource(Resource):
+    @products_ns.marshal_with(product_model)
+    def get(self, product_id):
         product = Products.query.get(product_id)
-
-        if product is None:
-            return jsonify({"error": "Product not found"}), 404
-
-        specific_product = {
-            "id": product.id,
-            "name": product.name,
-            "description": product.description,
-            "price": product.price,
-            "image": product.image,
-            "status": product.status,
-            "user_id": product.user_id,
-        }
-
-        return jsonify(specific_product), 200
-
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
-
-@products.route("/<int:product_id>", methods=["DELETE"])
-def delete_product(product_id):
-    try:
-        product = Products.query.get(product_id)
-
         if not product:
-            return jsonify({"error": "Product not found"}), 404
-
-        db.session.delete(product)
-        db.session.commit()
-
-        return jsonify({"message": "Product deleted successfully"}), 200
-
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
+            abort(404, message="Product not found")
+        return product
 
 
-@products.route("/<int:product_id>", methods=["PUT"])
-def update_product(product_id):
-    try:
+    @products_ns.expect(product_parser)
+    @products_ns.marshal_with(product_model)
+    def put(self, product_id):
         product = Products.query.get(product_id)
+        if product:
+            try:
+                args = product_parser.parse_args()
+                for key, value in args.items():
+                    setattr(product, key, value)
+                db.session.commit()
+            except Exception as e:
+                abort(409, message="Invalid field input")
+        elif product is None:
+            abort(404, message="Product not found")
+        
 
-        if not product:
-            return jsonify({"error": "Product not found"}), 404
-
-        data = request.form
-        if "name" in data:
-            product.name = data["name"]
-        if "description" in data:
-            product.description = data["description"]
-        if "price" in data:
-            product.price = float(data["price"])
-        if "image" in data:
-            product.image = data["image"]
-        if "status" in data:
-            product.status = data["status"]
-
-        db.session.commit()
-
-        return jsonify({"message": "Product updated successfully"}), 200
-
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
+    @products_ns.response(204, "Product deleted")
+    def delete(self, product_id):
+        product = Products.query.get(product_id)
+        if product:
+            db.session.delete(product)
+            db.session.commit()
+            return "", 204
+        elif product is None:
+            abort(404,message='Product with this ID does not exist')

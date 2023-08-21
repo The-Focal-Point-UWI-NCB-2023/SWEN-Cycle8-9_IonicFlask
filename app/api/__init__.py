@@ -1,20 +1,17 @@
 from flask import Blueprint, jsonify
-from .auth import auth
+from flask_restx import Api, Resource, Namespace, fields, reqparse, abort
 from .payment import payment
-from .rest import rest
 from ..models import db
 
 # Initialize API
-api = Blueprint("api", __name__, url_prefix="/api")
+api_blueprint = Blueprint("api", __name__, url_prefix="/api")
 
+api = Api(
+    api_blueprint,
+    version="1.0",
+    title="FOCAL FRAMES API",
+    description="The Offical Api of the Focal Frames E-commerce Store",
+)
 
-# Create initial route
-@api.route("/")
-def api_index():
-    return {"message": db.engine.driver}
-
-
-# Register API Endpoints
-api.register_blueprint(auth)
-api.register_blueprint(payment)
-api.register_blueprint(rest)
+from .rest import * 
+from .auth import *

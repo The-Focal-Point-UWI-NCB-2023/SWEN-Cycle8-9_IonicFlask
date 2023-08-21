@@ -1,54 +1,81 @@
-from flask import Blueprint, request, jsonify, g
-#from app.api.auth import users
+from flask import g, request
+from app.api import api, Namespace, Resource, fields, reqparse,abort
 import jwt
 from datetime import datetime, timedelta
 from functools import wraps
 import os
-#from app import app
 
-jwt_auth = Blueprint("jwt_auth", __name__, url_prefix="/v1/jwt_auth")
+# Create a custom namespace for JWT authentication and protected routes
+jwt_auth_ns = Namespace('jwt_auth', description='JWT Authentication')
 
-encode_key = os.environ.get("SECRET_KEY") # This is the secret key that will be used to encode the JWT token. You can use any string you want here.
+# Define your secret key
+encode_key = os.environ.get("SECRET_KEY")
 
-# To test this you can use postman and try login with a user you created, in the JSON response you will recieve a JWT token.
-# You will then need to copy the token and paste it in the Authorization tab in postman. 
-# In the Authorization tab select Bearer Token and paste the token in the token field.
-# Then make a request to the protected route and you should be able to access it.
-
-## Requires Auth Decorator (@requires_auth)
+# Define a custom decorator for authentication
 def requires_auth(f):
-  @wraps(f)
-  def decorated(*args, **kwargs):
-    auth = request.headers.get('Authorization', None) # or request.cookies.get('token', None)
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        auth = request.headers.get('Authorization', None)
+        
+        if not auth:
+            return {'message': 'Authorization header is expected'}, 401
+        
+        parts = auth.split()
 
-    if not auth:
-      return jsonify({'code': 'authorization_header_missing', 'description': 'Authorization header is expected'}), 401
+        if parts[0].lower() != 'bearer':
+            return {'message': 'Authorization header must start with Bearer'}, 401
+        elif len(parts) == 1:
+            return {'message': 'Token not found'}, 401
+        elif len(parts) > 2:
+            return {'message': 'Authorization header must be Bearer + \s + token'}, 401
 
-    parts = auth.split()
+        token = parts[1]
+        try:
+            payload = jwt.decode(token, encode_key, algorithms=["HS256"])
 
-    if parts[0].lower() != 'bearer':
-      return jsonify({'code': 'invalid_header', 'description': 'Authorization header must start with Bearer'}), 401
-    elif len(parts) == 1:
-      return jsonify({'code': 'invalid_header', 'description': 'Token not found'}), 401
-    elif len(parts) > 2:
-      return jsonify({'code': 'invalid_header', 'description': 'Authorization header must be Bearer + \s + token'}), 401
+        except jwt.ExpiredSignatureError:
+            return {'message': 'Token is expired'}, 401
+        except jwt.DecodeError:
+            return {'message': 'Token signature is invalid'}, 401
 
-    token = parts[1]
-    try:
-        payload = jwt.decode(token, encode_key, algorithms=["HS256"])
+        g.current_user = user = payload
+        return f(*args, **kwargs)
+    
+    return decorated
 
-    except jwt.ExpiredSignatureError:
-        return jsonify({'code': 'token_expired', 'description': 'token is expired'}), 401
-    except jwt.DecodeError:
-        return jsonify({'code': 'token_invalid_signature', 'description': 'Token signature is invalid'}), 401
+# Define a parser for generating tokens
+token_parser = reqparse.RequestParser()
+token_parser.add_argument('id', type=int, required=True, help='User ID is required')
+token_parser.add_argument('email', required=True, help='Email is required')
+token_parser.add_argument('role', required=True, help='Role is required')
+token_parser.add_argument('password', required=True, help='Password is required')
 
-    g.current_user = user = payload
-    return f(*args, **kwargs)
+# Define a route for generating tokens within the custom namespace
+@jwt_auth_ns.route('/gen')
+class GenerateToken(Resource):
+    @jwt_auth_ns.expect(token_parser)
+    def post(self):
+        args = token_parser.parse_args()
+        timestamp = datetime.utcnow()
+        payload = {
+            "user_id": args['id'],
+            "email": args['email'],
+            "role": args['role'],
+            "password": args['password'],
+            "iat": timestamp,
+            "exp": timestamp + timedelta(minutes=10)
+        }
+        token = jwt.encode(payload, encode_key, algorithm='HS256')
+        return {'token': token}
 
-  return decorated
+# Define a route for protected content within the custom namespace
+@jwt_auth_ns.route('/protected')
+class Protected(Resource):
+    @jwt_auth_ns.doc(security='apiKey')  # Indicate that authentication is required
+    @requires_auth
+    def get(self):
+        return {'message': 'You are authorized to view this page.'}
 
-#route to generate tokens using the user's info as the payload
-@jwt_auth.route("/gen", methods=["POST"])
 def generate_token(id,email,role,password):
     timestamp = datetime.utcnow()
     payload = {
@@ -60,10 +87,8 @@ def generate_token(id,email,role,password):
         "exp": timestamp + timedelta(minutes=10)
     }
     token = jwt.encode(payload, encode_key, algorithm='HS256')
-    return jsonify(token=token)
+    return {'token': token}
 
-#route to test the protected decorator
-@jwt_auth.route("/protected")
-@requires_auth
-def test_protected():
-    return jsonify(message="You are authorized to view this page.")
+# Add the jwt_auth_ns namespace to your main API
+api.add_namespace(jwt_auth_ns)
+

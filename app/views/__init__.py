@@ -29,15 +29,15 @@ def login():
         password = form.password.data
 
         response = requests.post(
-            "http://127.0.0.1:8080/api/auth/login",
+            "http://127.0.0.1:8080/api/v1/auth/login",
             data={"email": email, "password": password},
         )
 
         if response.status_code == 200:
             user = db.session.execute(db.select(Users).filter_by(email=email)).scalar()
             login_user(user)
-
             return redirect(url_for("views.index"))
+        
         elif response.status_code == 401:
             flash("Username or Password is incorrect.")
 
@@ -56,7 +56,7 @@ def register():
         email = form.email.data
         password = form.password.data
         response = requests.post(
-            "http://127.0.0.1:8080/api/auth/register",
+            "http://127.0.0.1:8080/api/v1/auth/register",
             data={"full_name": full_name, "email": email, "password": password},
         )  # Port # might be different for you
 
@@ -139,52 +139,63 @@ def view_products():
     return  render_template('components/products.html', products=products)
 
 products = [
-        {
-            'id': 0,
-            'title': 'Cowrie Shield Earring',
-            'image': 'earring1.jpeg',
-            'description':'A Kenyan inspired handmade beaded earring. It can also be worn as a ring or bracelet.',
-            'price': 2000
-        },
-        {
-            'id': 1,
-            'title': 'Double Beaded Rings',
-            'image': 'earring4.jpeg',
-            'description':'Handmade double hooped beaded earring.',
-            'price': 1500
-        },
-        {
-            'id': 2,
-            'title': 'Drop Cowrie Earrings',
-            'image': 'earring3.jpeg',
-            'description':'Drop earrings made with cowrie shells and glass beads',
-            'price': 2000
-        },
-        {
-            'id': 3,
-            'title': 'Gem stone Bracelets',
-            'image': 'bracelet.jpeg',
-            'description':'Bracelet set of 2, made from aventurine gem stones',
-            'price': 2500
-        },
-        {
-            'id': 4,
-            'title': 'Embroidered Spideys',
-            'image': 'embroid_tshirt.jpg',
-            'description':'Machine embroidered sweatshirt, stitched is a scene from Spiderman and a viral meme',
-            'price': 5000
-        },
-        {
-            'id': 5,
-            'title': 'Crocheted shroom',
-            'image': 'bag.jpg',
-            'description':'Crocheted mushroom shoulder bag',
-            'price': 4500
-        }
+    {
+        'id': 0,
+        'title': 'Cowrie Shield Earring',
+        'image': 'earring1.jpeg',
+        'description':'A Kenyan inspired handmade beaded earring. It can also be worn as a ring or bracelet.',
+        'price': 2000
+    },
+    {
+        'id': 1,
+        'title': 'Double Beaded Rings',
+        'image': 'earring4.jpeg',
+        'description':'Handmade double hooped beaded earring.',
+        'price': 1500
+    },
+    {
+        'id': 2,
+        'title': 'Drop Cowrie Earrings',
+        'image': 'earring3.jpeg',
+        'description':'Drop earrings made with cowrie shells and glass beads',
+        'price': 2000
+    },
+    {
+        'id': 3,
+        'title': 'Gem stone Bracelets',
+        'image': 'bracelet.jpeg',
+        'description':'Bracelet set of 2, made from aventurine gem stones',
+        'price': 2500
+    },
+    {
+        'id': 4,
+        'title': 'Embroidered Spideys',
+        'image': 'embroid_tshirt.jpg',
+        'description':'Machine embroidered sweatshirt, stitched is a scene from Spiderman and a viral meme',
+        'price': 5000
+    },
+    {
+        'id': 5,
+        'title': 'Crocheted shroom',
+        'image': 'bag.jpg',
+        'description':'Crocheted mushroom shoulder bag',
+        'price': 4500
+    }
 ]
+
+# Register View Endpoints
+# api.register_blueprint()
+
+@views.route('/products')
+def views_products():
+    """Render the the page to display list of products"""
+    return  render_template('components/products.html', products=products)
+
+
 
 @views.route('/products/<product_id>')
 def product_info(product_id):
+    print(product_id)
     return render_template('components/product-view.html', product=products[int(product_id)])
 
 @views.route("/cart/<int:userId>")
