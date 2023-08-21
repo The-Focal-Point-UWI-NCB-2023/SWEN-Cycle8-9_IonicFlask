@@ -71,13 +71,12 @@ const Login: React.FC = () => {
             if (response.ok && data.message === 'User found') {
                 setJwt(data.token)
                 localStorage.setItem('jwt', data.token)
-                //console.log(jwt)
                 present({
                     message: 'Login Successful',
                     duration: 3000,
                     color: 'success',
                 })
-                //window.location.href = '/home'
+                window.location.href = '/home'
             } else {
                 setError('Login Failed')
                 present({
@@ -118,7 +117,7 @@ const Login: React.FC = () => {
                         Login
                     </IonButton>
                 </IonList>
-                <p className={styles.register}>
+                <p >
                     Don't have an account? <a href="/register">Register</a>
                 </p>
             </form>
