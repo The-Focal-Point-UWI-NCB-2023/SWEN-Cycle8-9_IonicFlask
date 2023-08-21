@@ -15,6 +15,7 @@ const Login: React.FC = () => {
     const [error, setError] = useState<string>('')
     const [present] = useIonToast()
     const [csrfToken, setCsrfToken] = useState('')
+    const [jwt, setJwt] = useState('')
 
     async function getCsrfToken() {
         try {
@@ -65,14 +66,18 @@ const Login: React.FC = () => {
             )
 
             const data = await response.json()
+            
 
             if (response.ok && data.message === 'User found') {
+                setJwt(data.token)
+                localStorage.setItem('jwt', data.token)
+                //console.log(jwt)
                 present({
                     message: 'Login Successful',
                     duration: 3000,
                     color: 'success',
                 })
-                window.location.href = '/home'
+                //window.location.href = '/home'
             } else {
                 setError('Login Failed')
                 present({
