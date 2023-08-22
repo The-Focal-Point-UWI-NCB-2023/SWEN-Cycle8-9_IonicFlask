@@ -6,8 +6,6 @@ import {
     IonList,
     useIonToast,
 } from '@ionic/react'
-import Main from '../../components/Main/Main'
-import styles from './Login.module.scss'
 import { 
     userAdmin,
     isLoggedin,
@@ -15,6 +13,8 @@ import {
     checkLoginStatus,
     current_User 
 } from '../../util/api/auth/auth';
+import Main from '../../components/Main/Main'
+import styles from './Login.module.scss'
 import { api_url_auth } from '../../util/constants';
 
 

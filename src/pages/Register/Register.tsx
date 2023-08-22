@@ -9,6 +9,9 @@ import { useState, useEffect } from 'react'
 import Main from '../../components/Main/Main'
 import styles from './Register.module.scss'
 import { Redirect } from 'react-router'
+import { api_url_auth } from '../../util/constants'
+import { checkLoginStatus } from '../../util/api/auth/auth'
+
 
 const Register: React.FC = () => {
     const [name, setName] = useState<string>('')
@@ -23,7 +26,7 @@ const Register: React.FC = () => {
     async function getCsrfToken() {
         try {
             const response = await fetch(
-                'http://localhost:8080/api/v1/auth/csrf-token',
+                api_url_auth + `csrf-token`,
                 {
                     method: 'GET',
                     credentials: 'include',
@@ -43,6 +46,7 @@ const Register: React.FC = () => {
 
     useEffect(() => {
         getCsrfToken()
+        checkLoginStatus()
     }, [])
 
     const RegisterUser = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -56,7 +60,7 @@ const Register: React.FC = () => {
             }
 
             const response = await fetch(
-                'http://localhost:8080/api/v1/auth/register',
+                api_url_auth + `register`,
                 {
                     method: 'POST',
                     headers: {
@@ -135,9 +139,6 @@ const Register: React.FC = () => {
                         <IonButton
                             type='submit'
                             color="primary"
-                            // onClick={(e) => {
-                            //     //RegisterUser(e)
-                            // }}
                         >
                             Register
                         </IonButton>
