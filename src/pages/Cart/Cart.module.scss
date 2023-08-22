@@ -22,7 +22,7 @@
     height: 30px;
     width: 30px;
     padding-right: 2%;
-    color: red;
+    color: var(--ion-color-danger);
     cursor: pointer;
 }
 
@@ -31,8 +31,6 @@
     justify-content: center;
     flex-direction: column;
     align-items: center;
-    overflow: scroll;
-    height: 30%;
 }
 
 .remove {

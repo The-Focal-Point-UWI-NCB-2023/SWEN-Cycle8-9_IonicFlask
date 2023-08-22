@@ -8,6 +8,14 @@ export interface Product {
     status: string
     user_id: number
 }
+export interface Product {
+    name: string
+    description: string
+    price: number
+    image: string
+    status: string
+    user_id: number
+}
 
 export async function getProducts() {
     try {

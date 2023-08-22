@@ -82,7 +82,7 @@ const Router: React.FC = () => {
                     <Route render={() => <Redirect to="/landing" />} />
                 </IonRouterOutlet>
 
-                <IonTabBar slot="top">
+                <IonTabBar slot={window.orientation > 1 ? 'bottom' : 'top'}>
                     <IonTabButton tab="products" href="/products">
                         <IonIcon icon={glassesOutline} />
                         <IonLabel>Products</IonLabel>
