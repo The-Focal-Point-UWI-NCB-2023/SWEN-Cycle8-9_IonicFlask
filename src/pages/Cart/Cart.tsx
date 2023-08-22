@@ -14,6 +14,7 @@ import {
     IonCol,
     IonIcon,
     IonInput,
+    IonTitle,
 } from '@ionic/react'
 import { productItems } from '../Products/ProuductItemLoader'
 import { trash } from 'ionicons/icons'
@@ -40,7 +41,9 @@ const Cart: React.FC = () => {
         <Main>
             <IonGrid className={styles.container}>
                 <IonRow className={styles.cartRowTotal}>
-                    <IonText className={styles.total}>Total : ${total}</IonText>
+                    <IonTitle className={styles.total}>
+                        Total <span>${total}</span>
+                    </IonTitle>
                     <IonButton className={styles.checkoutBtn}>
                         CHECKOUT
                     </IonButton>
@@ -51,23 +54,26 @@ const Cart: React.FC = () => {
                             <IonImg
                                 src={'../../../uploads/' + prod.image + '.png'}
                                 className={styles.Cartimg}
-                            ></IonImg>
+                            />
                         </IonCol>
-                        <IonCol className={styles.productDetails}>
-                            <IonText className="ProductName">
+                        <IonCol>
+                            <IonTitle className={styles.cartTitle}>
                                 {prod.name}
-                            </IonText>
-                            <IonText className="Price">${prod.price}</IonText>
-                            <IonItem>
-                                <IonInput
-                                    label="Quantity"
-                                    type="number"
-                                    placeholder="000"
-                                    value={quantity}
-                                    onIonChange={() => handleQuantityChange}
-                                ></IonInput>
-                            </IonItem>
+                            </IonTitle>
                         </IonCol>
+                        <IonCol className={styles.productPrice}>
+                            <IonText className="Price">${prod.price}</IonText>
+                        </IonCol>
+                        <IonCol>
+                            <IonInput
+                                className={styles.productQuantity}
+                                type="number"
+                                placeholder="000"
+                                value={quantity}
+                                onIonChange={() => handleQuantityChange}
+                            ></IonInput>
+                        </IonCol>
+
                         <IonCol className={styles.remove}>
                             <IonIcon icon={trash} className={styles.delIcon} />
                         </IonCol>
