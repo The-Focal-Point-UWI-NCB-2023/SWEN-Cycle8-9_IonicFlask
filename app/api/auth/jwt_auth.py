@@ -84,10 +84,14 @@ def generate_token(id,email,role,password):
         "role": role,
         "password": password,
         "iat": timestamp,
-        "exp": timestamp + timedelta(minutes=10)
+        "exp": timestamp + timedelta(minutes=1000)
     }
     token = jwt.encode(payload, encode_key, algorithm='HS256')
     return {'token': token}
+
+# @jwt_auth_ns.route('/decode')
+# def decode_token():
+
 
 # Add the jwt_auth_ns namespace to your main API
 api.add_namespace(jwt_auth_ns)

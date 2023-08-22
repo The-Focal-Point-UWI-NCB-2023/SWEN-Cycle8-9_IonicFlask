@@ -8,6 +8,8 @@ import {
 } from '@ionic/react'
 import Main from '../../components/Main/Main'
 import styles from './Login.module.scss'
+import { isAdmin,test } from '../../util/api/auth/auth';
+
 
 const Login: React.FC = () => {
     const [email, setEmail] = useState<string>('')
@@ -40,6 +42,7 @@ const Login: React.FC = () => {
 
     useEffect(() => {
         getCsrfToken()
+        test()
     }, [])
 
     const loginUser = async (e: React.FormEvent<HTMLFormElement>) => {
