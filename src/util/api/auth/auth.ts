@@ -1,8 +1,9 @@
+import { api_url_auth } from "../../constants"
 
 export async function getCsrfToken() {
     try {
         const tokenResponse = await fetch(
-            'http://127.0.0.1:8080/api/v1/auth/csrf-token',
+            api_url_auth + `csrf-token`,
             {
                 credentials: 'include',
             }
@@ -20,7 +21,7 @@ export async function logout(csrfToken: string) {
     try {
         //const csrfToken = await getCsrfToken()
         const logoutResponse = await fetch(
-            'http://127.0.0.1:8080/api/v1/auth/logout',
+            api_url_auth + `logout`,
             {
                 method: 'POST',
                 credentials: 'include',
@@ -81,7 +82,7 @@ export async function userAdmin() {
 
     const csrfToken = await getCsrfToken()
     try {
-        const response = await fetch('http://127.0.0.1:8080/api/v1/auth/isAdmin', {
+        const response = await fetch(api_url_auth + `isAdmin`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -112,7 +113,7 @@ export async function current_User() {
     const jwt = localStorage.getItem('jwt');
     const csrfToken = await getCsrfToken()
     try {
-        const response = await fetch('http://127.0.0.1:8080/api/v1/auth/CurrentUser', {
+        const response = await fetch(api_url_auth + `CurrentUser`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -139,7 +140,7 @@ export async function isLoggedin() {
     const jwt = localStorage.getItem('jwt');
     const csrfToken = await getCsrfToken()
     try {
-        const response = await fetch('http://127.0.0.1:8080/api/v1/auth/isLoggedin', {
+        const response = await fetch( api_url_auth + `isLoggedin` , {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -165,7 +166,7 @@ export async function isLoggedin() {
 export async function checkLoginStatus() {
     try {
         const loggedInStatus = await isLoggedin();
-        if (loggedInStatus === "isLoggedIn") {
+        if (loggedInStatus === "true") {
             // Redirect the user to the home page
             window.location.href = '/home';
         }

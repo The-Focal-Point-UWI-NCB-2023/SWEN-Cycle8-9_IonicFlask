@@ -8,7 +8,14 @@ import {
 } from '@ionic/react'
 import Main from '../../components/Main/Main'
 import styles from './Login.module.scss'
-import { userAdmin,isLoggedin,getCsrfToken,checkLoginStatus, current_User } from '../../util/api/auth/auth';
+import { 
+    userAdmin,
+    isLoggedin,
+    getCsrfToken,
+    checkLoginStatus,
+    current_User 
+} from '../../util/api/auth/auth';
+import { api_url_auth } from '../../util/constants';
 
 
 const Login: React.FC = () => {
@@ -22,7 +29,7 @@ const Login: React.FC = () => {
     async function getCsrfToken() {
         try {
             const response = await fetch(
-                'http://localhost:8080/api/v1/auth/csrf-token',
+                api_url_auth + `csrf-token`,
                 {
                     method: 'GET',
                     credentials: 'include',
@@ -57,7 +64,7 @@ const Login: React.FC = () => {
             }
 
             const response = await fetch(
-                'http://localhost:8080/api/v1/auth/login',
+                api_url_auth + `login`,
                 {
                     method: 'POST',
                     headers: {
