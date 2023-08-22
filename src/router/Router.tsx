@@ -28,7 +28,6 @@ import Products from '../pages/Products/Products'
 import ProductDetails from '../pages/Products/ProductDetails/ProductDetails'
 import Cart from '../pages/Cart/Cart'
 import Admin from '../pages/Admin/Admin'
-import Settings from '../pages/Settings/Settings'
 
 const Router: React.FC = () => {
     //Auth Check
@@ -75,9 +74,6 @@ const Router: React.FC = () => {
                         }}
                     />
 
-                    {/* Settings */}
-                    <Route exact path="/settings" component={Settings} />
-
                     {/* Fallback Route */}
                     <Route render={() => <Redirect to="/landing" />} />
                 </IonRouterOutlet>
@@ -101,11 +97,6 @@ const Router: React.FC = () => {
                     ) : (
                         ''
                     )}
-
-                    <IonTabButton tab="settings" href="/settings">
-                        <IonIcon icon={settingsOutline} />
-                        <IonLabel>Settings</IonLabel>
-                    </IonTabButton>
 
                     {isAuthed ? (
                         <IonTabButton tab="logout" href="/logout">
