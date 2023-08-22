@@ -1,69 +1,55 @@
-.cartRow {
-    padding: 2%;
-    width: 60%;
-    margin-bottom: 3%;
-    margin-top: 1%;
-    border-radius: 10px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-    background-color: var(--ion-color-light-tint);
-}
-.cartRowTotal {
-    padding: 2%;
-    width: 60%;
-    margin-bottom: 3%;
-    margin-top: 1%;
-    border-radius: 10px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-    background-color: var(--ion-color-light-tint);
-    justify-content: space-between;
-}
-
-.delIcon {
-    height: 30px;
-    width: 30px;
-    padding-right: 2%;
-    color: var(--ion-color-danger);
-    cursor: pointer;
-}
-
 .container {
     display: flex;
     justify-content: center;
     flex-direction: column;
     align-items: center;
-}
 
-.remove {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
+    .cartRowTotal {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        gap: 10px;
+        padding: 10px;
+        border-radius: 10px;
+        background-color: var(--ion-color-light-tint);
+        margin: 10px 0;
 
-    width: 20%;
-}
+        ion-button {
+            padding: 0;
+            min-width: 120px;
+        }
+    }
 
-.Cartimg {
-    width: 100px;
-    height: 100px;
-}
+    .cartRow {
+        border-radius: 10px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        background-color: var(--ion-color-light-tint);
+        margin-bottom: 10px;
+        font-size: 24px;
 
-cartTotalRow {
-    padding: 2%;
-    width: 60%;
-    margin-bottom: 3%;
-    margin-top: 1%;
-    border-radius: 10px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-    background-color: var(--ion-color-light-tint);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
+        ion-col {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
 
-.productDetails {
-    display: flex;
-    flex-direction: column;
-}
+        .cartTitle {
+        }
 
-.productDetails > * {
-    margin-bottom: 5%;
+        .productPrice {
+        }
+
+        .productQuantity {
+        }
+
+        .remove {
+            .delIcon {
+                height: 30px;
+                width: 30px;
+                color: var(--ion-color-danger);
+                cursor: pointer;
+            }
+        }
+    }
 }
