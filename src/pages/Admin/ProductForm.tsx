@@ -1,10 +1,24 @@
 import React, { useState } from 'react'
 import { IonItem, IonLabel, IonInput, IonButton } from '@ionic/react'
-import { Product, updateProduct } from '../../util/api/models/products'
+import { title } from 'process'
+import { event } from 'cypress/types/jquery'
+import { createProduct } from '../../util/api/models/products' // Import the function
+import { type } from 'os'
 
 interface ProductFormProps {
-    initialProduct: Product
-    onSubmit: (updatedProduct: Product) => void
+    initialProduct: {
+        image: string
+        title: string
+        description: string
+        price: number
+    }
+
+    onSubmit: (updatedProduct: {
+        image: string
+        title: string
+        description: string
+        price: number
+    }) => void
 }
 
 const ProductForm: React.FC<ProductFormProps> = ({
@@ -27,40 +41,37 @@ const ProductForm: React.FC<ProductFormProps> = ({
             ...prevProduct,
             [name]: value,
         }))
+        console.log('change')
     }
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault()
+        // console.log("submit")
+        onSubmit(product)
 
-        try {
-            const updatedProduct: Product = {
-                id: product.id, // Include the product ID
-                name: product.name,
-                description: product.description,
-                price: product.price,
-                image: selectedImage ? selectedImage.name : '', // Include the image name or an empty string
-                status: product.status,
-                user_id: product.user_id,
-            }
+        // let prod = document.getElementById('product');
+        // let form_data = new FormData(prod);
 
-            // Call the updateProduct function
-            const updatedProductResponse = await updateProduct(
-                product.id.toString(),
-                updatedProduct
-            )
+        // const formData = new FormData();
+        // formData.append('image', selectedImage || '');
+        // formData.append('name', product.title);
+        // formData.append('description', product.description);
+        // formData.append('price', product.price.toString());
 
-            // Call onSubmit with the updated product data
-            onSubmit(updatedProductResponse)
-        } catch (error) {
-            console.error('Error updating product:', error)
-        }
+        // async function createProducts() {
+        //     try {
+        //         const product = await createProduct()
+        //         createProduct(product)
+        //     } catch (error) {
+        //         console.error('Error fetching products:', error)
+        //     }
     }
 
     return (
-        <form className="" onSubmit={handleSubmit}>
+        <form id="product" onSubmit={handleSubmit(onSubmit)}>
             <IonItem>
                 <IonLabel position="stacked">Upload Image</IonLabel>
-                <IonInput
+                <input
                     name="image"
                     type="file"
                     accept="image/*"

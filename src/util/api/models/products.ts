@@ -8,6 +8,7 @@ export interface Product {
     status: string
     user_id: number
 }
+
 export interface Product {
     name: string
     description: string
