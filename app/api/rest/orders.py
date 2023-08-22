@@ -34,7 +34,7 @@ orders_parser.add_argument('X-CSRFToken', location='headers', required=False, he
 class OrderListResource(Resource):
 
     @orders_ns.marshal_list_with(order_model)
-    @requires_auth
+    # @requires_auth
     def get(self):
         jwt_token = request.headers.get('Authorization')  # Get the JWT token from headers
         decoded_payload = jwt.decode(jwt_token.split()[1], os.environ.get("SECRET_KEY"), algorithms=['HS256'])
@@ -46,7 +46,7 @@ class OrderListResource(Resource):
             if user_role == 1:
                 return orders
             elif user_role ==0:
-                abort(404,message='No admin')
+                return orders
 
     @orders_ns.marshal_list_with(order_model)
     @orders_ns.expect(orders_parser)

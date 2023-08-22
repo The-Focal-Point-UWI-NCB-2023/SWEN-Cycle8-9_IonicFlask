@@ -1,27 +1,17 @@
 import React, { useState } from 'react'
 import { IonItem, IonLabel, IonInput, IonButton } from '@ionic/react'
+import { Product, updateProduct } from '../../util/api/models/products'
 
 interface ProductFormProps {
-    initialProduct: {
-        image: string
-        title: string
-        description: string
-        price: number
-    }
-    onSubmit: (updatedProduct: {
-        image: string
-        title: string
-        description: string
-        price: number
-    }) => void
+    initialProduct: Product
+    onSubmit: (updatedProduct: Product) => void
 }
 
 const ProductForm: React.FC<ProductFormProps> = ({
     initialProduct,
     onSubmit,
 }) => {
-    const [product, setProduct] = useState(initialProduct)
-
+    const [product, setProduct] = useState<Product>(initialProduct)
     const [selectedImage, setSelectedImage] = useState<File | null>(null)
 
     const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -39,27 +29,50 @@ const ProductForm: React.FC<ProductFormProps> = ({
         }))
     }
 
-    const handleSubmit = (event: React.FormEvent) => {
+    const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault()
-        onSubmit(product)
+
+        try {
+            const updatedProduct: Product = {
+                id: product.id, // Include the product ID
+                name: product.name,
+                description: product.description,
+                price: product.price,
+                image: selectedImage ? selectedImage.name : '', // Include the image name or an empty string
+                status: product.status,
+                user_id: product.user_id,
+            }
+
+            // Call the updateProduct function
+            const updatedProductResponse = await updateProduct(
+                product.id.toString(),
+                updatedProduct
+            )
+
+            // Call onSubmit with the updated product data
+            onSubmit(updatedProductResponse)
+        } catch (error) {
+            console.error('Error updating product:', error)
+        }
     }
 
     return (
         <form className="" onSubmit={handleSubmit}>
             <IonItem>
                 <IonLabel position="stacked">Upload Image</IonLabel>
-                <input
+                <IonInput
+                    name="image"
                     type="file"
                     accept="image/*"
-                    onChange={handleImageChange}
+                    onIonChange={handleImageChange}
                 />
             </IonItem>
             <IonItem>
                 <IonLabel position="stacked">Title</IonLabel>
                 <IonInput
-                    name="title"
-                    value={product.title}
-                    onIonChange={() => handleInputChange}
+                    name="name"
+                    value={product.name}
+                    onIonChange={handleInputChange}
                     required
                 />
             </IonItem>
@@ -68,7 +81,7 @@ const ProductForm: React.FC<ProductFormProps> = ({
                 <IonInput
                     name="description"
                     value={product.description}
-                    onIonChange={() => handleInputChange}
+                    onIonChange={handleInputChange}
                     required
                 />
             </IonItem>
@@ -78,7 +91,37 @@ const ProductForm: React.FC<ProductFormProps> = ({
                     name="price"
                     type="number"
                     value={product.price.toString()}
-                    onIonChange={() => handleInputChange}
+                    onIonChange={handleInputChange}
+                    required
+                />
+            </IonItem>
+            <IonItem>
+                <IonLabel position="stacked">Product ID</IonLabel>
+                <IonInput
+                    name="id"
+                    type="number"
+                    value={product.id.toString()}
+                    onIonChange={handleInputChange}
+                    required
+                />
+            </IonItem>
+            <IonItem>
+                <IonLabel position="stacked">User ID</IonLabel>
+                <IonInput
+                    name="user_id"
+                    type="number"
+                    value={product.user_id.toString()}
+                    onIonChange={handleInputChange}
+                    required
+                />
+            </IonItem>
+            <IonItem>
+                <IonLabel position="stacked">Status</IonLabel>
+                <IonInput
+                    name="status"
+                    type="string"
+                    value={product.status}
+                    onIonChange={handleInputChange}
                     required
                 />
             </IonItem>

@@ -1,90 +1,72 @@
 import React, { useState } from 'react'
-import {
-    IonLabel,
-    IonInput,
-    IonSelect,
-    IonSelectOption,
-    IonButton,
-} from '@ionic/react'
-
-export interface FormData {
-    name: string
-    email: string
-    password: string
-    role: string
-}
+import { IonItem, IonLabel, IonInput, IonButton } from '@ionic/react'
+import { User, updateUser } from '../../util/api/models/users'
 
 interface UserFormProps {
-    onSubmit: (formData: FormData) => void
-    currentUser: FormData
+    initialUser: User // You'll need to define the User type
+    onSubmit: (updatedUser: User) => void
 }
 
-const UserForm: React.FC<UserFormProps> = ({ currentUser, onSubmit }) => {
-    const [formData, setFormData] = useState(currentUser)
+const UserForm: React.FC<UserFormProps> = ({ initialUser, onSubmit }) => {
+    const [user, setUser] = useState<User>(initialUser)
 
-    const handleChange = (
-        event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-    ) => {
+    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target
-        setFormData((prevData) => ({
-            ...prevData,
+        setUser((prevUser) => ({
+            ...prevUser,
             [name]: value,
         }))
     }
 
-    const handleSubmit = (event: React.FormEvent) => {
+    const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault()
-        onSubmit(formData)
-        setFormData({
-            name: '',
-            email: '',
-            password: '',
-            role: '',
-        })
+
+        try {
+            // Call the updateUser function
+            const updatedUserResponse = await updateUser(
+                user.id.toString(),
+                user
+            )
+
+            // Call onSubmit with the updated user data
+            onSubmit(updatedUserResponse)
+        } catch (error) {
+            console.error('Error updating user:', error)
+        }
     }
 
-    const isRoleSelected = formData.role !== ''
-
     return (
-        <form onSubmit={handleSubmit}>
-            <IonLabel>Name:</IonLabel>
-            <IonInput
-                type="text"
-                name="name"
-                value={formData.name}
-                onIonChange={() => handleChange}
-                required
-                disabled={true}
-            />
-            <IonLabel>Email:</IonLabel>
-            <IonInput
-                type="email"
-                name="email"
-                value={formData.email}
-                onIonChange={() => handleChange}
-                required
-                disabled={true}
-            />
-            <IonLabel>Password:</IonLabel>
-            <IonInput
-                type="password"
-                name="password"
-                value={formData.password}
-                onIonChange={() => handleChange}
-                required
-                disabled={true}
-            />
-            <IonLabel>Role:</IonLabel>
-            <IonSelect
-                name="role"
-                value={formData.role}
-                onIonChange={() => handleChange}
-            >
-                <IonSelectOption value="">Select Role</IonSelectOption>
-                <IonSelectOption value="admin">Admin</IonSelectOption>
-                <IonSelectOption value="user">User</IonSelectOption>
-            </IonSelect>
-            <IonButton type="submit">Submit</IonButton>
+        <form className="" onSubmit={handleSubmit}>
+            <IonItem>
+                <IonLabel position="stacked">Name</IonLabel>
+                <IonInput
+                    name="name"
+                    value={user.full_name}
+                    onIonChange={handleInputChange}
+                    required
+                />
+            </IonItem>
+            <IonItem>
+                <IonLabel position="stacked">Email</IonLabel>
+                <IonInput
+                    name="email"
+                    value={user.email}
+                    onIonChange={handleInputChange}
+                    required
+                />
+            </IonItem>
+            <IonItem>
+                <IonLabel position="stacked">Role</IonLabel>
+                <IonInput
+                    name="role"
+                    value={user.role}
+                    onIonChange={handleInputChange}
+                    required
+                />
+            </IonItem>
+            <IonButton expand="full" type="submit">
+                Save Changes
+            </IonButton>
         </form>
     )
 }
