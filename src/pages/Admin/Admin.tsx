@@ -406,25 +406,12 @@ const Admin: React.FC = () => {
                             onClose={closeAddProductModal}
                         >
                             <ProductForm
-                                initialProduct={{
-                                    id: -1,
-                                    image: '',
+                                initialValues={{
                                     name: '',
                                     description: '',
                                     price: 0,
-                                    status: 'pending',
-                                    user_id: 0,
-                                }}
-                                onSubmit={function (newProduct: {
-                                    id: number
-                                    image: string
-                                    title: string
-                                    description: string
-                                    price: number
-                                    status: string
-                                    user_id: number
-                                }): void {
-                                    throw new Error('Function not implemented.')
+                                    status: '',
+                                    mode: 'create',
                                 }}
                             ></ProductForm>
                         </MyModal>
@@ -475,30 +462,15 @@ const Admin: React.FC = () => {
                                         }
                                     >
                                         <ProductForm
-                                            initialProduct={{
-                                                id: prod['id'],
-                                                image: prod['image'],
-                                                name: prod['name'],
-                                                description:
-                                                    prod['description'],
-                                                price: prod['price'],
-                                                status: prod['status'],
-                                                user_id: prod['user_id'],
+                                            initialValues={{
+                                                name: prod.name,
+                                                description: prod.description,
+                                                price: prod.price,
+                                                status: prod.status,
+                                                id: prod.id,
+                                                mode: 'update',
                                             }}
-                                            onSubmit={function (updatedProduct: {
-                                                id: number
-                                                image: string
-                                                title: string
-                                                description: string
-                                                price: number
-                                                status: string
-                                                user_id: number
-                                            }): void {
-                                                throw new Error(
-                                                    'Function not implemented.'
-                                                )
-                                            }}
-                                        ></ProductForm>
+                                        />{' '}
                                     </MyModal>
                                     <IonIcon
                                         icon={trash}

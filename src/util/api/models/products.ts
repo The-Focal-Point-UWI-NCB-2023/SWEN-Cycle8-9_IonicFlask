@@ -34,7 +34,7 @@ export async function getProducts() {
     }
 }
 
-export async function createProduct(productData: Product) {
+export async function createProduct(FormData) {
     try {
         const csrfToken = await getCsrfToken()
         const response = await fetch(api_url_rest + `products/`, {
@@ -45,7 +45,7 @@ export async function createProduct(productData: Product) {
             },
             credentials: 'include',
             mode: 'cors',
-            body: JSON.stringify(productData),
+            body: FormData,
         })
 
         const data = await response.json()
@@ -56,6 +56,34 @@ export async function createProduct(productData: Product) {
         throw error
     }
 }
+
+// export async function createProduct(productData:any) {
+//     try {
+//         const csrfToken = await getCsrfToken()
+//         const formData = new FormData()
+
+//         for (const key in productData) {
+//             formData.append(key, productData[key])
+//         }
+
+//         const response = await fetch(api_url_rest + `products/`, {
+//             method: 'POST',
+//             headers: {
+//                 'X-CSRFToken': csrfToken,
+//             },
+//             credentials: 'include',
+//             mode: 'cors',
+//             body: formData,
+//         })
+
+//         const data = await response.json()
+//         console.log('Created Product:', data)
+//         return data // Return the fetched data
+//     } catch (error) {
+//         console.error('Error creating product:', error)
+//         throw error
+//     }
+// }
 
 export async function updateProduct(
     productId: String,
