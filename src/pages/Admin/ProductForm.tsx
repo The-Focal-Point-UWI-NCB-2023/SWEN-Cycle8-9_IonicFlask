@@ -1,5 +1,9 @@
 import React, { useState } from 'react'
 import { IonItem, IonLabel, IonInput, IonButton } from '@ionic/react'
+import { title } from 'process'
+import { event } from 'cypress/types/jquery'
+import { createProduct } from '../../util/api/models/products' // Import the function
+import { type } from 'os'
 
 interface ProductFormProps {
     initialProduct: {
@@ -8,6 +12,7 @@ interface ProductFormProps {
         description: string
         price: number
     }
+
     onSubmit: (updatedProduct: {
         image: string
         title: string
@@ -37,18 +42,38 @@ const ProductForm: React.FC<ProductFormProps> = ({
             ...prevProduct,
             [name]: value,
         }))
+        console.log('change')
     }
 
     const handleSubmit = (event: React.FormEvent) => {
         event.preventDefault()
+        // console.log("submit")
         onSubmit(product)
+
+        // let prod = document.getElementById('product');
+        // let form_data = new FormData(prod);
+
+        // const formData = new FormData();
+        // formData.append('image', selectedImage || '');
+        // formData.append('name', product.title);
+        // formData.append('description', product.description);
+        // formData.append('price', product.price.toString());
+
+        // async function createProducts() {
+        //     try {
+        //         const product = await createProduct()
+        //         createProduct(product)
+        //     } catch (error) {
+        //         console.error('Error fetching products:', error)
+        //     }
     }
 
     return (
-        <form className="" onSubmit={handleSubmit}>
+        <form id="product" onSubmit={handleSubmit(onSubmit)}>
             <IonItem>
                 <IonLabel position="stacked">Upload Image</IonLabel>
                 <input
+                    name="image"
                     type="file"
                     accept="image/*"
                     onChange={handleImageChange}
