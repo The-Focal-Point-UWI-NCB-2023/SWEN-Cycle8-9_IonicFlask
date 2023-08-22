@@ -1,50 +1,42 @@
-import { getCsrfToken,api_url_rest } from "../../constants"
+import { getCsrfToken, api_url_rest } from '../../constants'
 
-export interface Order{
-
-    user_id: number,
-    billing_address: string,
-    total_amount: number,
-    status: string,
-
+export interface Order {
+    user_id: number
+    billing_address: string
+    total_amount: number
+    status: string
 }
 
 export async function getOrders() {
     try {
-        const response = await fetch(
-            api_url_rest + `orders/`,
-            {
-                headers: {
-                    Authorization: 'Bearer', // Add your bearer token here
-                },
-            }
-        )
+        const response = await fetch(api_url_rest + `orders/`, {
+            headers: {
+                Authorization: 'Bearer', // Add your bearer token here
+            },
+        })
 
         const data = await response.json()
         console.log(data)
-        return data;
+        return data
     } catch (error) {
         console.error('Error fetching orders:', error)
         throw error
     }
 }
 
-export async function createOrder(orderData:Order) {
+export async function createOrder(orderData: Order) {
     try {
         const csrfToken = await getCsrfToken()
-        const response = await fetch(
-            api_url_rest + `orders/`,
-            {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': csrfToken,
-                },
-                credentials: 'include',
-                mode: 'cors',
-                body: JSON.stringify(orderData),
-            }
-        )
+        const response = await fetch(api_url_rest + `orders/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken,
+            },
+            credentials: 'include',
+            mode: 'cors',
+            body: JSON.stringify(orderData),
+        })
 
         const data = await response.json()
         console.log('Created Order:', data)
@@ -54,22 +46,19 @@ export async function createOrder(orderData:Order) {
     }
 }
 
-export async function updateOrder(orderId:string, updatedOrderData:Order) {
+export async function updateOrder(orderId: string, updatedOrderData: Order) {
     try {
         const csrfToken = await getCsrfToken()
-        const response = await fetch(
-            api_url_rest + `orders/${orderId}`,
-            {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': csrfToken,
-                },
-                credentials: 'include',
-                mode: 'cors',
-                body: JSON.stringify(updatedOrderData),
-            }
-        )
+        const response = await fetch(api_url_rest + `orders/${orderId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken,
+            },
+            credentials: 'include',
+            mode: 'cors',
+            body: JSON.stringify(updatedOrderData),
+        })
 
         const updatedOrder = await response.json()
         console.log('Updated Order:', updatedOrder)
@@ -79,22 +68,18 @@ export async function updateOrder(orderId:string, updatedOrderData:Order) {
     }
 }
 
-export async function deleteOrder(orderId:string) {
+export async function deleteOrder(orderId: string) {
     try {
         const csrfToken = await getCsrfToken()
-        const response = await fetch(
-            api_url_rest + `orders/${orderId}`,
-            {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': csrfToken,
-                },
-                credentials: 'include',
-                mode: 'cors',
-
-            }
-        )
+        const response = await fetch(api_url_rest + `orders/${orderId}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken,
+            },
+            credentials: 'include',
+            mode: 'cors',
+        })
 
         if (response.status === 204) {
             console.log('Order deleted successfully')
@@ -107,15 +92,12 @@ export async function deleteOrder(orderId:string) {
     }
 }
 
-export async function getOrderById(orderId:string) {
+export async function getOrderById(orderId: string) {
     try {
-        const response = await fetch(
-            api_url_rest + `orders/${orderId}`,
-        )
+        const response = await fetch(api_url_rest + `orders/${orderId}`)
         const data = await response.json()
         console.log('Order by ID:', data)
-        return data;
-        
+        return data
     } catch (error) {
         console.error('Error fetching order:', error)
         throw error
@@ -137,7 +119,6 @@ const updatedOrderData = {
     total_amount: 75.0,
     status: 'Shipped',
 }
-
 
 // Call the functions to interact with the orders API
 // getOrders();

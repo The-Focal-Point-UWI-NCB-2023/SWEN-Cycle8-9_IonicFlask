@@ -133,7 +133,7 @@ const Register: React.FC = () => {
                         <IonInput name="password_confirmation" type="password" placeholder="Confirm Password" required />
                     </IonItem> */}
                         <IonButton
-                            type='submit'
+                            type="submit"
                             color="primary"
                             // onClick={(e) => {
                             //     //RegisterUser(e)

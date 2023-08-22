@@ -66,7 +66,6 @@ const Login: React.FC = () => {
             )
 
             const data = await response.json()
-            
 
             if (response.ok && data.message === 'User found') {
                 setJwt(data.token)
@@ -117,7 +116,7 @@ const Login: React.FC = () => {
                         Login
                     </IonButton>
                 </IonList>
-                <p >
+                <p>
                     Don't have an account? <a href="/register">Register</a>
                 </p>
             </form>
