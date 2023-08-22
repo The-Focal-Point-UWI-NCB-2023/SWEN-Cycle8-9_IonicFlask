@@ -51,7 +51,7 @@ class Login(Resource):
 
         if user is not None and check_password_hash(user.password, password):
             login_user(user)
-            generate_token_resource = generate_token(user.id,user.email,user.role,user.password)
+            generate_token_resource = generate_token(user.id,user.full_name,user.email,user.role)
             token_response = generate_token_resource
             tk = token_response.get('token')
             #headers = {'X-CSRF-Token': generate_csrf()}
@@ -142,7 +142,7 @@ class IsLoggedIn(Resource):
         # Check if Authorization header is missing
         if header is None:
             response = {
-                'message': 'User is not logged in',
+                'message': 'false',
             }
             return response, 401
 
@@ -158,7 +158,7 @@ class IsLoggedIn(Resource):
         try:
             decoded_token = jwt.decode(token, encode_key, algorithms=['HS256'])
             response = {
-                'message': 'isLoggedIn',
+                'message': 'true',
             }
             return response, 200
         except jwt.ExpiredSignatureError:
@@ -168,12 +168,10 @@ class IsLoggedIn(Resource):
             return response, 401
         except jwt.DecodeError:
             response = {
-                'message': 'Invalid token signature',
+                'message': 'false',
             }
             return response, 401
         
-        
-    
 @auth_ns.route('/isAdmin')
 class IsLoggedIn(Resource):
     @requires_auth
@@ -186,14 +184,14 @@ class IsLoggedIn(Resource):
             #print(decoded_token)
             if decoded_token['role'] == 1:
                 response = {
-                    'message': 'isAdmin',
-                    'token': token
+                    'message': 'true',
+                    
                 }
                 return response, 200
             else:
                 response = {
-                    'message': 'notAdmin',
-                    'token': token
+                    'message': 'false',
+                    
                 }
                 return response, 200
         except jwt.ExpiredSignatureError:
@@ -201,27 +199,34 @@ class IsLoggedIn(Resource):
                     'message': 'Token is expired',
                     'token': token
                 }
-                return response , 401
-        
-# @auth_ns.route('/getUser')
-# class GetUser(Resource):
-#     @requires_auth
-#     def get(self):
-#         header= request.headers.get('Authorization')
-
-#         if header is None:
-#             response = {
-#                 'message': 'No token provided',
-#             }
-#             return response, 401
-#         parts = header.split()
-#         token = parts[1]
-
-        
-
-
-
+                return response , 401        
     
+        
+@auth_ns.route('/CurrentUser')
+class CurrUser(Resource):
+    @requires_auth
+    def get(self):
+        token = request.headers.get('Authorization')  # Get the token from the Authorization header
+        parts = token.split()
+        token = parts[1]
+        try:
+            decoded_token = jwt.decode(token, encode_key, algorithms=['HS256'])
+            user = {
+                'id': decoded_token['user_id'],
+                'name': decoded_token['name'],
+                'email': decoded_token['email'],
+                'role': decoded_token['role'],
+            }
+            response = {
+                'user': user,
+            }
+            return response, 200
+        except jwt.ExpiredSignatureError:
+                response = {
+                    'message': 'Token is expired',
+                    'token': token
+                }
+                return response , 401            
 
 # Add namespaces to the API
 api.add_namespace(auth_ns)

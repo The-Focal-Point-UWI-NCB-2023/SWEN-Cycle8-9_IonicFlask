@@ -76,12 +76,10 @@ export function isAuthenticated() {
 //     }
 // }
         
-export async function isAdmin() {
+export async function userAdmin() {
     const jwt = localStorage.getItem('jwt');
 
     const csrfToken = await getCsrfToken()
-    //console.log("Token", csrfToken);
-
     try {
         const response = await fetch('http://127.0.0.1:8080/api/v1/auth/isAdmin', {
             method: 'GET',
@@ -93,26 +91,53 @@ export async function isAdmin() {
             credentials: 'include',
             //mode: 'no-cors',
         });
-            const data = await response.json();
-        if (response.ok) {
-            // Use response.text() for no-cors mode
-            console.log(data.message);
-            return data.message; 
+        const data = await response.json();
+
+        if (response.ok && data.message == 'true') {
+            return true;
+
+        }else if (response.ok && data.message == 'false') {
+            return false; 
+
         } else {
-            console.error('Failed to check admin status');
+            //console.error('Failed to check admin status');
             return false;
         }
     } catch (error) {
-        console.error('Error during fetch:', error);
+        //console.error('Error during fetch:', error);
         return false;
+    }
+}
+export async function current_User() {
+    const jwt = localStorage.getItem('jwt');
+    const csrfToken = await getCsrfToken()
+    try {
+        const response = await fetch('http://127.0.0.1:8080/api/v1/auth/CurrentUser', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `bearer ${jwt}`,
+                'X-CSRFToken': csrfToken,
+            },
+            credentials: 'include',
+        });
+        const data = await response.json()
+        if (response.ok) {
+            console.log(data.user);
+            return data.user;
+        } else {
+            //console.log(data.message);
+            return data;
+        }
+    } catch (error) {
+        console.error('Error during fetch:', error);
+        return error;
     }
 }
 
 export async function isLoggedin() {
     const jwt = localStorage.getItem('jwt');
     const csrfToken = await getCsrfToken()
-    //console.log("Token", csrfToken);
-
     try {
         const response = await fetch('http://127.0.0.1:8080/api/v1/auth/isLoggedin', {
             method: 'GET',
@@ -120,22 +145,16 @@ export async function isLoggedin() {
                 'Content-Type': 'application/json',
                 'Authorization': `bearer ${jwt}`,
                 'X-CSRFToken': csrfToken,
-
-
             },
             credentials: 'include',
-            //mode: 'no-cors',
         });
         const data = await response.json()
         if (response.ok) {
-            //const data = await response.text(); // Use response.text() for no-cors mode
             console.log(data);
             return data.message; 
         } else {
             console.log(data.message);
-
-            
-            return data;
+            return data.message;
         }
     } catch (error) {
         console.error('Error during fetch:', error);
@@ -146,22 +165,19 @@ export async function isLoggedin() {
 export async function checkLoginStatus() {
     try {
         const loggedInStatus = await isLoggedin();
-
         if (loggedInStatus === "isLoggedIn") {
             // Redirect the user to the home page
             window.location.href = '/home';
         }
-    } catch (error) {
-        console.error('Error during login check:', error);
-    }
+    }catch (error) {
+        console.error('Error during fetch:', error);
+    }     
 }
 
-
 export function logoutUser() {
+    localStorage.setItem('isAuthed', 'false');
     localStorage.removeItem('jwt');
-    localStorage.removeItem('isAuthed');
-    // You can also perform additional cleanup if necessary
-    window.location.href = '/login'; // Redirect to the login page after logout
+    window.location.href = '/login'; 
 }
 
 
