@@ -36,17 +36,18 @@ class OrderListResource(Resource):
     @orders_ns.marshal_list_with(order_model)
     # @requires_auth
     def get(self):
-        jwt_token = request.headers.get('Authorization')  # Get the JWT token from headers
-        decoded_payload = jwt.decode(jwt_token.split()[1], os.environ.get("SECRET_KEY"), algorithms=['HS256'])
-        user_role = decoded_payload.get('role')
+        # jwt_token = request.headers.get('Authorization')  # Get the JWT token from headers
+        # decoded_payload = jwt.decode(jwt_token.split()[1], os.environ.get("SECRET_KEY"), algorithms=['HS256'])
+        # user_role = decoded_payload.get('role')
         orders = Orders.query.all()
         if orders == []:
             abort(404,message='No orders found')
-        else:
-            if user_role == 1:
-                return orders
-            elif user_role ==0:
-                return orders
+        return orders
+        # else:
+        #     if user_role == 1:
+        #         return orders
+        #     elif user_role ==0:
+        #         return orders
 
     @orders_ns.marshal_list_with(order_model)
     @orders_ns.expect(orders_parser)

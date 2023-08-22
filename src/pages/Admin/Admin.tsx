@@ -23,7 +23,6 @@ import { add, create, trash } from 'ionicons/icons' // Import the Ionicons add i
 import MyModal from './AdminModal'
 import ProductForm from './ProductForm'
 import UserForm from './CustomerForm'
-import { FormData } from './CustomerForm'
 import {
     Product,
     createProduct,
@@ -375,17 +374,11 @@ const Admin: React.FC = () => {
                                     }
                                 >
                                     <UserForm
-                                        currentUser={{
-                                            name: users['full_name'],
-                                            email: users['email'],
-                                            role: users['role'],
-                                        }}
-                                        onSubmit={function (
-                                            formData: FormData
-                                        ): void {
-                                            throw new Error(
-                                                'Function not implemented.'
-                                            )
+                                        initialValues={{
+                                            id: users.id,
+                                            name: users.full_name,
+                                            email: users.email,
+                                            role: users.role,
                                         }}
                                     ></UserForm>
                                 </MyModal>

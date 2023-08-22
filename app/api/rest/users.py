@@ -31,7 +31,7 @@ user_parser.add_argument("role", type=int, required=True, help="Role is required
 class UsersResource(Resource):
     @users_ns.marshal_list_with(user_model)
     def get(self):
-        users = Users.query.all()
+        users = Users.query.all()   
         if users == []:
             abort(404,message="No users found")
         return users
@@ -74,7 +74,7 @@ class UserResource(Resource):
                 db.session.commit()
                 return user
             except Exception as e:
-                abort(409, message="Invalid field input")
+                abort(409, message=e)
         elif user is None:
             abort(404,message='User with this ID does not exist')
 
