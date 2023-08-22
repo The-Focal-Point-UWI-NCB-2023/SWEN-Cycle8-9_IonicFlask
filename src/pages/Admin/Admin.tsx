@@ -53,29 +53,30 @@ import {
 
 const Admin: React.FC = () => {
     const [activeContent, setActiveContent] = useState('CUSTOMERS')
-    const [productss, setProducts] = useState<Product>()
-    const [orderss, setOrders] = useState<Order>()
-    const [userss, setUsers] = useState<any>()
+    const [productsList, setProducts] = useState<Product[]>([])
+    const [orderList, setOrders] = useState<Order[]>([])
+    const [userList, setUsers] = useState<any>([])
     const [lineitmess, setLineItems] = useState<LineItem>()
 
     // For testing to see if fetch api works
-    // useEffect(() => {
-    //     fetchProducts()
-    //     fetchOrders()
-    //     fetchUsers()
-    //     fetchLineItems()
-    //     fetchcreateOrder(orderData)
-    // }, [])
+    useEffect(() => {
+        fetchProducts()
+        fetchOrders()
+        fetchUsers()
+        // fetchLineItems()
+        // fetchcreateOrder(orderData)
+    }, [])
 
-    // useEffect(() => {
-    //     console.log('Working prod')
-    //     console.log(productss)
-    //     console.log('before')
-    //     console.log(orderss)
-    //     console.log(userss)
-    //     console.log('next')
-    //     console.log(lineitmess)
-    // }, [productss, orderss])
+    useEffect(() => {
+        // console.log('Working prod')
+        console.log(productsList[0])
+        console.log('test')
+        // console.log('before')
+        // console.log(orderss)
+        // console.log(userss)
+        // console.log('next')
+        // console.log(lineitmess)
+    }, [productsList])
 
     const orderData = {
         user_id: 20,
@@ -336,11 +337,14 @@ const Admin: React.FC = () => {
                                     key={`header_${index}`}
                                     className={styles.headerCol}
                                 >
-                                    {header}
+                                    {header === 'full_name'
+                                        ? 'Name'
+                                        : header.charAt(0).toUpperCase() +
+                                          header.slice(1)}
                                 </IonCol>
                             ))}
                         </IonRow>
-                        {test_users.map((users, rowIndex) => (
+                        {userList.map((users, rowIndex) => (
                             <IonRow
                                 key={`user_${rowIndex}`}
                                 className={styles.userRow}
@@ -422,18 +426,29 @@ const Admin: React.FC = () => {
                                     key={`header_${index}`}
                                     className={styles.headerCol}
                                 >
-                                    {header}
+                                    {header.charAt(0).toUpperCase() +
+                                        header.slice(1)}
                                 </IonCol>
                             ))}
                         </IonRow>
-                        {products.map((prod, rowIndex) => (
+                        {productsList.map((prod, rowIndex) => (
                             <IonRow
                                 key={`user_${rowIndex}`}
                                 className={styles.userRow}
                             >
                                 {prodHeaders.slice(0, -1).map((header) => (
                                     <IonCol key={`col_${rowIndex}_${header}`}>
-                                        {prod[header]}
+                                        {header === 'price' ? (
+                                            `$${prod[header]}`
+                                        ) : header === 'image' ? (
+                                            <img
+                                                src={`="../../../uploads/${prod[header]}`}
+                                                alt="Product"
+                                                className={styles.productImage}
+                                            />
+                                        ) : (
+                                            prod[header]
+                                        )}{' '}
                                     </IonCol>
                                 ))}
                                 <IonCol className={styles.actionCol}>
@@ -510,18 +525,27 @@ const Admin: React.FC = () => {
                                     key={`header_${index}`}
                                     className={styles.headerCol}
                                 >
-                                    {header}
+                                    {header
+                                        .split('_')
+                                        .map(
+                                            (word) =>
+                                                word.charAt(0).toUpperCase() +
+                                                word.slice(1)
+                                        )
+                                        .join(' ')}
                                 </IonCol>
                             ))}
                         </IonRow>
-                        {orders.map((order, rowIndex) => (
+                        {orderList.map((order, rowIndex) => (
                             <IonRow
                                 key={`user_${rowIndex}`}
                                 className={styles.userRow}
                             >
                                 {order_headers.map((header) => (
                                     <IonCol key={`col_${rowIndex}_${header}`}>
-                                        {order[header]}
+                                        {header === 'total_amount'
+                                            ? `$${order[header]}`
+                                            : order[header]}{' '}
                                     </IonCol>
                                 ))}
                             </IonRow>

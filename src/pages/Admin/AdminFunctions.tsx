@@ -1,10 +1,4 @@
-export const userHeaders: string[] = [
-    'Name',
-    'Email',
-    'Password',
-    'Role',
-    'Actions',
-]
+export const userHeaders: string[] = ['full_name', 'email', 'role', 'Actions']
 
 export const test_users = [
     {
@@ -39,7 +33,7 @@ export const test_users = [
     },
 ]
 
-export const prodHeaders = ['Image', 'Title', 'Description', 'Price', 'Actions']
+export const prodHeaders = ['image', 'name', 'description', 'price', 'Actions']
 export const products = [
     {
         id: 0,
@@ -88,11 +82,12 @@ export const products = [
 ]
 
 export const order_headers = [
-    'OrderID',
-    'UserID',
-    'BillingAddress',
-    'TotalAmount',
-    'Status',
+    'id',
+    'user_id',
+    'billing_address',
+    'total_amount',
+    'status',
+    'line_items',
 ]
 
 export const orders = [
