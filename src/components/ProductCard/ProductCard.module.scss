@@ -21,9 +21,8 @@ ion-grid {
     box-shadow: none;
 }
 
-ion-item button {
-    --color-hover: blue;
-    --background-hover: blue;
+ion-item {
+    --background-hover: var(--ion-color-primary);
 }
 
 ion-button {
