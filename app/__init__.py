@@ -43,6 +43,15 @@ login_manager.login_view = (
     "views.login"  # Specify what page to load for NON-AUTHED users
 )
 
+@app.after_request
+def add_header(response):
+    response.headers['Access-Control-Allow-Origin'] = 'http://localhost:8100'
+    response.headers['Access-Control-Allow-Headers'] = "X-Csrftoken,Content-type,Authorization"
+    response.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
+    response.headers['Access-Control-Allow-Credentials'] = 'true'
+    return response
+    
+
 
 """
 # Run Database Seeder

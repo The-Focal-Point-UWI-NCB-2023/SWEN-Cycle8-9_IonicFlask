@@ -52,7 +52,7 @@ class Login(Resource):
             generate_token_resource = generate_token(user.id,user.email,user.role,user.password)
             token_response = generate_token_resource
             tk = token_response.get('token')
-            
+            #headers = {'X-CSRF-Token': generate_csrf()}
             response = {
                 'token': tk,
                 'message': 'User found'
@@ -74,6 +74,10 @@ class Register(Resource):
         email = user_data['email']
         password = user_data['password']
         role = 0  # Setting the role to user for now
+        existing_user = Users.query.filter_by(email=email).first()
+        if existing_user:
+
+            abort(409, message="User already exists")
         try:
             user = Users(full_name=full_name, email=email, password=password, role=role)
             db.session.add(user)
@@ -127,5 +131,6 @@ class CSRFTokenResource(Resource):
         csrf_token = generate_csrf()
         return {"csrf_token": csrf_token}
     
+
 # Add namespaces to the API
 api.add_namespace(auth_ns)

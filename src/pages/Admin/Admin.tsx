@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import Main from '../../components/Main/Main'
 import styles from './Admin.module.scss'
 import {
@@ -9,6 +9,7 @@ import {
     IonIcon,
     IonModal,
     IonAlert,
+    useIonViewWillEnter,
 } from '@ionic/react'
 import {
     userHeaders,
@@ -23,9 +24,232 @@ import MyModal from './AdminModal'
 import ProductForm from './ProductForm'
 import UserForm from './CustomerForm'
 import { FormData } from './CustomerForm'
+import {
+    Product,
+    createProduct,
+    deleteProduct,
+    getProductById,
+    getProducts,
+    updateProduct,
+} from '../../util/api/models/products'
+
+import {
+    Order,
+    createOrder,
+    getOrders,
+    updateOrder,
+    deleteOrder,
+    getOrderById,
+} from '../../util/api/models/orders'
+import { getUsers } from '../../util/api/models/users'
+import {
+    LineItem,
+    createLineItem,
+    deleteLineItem,
+    getLineItemById,
+    getLineItems,
+    updateLineItem,
+} from '../../util/api/models/line_items'
 
 const Admin: React.FC = () => {
     const [activeContent, setActiveContent] = useState('CUSTOMERS')
+    const [productss, setProducts] = useState<Product>()
+    const [orderss, setOrders] = useState<Order>()
+    const [userss, setUsers] = useState<any>()
+    const [lineitmess, setLineItems] = useState<LineItem>()
+
+    // For testing to see if fetch api works
+    // useEffect(() => {
+    //     fetchProducts()
+    //     fetchOrders()
+    //     fetchUsers()
+    //     fetchLineItems()
+    //     fetchcreateOrder(orderData)
+    // }, [])
+
+    // useEffect(() => {
+    //     console.log('Working prod')
+    //     console.log(productss)
+    //     console.log('before')
+    //     console.log(orderss)
+    //     console.log(userss)
+    //     console.log('next')
+    //     console.log(lineitmess)
+    // }, [productss, orderss])
+
+    const orderData = {
+        user_id: 20,
+        billing_address: 'Jason',
+        total_amount: 150.0,
+        status: 'Shipped',
+    }
+
+    //Users Fetch
+
+    async function fetchUsers() {
+        try {
+            const fetchedUsers = await getUsers()
+            setUsers(fetchedUsers)
+        } catch (error) {
+            console.error('Error fetching products:', error)
+        }
+    }
+
+    //Products fetch
+    const productData = {
+        name: 'New Product',
+        description: 'A new product',
+        price: 19.99,
+        image: 'image.jpg',
+        status: 'TEST',
+        user_id: 20,
+    }
+    async function fetchProducts() {
+        try {
+            const fetchedProducts = await getProducts()
+            setProducts(fetchedProducts)
+        } catch (error) {
+            console.error('Error fetching products:', error)
+        }
+    }
+
+    async function fetchcreateProduct(newProduct: Product) {
+        try {
+            // Call your API to create the new product
+            const createdProduct = await createProduct(newProduct)
+        } catch (error) {
+            console.error('Error creating product:', error)
+        }
+    }
+
+    async function fetchDeleteProduct(productId: string) {
+        try {
+            // Call your API to create the new product
+            const deletedProduct = await deleteProduct(productId)
+        } catch (error) {
+            console.error('Error creating product:', error)
+        }
+    }
+
+    async function fetchUpdateProduct(productId: string, newProduct: Product) {
+        try {
+            // Call your API to create the new product
+            const updatedProduct = await updateProduct(productId, newProduct)
+        } catch (error) {
+            console.error('Error creating product:', error)
+        }
+    }
+
+    async function fetchProductsById(productId: string) {
+        try {
+            // Call your API to create the new product
+            const fetchedProductByID = await getProductById(productId)
+        } catch (error) {
+            console.error('Error creating product:', error)
+        }
+    }
+
+    //Orders Fetch
+
+    async function fetchOrders() {
+        try {
+            const fetchedOrders = await getOrders()
+            setOrders(fetchedOrders)
+        } catch (error) {
+            console.error('Error fetching products:', error)
+        }
+    }
+
+    async function fetchcreateOrder(newOrder: Order) {
+        try {
+            // Call your API to create the new product
+            const createdOder = await createOrder(newOrder)
+        } catch (error) {
+            console.error('Error creating product:', error)
+        }
+    }
+
+    async function fetchDeleteOrder(orderID: string) {
+        try {
+            // Call your API to create the new product
+            const deletedOrder = await deleteOrder(orderID)
+        } catch (error) {
+            console.error('Error creating product:', error)
+        }
+    }
+
+    async function fetchUpdateOrder(orderID: string, newOrder: Order) {
+        try {
+            // Call your API to create the new product
+            const updatedOrder = await updateOrder(orderID, newOrder)
+        } catch (error) {
+            console.error('Error creating product:', error)
+        }
+    }
+
+    async function fetchOrderById(orderID: string) {
+        try {
+            // Call your API to create the new product
+            const fetchedOrderByID = await getOrderById(orderID)
+        } catch (error) {
+            console.error('Error creating product:', error)
+        }
+    }
+
+    //Line Items Fetch
+
+    //Line Items Fetch
+
+    async function fetchLineItems() {
+        try {
+            const fetchedLineItems = await getLineItems()
+            setLineItems(fetchedLineItems)
+        } catch (error) {
+            console.error('Error fetching products:', error)
+        }
+    }
+
+    async function fetchcreateLineItem(newLineItems: LineItem) {
+        try {
+            // Call your API to create the new product
+            const createdOder = await createLineItem(newLineItems)
+        } catch (error) {
+            console.error('Error creating product:', error)
+        }
+    }
+
+    async function fetchDeleteLineItem(LineItemsID: string) {
+        try {
+            // Call your API to create the new product
+            const deletedLineItems = await deleteLineItem(LineItemsID)
+        } catch (error) {
+            console.error('Error creating product:', error)
+        }
+    }
+
+    async function fetchUpdateLineItem(
+        LineItemsID: string,
+        newLineItems: LineItem
+    ) {
+        try {
+            // Call your API to create the new product
+            const updatedLineItems = await updateLineItem(
+                LineItemsID,
+                newLineItems
+            )
+        } catch (error) {
+            console.error('Error creating product:', error)
+        }
+    }
+
+    async function fetchLineItemById(LineItemsID: string) {
+        try {
+            // Call your API to create the new product
+            const fetchedLineItemsByID = await getLineItemById(LineItemsID)
+        } catch (error) {
+            console.error('Error creating product:', error)
+        }
+    }
 
     const handleButtonClick = (content: React.SetStateAction<string>) => {
         setActiveContent(content)

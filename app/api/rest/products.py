@@ -1,5 +1,7 @@
-from app.api import Namespace, Resource, fields, reqparse,abort
+from app.api import Namespace, Resource, fields, reqparse,abort,os
 from app.models import Products, db
+from werkzeug.datastructures import FileStorage
+from werkzeug.utils import secure_filename
 
 products_ns = Namespace("products", path="/v1/rest/products", 
     description="API operations related to managing product information, including adding, retrieving, updating, and deleting products. This namespace provides endpoints to interact with product data, allowing administrators to manage product listings, pricing, availability, and details. Products can be searched by ID, and their name, description, price, image, status, and user ID information are accessible for administration purposes.")
@@ -24,7 +26,8 @@ product_parser.add_argument(
 product_parser.add_argument(
     "price", type=float, required=True, help="Price is required"
 )
-product_parser.add_argument("image", type=str, required=True, help="Image is required")
+product_parser.add_argument('image', location='files',
+                           type=FileStorage, required=True)
 product_parser.add_argument(
     "status", type=str, required=True, help="Status is required"
 )
@@ -48,6 +51,15 @@ class ProductsResource(Resource):
     @products_ns.marshal_with(product_model)
     def post(self):
         args = product_parser.parse_args()
+        image_file = args['image']  # Get the uploaded image file
+
+        if image_file:
+            filename = secure_filename(image_file.filename)
+            image_path = os.path.join('./uploads', filename)
+            image_file.save(image_path)
+
+            args['image'] = image_path  # Update the 'image' field to the image path
+
         new_product = Products(**args)
         try:
             db.session.add(new_product)
