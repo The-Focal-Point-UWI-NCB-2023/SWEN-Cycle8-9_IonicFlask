@@ -16,9 +16,9 @@ export async function getCsrfToken() {
     }
 }
 
-export async function logout() {
+export async function logout(csrfToken: string) {
     try {
-        const csrfToken = await getCsrfToken()
+        //const csrfToken = await getCsrfToken()
         const logoutResponse = await fetch(
             'http://127.0.0.1:8080/api/v1/auth/logout',
             {
@@ -37,4 +37,44 @@ export async function logout() {
         throw error
     }
 } 
+
+export function isAuthenticated(csrfToken: string) {
+    return localStorage.getItem('isAuthed') === 'true';
+}
+
+export async function isAdmin(){
+    const jwt = localStorage.getItem('jwt');
+    try {
+    const response = await fetch('http://127:0.0.1:8080/api/v1/auth/isAdmin', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${jwt}`,
+            'X-CSRFToken': 'csrfToken', 
+        }
+    });
+
+    const data = await response.json()
+
+    if (response.ok ) {
+        //const data = await response.json();
+        return data.message; 
+    } else {
+        console.error('Failed to check admin status');
+        return false;
+    }
+    } catch (error) {
+        console.error('Error during fetch:', error);
+        return false;
+    }
+}
+        
+
+export function logoutUser() {
+    localStorage.removeItem('jwt');
+    localStorage.removeItem('isAuthed');
+    // You can also perform additional cleanup if necessary
+    window.location.href = '/login'; // Redirect to the login page after logout
+}
+
 

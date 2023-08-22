@@ -32,6 +32,7 @@ register_parser.add_argument('email', required=True, help='Email address')
 register_parser.add_argument('password', required=True, help='Password')
 
 # ... Your other imports and setup ...
+encode_key = os.environ.get("SECRET_KEY")
 
 @auth_ns.route('/')
 class AuthIndex(Resource):
@@ -130,6 +131,24 @@ class CSRFTokenResource(Resource):
     def get(self):
         csrf_token = generate_csrf()
         return {"csrf_token": csrf_token}
+    
+@auth_ns.route('/isAdmin')
+class IsAdmin(Resource):
+    @requires_auth
+    def get(self):
+        token = request.headers.get('Authorization')  # Get the token from the Authorization header
+        try:
+            decoded_token = jwt.decode(token, encode_key, algorithms=['HS256'])
+            print(decoded_token)
+            if decoded_token['role'] == 1:
+                return {'message': 'isAdmin'}, 200
+            else:
+                return {'message': 'notAdmin'}, 200
+        except jwt.ExpiredSignatureError:
+            return {'message': 'Token is expired'}, 401
+
+
+
     
 
 # Add namespaces to the API

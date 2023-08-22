@@ -71,6 +71,7 @@ const Login: React.FC = () => {
             if (response.ok && data.message === 'User found') {
                 setJwt(data.token)
                 localStorage.setItem('jwt', data.token)
+                localStorage.setItem('isAuthed', 'true')
                 present({
                     message: 'Login Successful',
                     duration: 3000,
