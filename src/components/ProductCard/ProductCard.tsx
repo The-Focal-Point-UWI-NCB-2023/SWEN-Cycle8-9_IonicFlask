@@ -24,7 +24,7 @@ interface Props {
 const ProductCard: React.FC<PropsWithChildren<Props>> = (props) => {
     return (
         <IonItem button>
-            <Link to={'/products/' + props.id} className={styles.link}>
+            <Link to={'products/' + props.id} className={styles.link}>
                 <IonCard className={styles.card} color="light">
                     <IonImg
                         className={styles.img}

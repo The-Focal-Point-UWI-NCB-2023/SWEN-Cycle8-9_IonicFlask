@@ -11,7 +11,7 @@ export interface Product {
 
 export async function getProducts() {
     try {
-        const response = await fetch(api_url_rest + `/products/`, {
+        const response = await fetch(api_url_rest + `products/`, {
             headers: {
                 Authorization: 'Bearer', // Add your bearer token here
             },
@@ -28,7 +28,7 @@ export async function getProducts() {
 export async function createProduct(productData: Product) {
     try {
         const csrfToken = await getCsrfToken()
-        const response = await fetch(api_url_rest + `/products/`, {
+        const response = await fetch(api_url_rest + `products/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
