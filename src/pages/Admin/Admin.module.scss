@@ -10,8 +10,8 @@
 }
 
 .button {
-  background-color: #007bff;
-  color: white;
+  background-color: var(--ion-color-primary);
+  color: var(--ion-color-secondary-contrast);
   border-radius: 10px;
 }
 
@@ -20,8 +20,8 @@
   margin-bottom: 1%;
   margin-top: 1%;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-  background-color: #007bff;
-  color: #F0EAD6;
+  background-color: var(--ion-color-primary);
+  color: var(--ion-color-secondary-contrast);
   border-radius: 10px;
 
 }
@@ -55,7 +55,7 @@
   height: 30px;
   width: 30px;
   padding-right: 2%;
-  color: #28a745;
+  color: var(--ion-color-success);
   cursor: pointer;
 }
 
@@ -63,7 +63,7 @@
   height: 30px;
   width: 30px;
   padding-right: 2%;
-  color: blue;
+  color: var(--ion-color-primary);
   cursor: pointer;
 }
 
@@ -71,12 +71,12 @@
   height: 30px;
   width: 30px;
   padding-right: 2%;
-  color:  red;
+  color:  var(--ion-color-danger);
   cursor: pointer;
 }
 
 .prodAdd{
-  background-color:#28a745;
+  background-color:var(--ion-color-success);
   width: 100%;
 }
 
