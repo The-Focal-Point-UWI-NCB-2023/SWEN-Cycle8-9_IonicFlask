@@ -15,7 +15,7 @@ import {
     IonIcon,
     IonInput,
     IonTitle,
-    IonBadge,
+    IonAlert,
 } from '@ionic/react'
 import { productItems } from '../Products/ProuductItemLoader'
 import { cart, eye, trash } from 'ionicons/icons'
@@ -25,6 +25,19 @@ import { Link } from 'react-router-dom'
 const Cart: React.FC = () => {
     const [total, setTotal] = useState(0)
     const [quantity, setQuantity] = useState<number>(1)
+    const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false)
+    const [productToDeleteId, setProductToDeleteId] = useState<number | null>(
+        null
+    )
+
+    const openDeleteConfirmation = (productId: number) => {
+        setProductToDeleteId(productId)
+        setShowDeleteConfirmation(true)
+    }
+
+    const closeDeleteConfirmation = () => {
+        setShowDeleteConfirmation(false)
+    }
 
     useEffect(() => {
         const subtotal = productItems
@@ -88,8 +101,36 @@ const Cart: React.FC = () => {
                                 <IonIcon
                                     icon={trash}
                                     className={styles.delIcon}
+                                    onClick={() =>
+                                        openDeleteConfirmation(prod.id)
+                                    }
                                 />
                             </IonCol>
+                            <IonAlert
+                                isOpen={showDeleteConfirmation}
+                                onDidDismiss={closeDeleteConfirmation}
+                                header="Confirm Deletion"
+                                message="Are you sure you want to delete this product?"
+                                buttons={[
+                                    {
+                                        text: 'Cancel',
+                                        role: 'cancel',
+                                        handler: closeDeleteConfirmation,
+                                    },
+                                    {
+                                        text: 'Delete',
+                                        handler: () => {
+                                            if (productToDeleteId != null) {
+                                                fetchDeleteProduct(
+                                                    productToDeleteId.toString()
+                                                )
+                                                setProductToDeleteId(null)
+                                            }
+                                            closeDeleteConfirmation()
+                                        },
+                                    },
+                                ]}
+                            />
                         </div>
                     </IonRow>
                 ))}
@@ -105,5 +146,4 @@ const Cart: React.FC = () => {
         </Main>
     )
 }
-
 export default Cart

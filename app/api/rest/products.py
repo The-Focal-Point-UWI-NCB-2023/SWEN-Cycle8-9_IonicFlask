@@ -66,7 +66,7 @@ class ProductsResource(Resource):
             db.session.commit()
             return new_product, 201
         except Exception as e:
-            abort(409, message="Invalid field input")
+            abort(409, message=e)
 
 @products_ns.route("/<int:product_id>")
 @products_ns.response(404, "Product not found")
@@ -88,11 +88,20 @@ class ProductResource(Resource):
         if product:
             try:
                 args = product_parser.parse_args()
+                image_file = args['image']  # Get the uploaded image file
+
+                if image_file:
+                    filename = secure_filename(image_file.filename)
+                    image_path = os.path.join('./uploads', filename)
+                    image_file.save(image_path)
+
+                args['image'] = image_path  # Update the 'image' field to the image path
+
                 for key, value in args.items():
                     setattr(product, key, value)
                 db.session.commit()
             except Exception as e:
-                abort(409, message="Invalid field input")
+                abort(409, message=e)
         elif product is None:
             abort(404, message="Product not found")
         

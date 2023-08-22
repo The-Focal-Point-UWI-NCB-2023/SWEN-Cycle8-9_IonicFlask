@@ -23,7 +23,6 @@ import { add, create, trash } from 'ionicons/icons' // Import the Ionicons add i
 import MyModal from './AdminModal'
 import ProductForm from './ProductForm'
 import UserForm from './CustomerForm'
-import { FormData } from './CustomerForm'
 import {
     Product,
     createProduct,
@@ -57,6 +56,9 @@ const Admin: React.FC = () => {
     const [orderList, setOrders] = useState<Order[]>([])
     const [userList, setUsers] = useState<any>([])
     const [lineitmess, setLineItems] = useState<LineItem>()
+    const [productToDeleteId, setProductToDeleteId] = useState<number | null>(
+        null
+    )
 
     // For testing to see if fetch api works
     useEffect(() => {
@@ -125,7 +127,7 @@ const Admin: React.FC = () => {
 
     async function fetchDeleteProduct(productId: string) {
         try {
-            // Call your API to create the new product
+            // Call your API to delete a product
             const deletedProduct = await deleteProduct(productId)
         } catch (error) {
             console.error('Error creating product:', error)
@@ -298,7 +300,8 @@ const Admin: React.FC = () => {
 
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false)
 
-    const openDeleteConfirmation = () => {
+    const openDeleteConfirmation = (productId: number) => {
+        setProductToDeleteId(productId)
         setShowDeleteConfirmation(true)
     }
 
@@ -371,18 +374,11 @@ const Admin: React.FC = () => {
                                     }
                                 >
                                     <UserForm
-                                        currentUser={{
-                                            name: users['Name'],
-                                            email: users['Email'],
-                                            password: users['Password'],
-                                            role: users['Role'],
-                                        }}
-                                        onSubmit={function (
-                                            formData: FormData
-                                        ): void {
-                                            throw new Error(
-                                                'Function not implemented.'
-                                            )
+                                        initialValues={{
+                                            id: users.id,
+                                            name: users.full_name,
+                                            email: users.email,
+                                            role: users.role,
                                         }}
                                     ></UserForm>
                                 </MyModal>
@@ -403,19 +399,12 @@ const Admin: React.FC = () => {
                             onClose={closeAddProductModal}
                         >
                             <ProductForm
-                                initialProduct={{
-                                    image: '',
-                                    title: '',
+                                initialValues={{
+                                    name: '',
                                     description: '',
                                     price: 0,
-                                }}
-                                onSubmit={function (newProduct: {
-                                    image: string
-                                    title: string
-                                    description: string
-                                    price: number
-                                }): void {
-                                    throw new Error('Function not implemented.')
+                                    status: '',
+                                    mode: 'create',
                                 }}
                             ></ProductForm>
                         </MyModal>
@@ -466,30 +455,25 @@ const Admin: React.FC = () => {
                                         }
                                     >
                                         <ProductForm
-                                            initialProduct={{
-                                                image: prod['Image'],
-                                                title: prod['Title'],
-                                                description:
-                                                    prod['Description'],
-                                                price: prod['Price'],
+                                            initialValues={{
+                                                name: prod.name,
+                                                description: prod.description,
+                                                price: prod.price,
+                                                status: prod.status,
+                                                id: prod.id,
+                                                mode: 'update',
                                             }}
-                                            onSubmit={function (updatedProduct: {
-                                                image: string
-                                                title: string
-                                                description: string
-                                                price: number
-                                            }): void {
-                                                throw new Error(
-                                                    'Function not implemented.'
-                                                )
-                                            }}
-                                        ></ProductForm>
+                                        />{' '}
                                     </MyModal>
                                     <IonIcon
                                         icon={trash}
                                         className={styles.delIcon}
-                                        onClick={openDeleteConfirmation}
+                                        onClick={() =>
+                                            openDeleteConfirmation(prod.id)
+                                        }
                                     />
+
+                                    <p>{prod.id}</p>
 
                                     <IonAlert
                                         isOpen={showDeleteConfirmation}
@@ -506,8 +490,17 @@ const Admin: React.FC = () => {
                                             {
                                                 text: 'Delete',
                                                 handler: () => {
-                                                    // Call your delete product function here
-                                                    // Close the confirmation modal afterward
+                                                    if (
+                                                        productToDeleteId !=
+                                                        null
+                                                    ) {
+                                                        fetchDeleteProduct(
+                                                            productToDeleteId.toString()
+                                                        )
+                                                        setProductToDeleteId(
+                                                            null
+                                                        )
+                                                    }
                                                     closeDeleteConfirmation()
                                                 },
                                             },
