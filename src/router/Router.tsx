@@ -28,7 +28,6 @@ import Products from '../pages/Products/Products'
 import ProductDetails from '../pages/Products/ProductDetails/ProductDetails'
 import Cart from '../pages/Cart/Cart'
 import Admin from '../pages/Admin/Admin'
-import Settings from '../pages/Settings/Settings'
 import { logoutUser, isLoggedin, userAdmin } from '../util/api/auth/auth';
 import { useState, useEffect } from 'react'
 
@@ -96,14 +95,11 @@ const Router: React.FC = () => {
                         }}
                     />
 
-                    {/* Settings */}
-                    <Route exact path="/settings" component={Settings} />
-
                     {/* Fallback Route */}
                     <Route render={() => <Redirect to="/landing" />} />
                 </IonRouterOutlet>
 
-                <IonTabBar slot="top">
+                <IonTabBar slot={window.orientation > 1 ? 'bottom' : 'top'}>
                     <IonTabButton tab="products" href="/products">
                         <IonIcon icon={glassesOutline} />
                         <IonLabel>Products</IonLabel>
@@ -122,11 +118,6 @@ const Router: React.FC = () => {
                     ) : (
                         ''
                     )}
-
-                    <IonTabButton tab="settings" href="/settings">
-                        <IonIcon icon={settingsOutline} />
-                        <IonLabel>Settings</IonLabel>
-                    </IonTabButton>
 
                     {isAuthed ? (
                         //<IonTabButton tab="logout" onClick = {logoutUser} /href="/logout">

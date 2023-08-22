@@ -1,85 +1,87 @@
-import React, { useState } from 'react';
-import { IonLabel, IonInput, IonSelect, IonSelectOption, IonButton } from '@ionic/react';
+import React, { useState } from 'react'
+import {
+    IonList,
+    IonItem,
+    IonInput,
+    IonButton,
+    IonSelect,
+    IonSelectOption,
+} from '@ionic/react'
+import { api_url_rest, getCsrfToken } from '../../util/constants'
 
-export interface FormData {
-    name: string;
-    email: string;
-    password: string;
-    role: string;
-}
+const UserForm = ({ initialValues }) => {
+    const [userName, setUserName] = useState(initialValues.name || '')
+    const [userEmail, setUserEmail] = useState(initialValues.email || '')
+    const [userRole, setUserRole] = useState(initialValues.role || '')
+    const [userID, setProductID] = useState(initialValues.id)
 
-interface UserFormProps {
-    onSubmit: (formData: FormData) => void;
-    currentUser: FormData
-}
+    const handleSubmit = async (e) => {
+        e.preventDefault()
 
-const UserForm: React.FC<UserFormProps> = ({ currentUser,onSubmit }) => {
-    const [formData, setFormData] = useState(currentUser)
+        try {
+            const csrfToken = await getCsrfToken()
+            const formData = new FormData()
+            formData.append('full_name', userName)
+            formData.append('email', userEmail)
+            formData.append('role', userRole)
 
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-        const { name, value } = event.target;
-        setFormData((prevData) => ({
-            ...prevData,
-            [name]: value,
-        }));
-    };
+            const response = await fetch(api_url_rest + `users/${userID}`, {
+                method: 'PUT',
+                headers: {
+                    'X-CSRFToken': csrfToken,
+                },
+                credentials: 'include',
+                mode: 'cors',
+                body: formData,
+            })
 
-    const handleSubmit = (event: React.FormEvent) => {
-        event.preventDefault();
-        onSubmit(formData);
-        setFormData({
-            name: '',
-            email: '',
-            password: '',
-            role: '',
-        });
-    };
-
-    const isRoleSelected = formData.role !== '';
+            const data = await response.json()
+            console.log('Updated user successfully')
+        } catch (error) {
+            // Handle success
+            console.error('Error creating user:', error)
+            // Handle error
+        }
+    }
 
     return (
-        <form onSubmit={handleSubmit}>
-        <IonLabel>Name:</IonLabel>
-        <IonInput
-            type="text"
-            name="name"
-            value={formData.name}
-            onIonChange={() => handleChange}
-            required
-            disabled={true}
-        />
-        <IonLabel>Email:</IonLabel>
-        <IonInput
-            type="email"
-            name="email"
-            value={formData.email}
-            onIonChange={() => handleChange}
-            required
-            disabled= {true}
-        />
-        <IonLabel>Password:</IonLabel>
-        <IonInput
-            type="password"
-            name="password"
-            value={formData.password}
-            onIonChange={() => handleChange}
-            required
-            disabled= {true}
-        />
-        <IonLabel>Role:</IonLabel>
-        <IonSelect
-            name="role"
-            value={formData.role}
-            onIonChange={ () => handleChange}
-            
-        >
-            <IonSelectOption value="">Select Role</IonSelectOption>
-            <IonSelectOption value="admin">Admin</IonSelectOption>
-            <IonSelectOption value="user">User</IonSelectOption>
-        </IonSelect>
-        <IonButton type="submit" >Submit</IonButton>
-    </form>
-    );
-};
+        <form id="form" action="#" method="post" encType="multipart/form-data">
+            <IonList>
+                <IonItem>
+                    <IonInput
+                        label="Name"
+                        name="full_name"
+                        value={userName}
+                        placeholder="e.g. A Pink Chair"
+                        onIonChange={(e) => setUserName(e.detail.value)}
+                    />
+                </IonItem>
+                <IonItem>
+                    <IonInput
+                        label="email"
+                        name="email"
+                        value={userEmail}
+                        placeholder="Enter user  email"
+                        onIonChange={(e) => setUserEmail(e.detail.value)}
+                    />
+                </IonItem>
+                <IonItem>
+                    <IonInput
+                        type="number"
+                        label="role"
+                        name="role"
+                        value={userRole}
+                        placeholder="Enter user role"
+                        onIonChange={(e) => userRole(e.detail.value)}
+                    />
+                </IonItem>
+                <input type="hidden" name="id" value={userID} />
+                <IonButton color="primary" onClick={handleSubmit}>
+                    Save
+                </IonButton>
+            </IonList>
+        </form>
+    )
+}
 
-export default UserForm;
+export default UserForm

@@ -1,22 +1,21 @@
 import {
+    IonBreadcrumb,
+    IonBreadcrumbs,
     IonButton,
     IonCol,
     IonGrid,
     IonIcon,
     IonImg,
     IonInput,
-    IonItem,
-    IonItemGroup,
-    IonLabel,
-    IonList,
-    IonListHeader,
 } from '@ionic/react'
 import Main from '../../../components/Main/Main'
 import styles from './ProductDetails.module.scss'
 import { useParams } from 'react-router-dom'
-import { cartOutline } from 'ionicons/icons'
+import { cart, cartOutline } from 'ionicons/icons'
+import Products from '../Products'
 import { useState, useEffect } from 'react'
 import { Product, getProductById } from '../../../util/api/models/products'
+import ProductCard from '../../../components/ProductCard/ProductCard'
 
 const ProductDetails: React.FC = () => {
     const { id } = useParams<{ id: string }>()
@@ -36,26 +35,40 @@ const ProductDetails: React.FC = () => {
     }
     return (
         <Main>
-            <IonGrid className={styles.container} fixed>
-                <IonCol>
-                    <IonImg src={product?.image} className={styles.img} />
-                </IonCol>
-                <IonCol>
-                    <h2>{product?.name}</h2>
-                    <h3>${product?.price.toFixed(2)}</h3>
-                    <form>
-                        <IonInput
-                            label="Outline input"
-                            labelPlacement="floating"
-                            fill="outline"
-                            placeholder="Enter text"
+            <IonBreadcrumbs>
+                <IonBreadcrumb href="/">Home</IonBreadcrumb>
+                <IonBreadcrumb href="/products">Frames</IonBreadcrumb>
+                <IonBreadcrumb href="#">{product?.name}</IonBreadcrumb>
+            </IonBreadcrumbs>
+            <div>
+                <br />
+                <IonGrid className={styles.container} fixed>
+                    <IonCol size="12" size-sm="4">
+                        <IonImg
+                            src="../../../../uploads/2.png"
+                            className={styles.img}
                         />
-                        <IonButton>
-                            Add to Cart <IonIcon icon={cartOutline} />
-                        </IonButton>
-                    </form>
-                </IonCol>
-            </IonGrid>
+                        {/* <IonImg src={product?.image} className={styles.img} /> */}
+                    </IonCol>
+
+                    <IonCol>
+                        <div className={styles.content}>
+                            <h2>{product?.name}</h2>
+                            <h3>${product?.price.toFixed(2)}</h3>
+                            <IonInput
+                                label="Quantity"
+                                labelPlacement="floating"
+                                type="number"
+                                fill="outline"
+                            ></IonInput>
+                            <IonButton>
+                                <IonIcon slot="start" icon={cart}></IonIcon>
+                                Add to Cart
+                            </IonButton>
+                        </div>
+                    </IonCol>
+                </IonGrid>
+            </div>
         </Main>
     )
 }

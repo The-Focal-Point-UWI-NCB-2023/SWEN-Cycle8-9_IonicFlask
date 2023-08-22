@@ -23,7 +23,6 @@ import { add, create, trash } from 'ionicons/icons' // Import the Ionicons add i
 import MyModal from './AdminModal'
 import ProductForm from './ProductForm'
 import UserForm from './CustomerForm'
-import { FormData } from './CustomerForm'
 import {
     Product,
     createProduct,
@@ -53,29 +52,33 @@ import {
 
 const Admin: React.FC = () => {
     const [activeContent, setActiveContent] = useState('CUSTOMERS')
-    const [productss, setProducts] = useState<Product>()
-    const [orderss, setOrders] = useState<Order>()
-    const [userss, setUsers] = useState<any>()
+    const [productsList, setProducts] = useState<Product[]>([])
+    const [orderList, setOrders] = useState<Order[]>([])
+    const [userList, setUsers] = useState<any>([])
     const [lineitmess, setLineItems] = useState<LineItem>()
+    const [productToDeleteId, setProductToDeleteId] = useState<number | null>(
+        null
+    )
 
     // For testing to see if fetch api works
-    // useEffect(() => {
-    //     fetchProducts()
-    //     fetchOrders()
-    //     fetchUsers()
-    //     fetchLineItems()
-    //     fetchcreateOrder(orderData)
-    // }, [])
+    useEffect(() => {
+        fetchProducts()
+        fetchOrders()
+        fetchUsers()
+        // fetchLineItems()
+        // fetchcreateOrder(orderData)
+    }, [])
 
-    // useEffect(() => {
-    //     console.log('Working prod')
-    //     console.log(productss)
-    //     console.log('before')
-    //     console.log(orderss)
-    //     console.log(userss)
-    //     console.log('next')
-    //     console.log(lineitmess)
-    // }, [productss, orderss])
+    useEffect(() => {
+        // console.log('Working prod')
+        console.log(productsList[0])
+        console.log('test')
+        // console.log('before')
+        // console.log(orderss)
+        // console.log(userss)
+        // console.log('next')
+        // console.log(lineitmess)
+    }, [productsList])
 
     const orderData = {
         user_id: 20,
@@ -124,7 +127,7 @@ const Admin: React.FC = () => {
 
     async function fetchDeleteProduct(productId: string) {
         try {
-            // Call your API to create the new product
+            // Call your API to delete a product
             const deletedProduct = await deleteProduct(productId)
         } catch (error) {
             console.error('Error creating product:', error)
@@ -156,7 +159,7 @@ const Admin: React.FC = () => {
             const fetchedOrders = await getOrders()
             setOrders(fetchedOrders)
         } catch (error) {
-            console.error('Error fetching products:', error)
+            console.error('Error fetching orders:', error)
         }
     }
 
@@ -297,7 +300,8 @@ const Admin: React.FC = () => {
 
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false)
 
-    const openDeleteConfirmation = () => {
+    const openDeleteConfirmation = (productId: number) => {
+        setProductToDeleteId(productId)
         setShowDeleteConfirmation(true)
     }
 
@@ -336,11 +340,14 @@ const Admin: React.FC = () => {
                                     key={`header_${index}`}
                                     className={styles.headerCol}
                                 >
-                                    {header}
+                                    {header === 'full_name'
+                                        ? 'Name'
+                                        : header.charAt(0).toUpperCase() +
+                                          header.slice(1)}
                                 </IonCol>
                             ))}
                         </IonRow>
-                        {test_users.map((users, rowIndex) => (
+                        {userList.map((users, rowIndex) => (
                             <IonRow
                                 key={`user_${rowIndex}`}
                                 className={styles.userRow}
@@ -367,18 +374,11 @@ const Admin: React.FC = () => {
                                     }
                                 >
                                     <UserForm
-                                        currentUser={{
-                                            name: users['Name'],
-                                            email: users['Email'],
-                                            password: users['Password'],
-                                            role: users['Role'],
-                                        }}
-                                        onSubmit={function (
-                                            formData: FormData
-                                        ): void {
-                                            throw new Error(
-                                                'Function not implemented.'
-                                            )
+                                        initialValues={{
+                                            id: users.id,
+                                            name: users.full_name,
+                                            email: users.email,
+                                            role: users.role,
                                         }}
                                     ></UserForm>
                                 </MyModal>
@@ -399,19 +399,12 @@ const Admin: React.FC = () => {
                             onClose={closeAddProductModal}
                         >
                             <ProductForm
-                                initialProduct={{
-                                    image: '',
-                                    title: '',
+                                initialValues={{
+                                    name: '',
                                     description: '',
                                     price: 0,
-                                }}
-                                onSubmit={function (newProduct: {
-                                    image: string
-                                    title: string
-                                    description: string
-                                    price: number
-                                }): void {
-                                    throw new Error('Function not implemented.')
+                                    status: '',
+                                    mode: 'create',
                                 }}
                             ></ProductForm>
                         </MyModal>
@@ -422,18 +415,29 @@ const Admin: React.FC = () => {
                                     key={`header_${index}`}
                                     className={styles.headerCol}
                                 >
-                                    {header}
+                                    {header.charAt(0).toUpperCase() +
+                                        header.slice(1)}
                                 </IonCol>
                             ))}
                         </IonRow>
-                        {products.map((prod, rowIndex) => (
+                        {productsList.map((prod, rowIndex) => (
                             <IonRow
                                 key={`user_${rowIndex}`}
                                 className={styles.userRow}
                             >
                                 {prodHeaders.slice(0, -1).map((header) => (
                                     <IonCol key={`col_${rowIndex}_${header}`}>
-                                        {prod[header]}
+                                        {header === 'price' ? (
+                                            `$${prod[header]}`
+                                        ) : header === 'image' ? (
+                                            <img
+                                                src={`="../../../uploads/${prod[header]}`}
+                                                alt="Product"
+                                                className={styles.productImage}
+                                            />
+                                        ) : (
+                                            prod[header]
+                                        )}{' '}
                                     </IonCol>
                                 ))}
                                 <IonCol className={styles.actionCol}>
@@ -451,30 +455,25 @@ const Admin: React.FC = () => {
                                         }
                                     >
                                         <ProductForm
-                                            initialProduct={{
-                                                image: prod['Image'],
-                                                title: prod['Title'],
-                                                description:
-                                                    prod['Description'],
-                                                price: prod['Price'],
+                                            initialValues={{
+                                                name: prod.name,
+                                                description: prod.description,
+                                                price: prod.price,
+                                                status: prod.status,
+                                                id: prod.id,
+                                                mode: 'update',
                                             }}
-                                            onSubmit={function (updatedProduct: {
-                                                image: string
-                                                title: string
-                                                description: string
-                                                price: number
-                                            }): void {
-                                                throw new Error(
-                                                    'Function not implemented.'
-                                                )
-                                            }}
-                                        ></ProductForm>
+                                        />{' '}
                                     </MyModal>
                                     <IonIcon
                                         icon={trash}
                                         className={styles.delIcon}
-                                        onClick={openDeleteConfirmation}
+                                        onClick={() =>
+                                            openDeleteConfirmation(prod.id)
+                                        }
                                     />
+
+                                    <p>{prod.id}</p>
 
                                     <IonAlert
                                         isOpen={showDeleteConfirmation}
@@ -491,8 +490,17 @@ const Admin: React.FC = () => {
                                             {
                                                 text: 'Delete',
                                                 handler: () => {
-                                                    // Call your delete product function here
-                                                    // Close the confirmation modal afterward
+                                                    if (
+                                                        productToDeleteId !=
+                                                        null
+                                                    ) {
+                                                        fetchDeleteProduct(
+                                                            productToDeleteId.toString()
+                                                        )
+                                                        setProductToDeleteId(
+                                                            null
+                                                        )
+                                                    }
                                                     closeDeleteConfirmation()
                                                 },
                                             },
@@ -510,18 +518,27 @@ const Admin: React.FC = () => {
                                     key={`header_${index}`}
                                     className={styles.headerCol}
                                 >
-                                    {header}
+                                    {header
+                                        .split('_')
+                                        .map(
+                                            (word) =>
+                                                word.charAt(0).toUpperCase() +
+                                                word.slice(1)
+                                        )
+                                        .join(' ')}
                                 </IonCol>
                             ))}
                         </IonRow>
-                        {orders.map((order, rowIndex) => (
+                        {orderList.map((order, rowIndex) => (
                             <IonRow
                                 key={`user_${rowIndex}`}
                                 className={styles.userRow}
                             >
                                 {order_headers.map((header) => (
                                     <IonCol key={`col_${rowIndex}_${header}`}>
-                                        {order[header]}
+                                        {header === 'total_amount'
+                                            ? `$${order[header]}`
+                                            : order[header]}{' '}
                                     </IonCol>
                                 ))}
                             </IonRow>

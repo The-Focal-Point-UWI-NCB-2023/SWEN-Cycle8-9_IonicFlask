@@ -5,8 +5,49 @@
     justify-content: center;
     background-color: var(--ion-color-light-tint);
     border-radius: 20px;
+    border: solid;
+    width: 70%;
 }
+
 .img {
-    width: 50vw;
-    max-width: 600px;
+    max-width: 100%;
+    height: auto;
+    padding: 10px;
+}
+
+.content {
+    align-self: center;
+    justify-content: center;
+}
+
+ion-card {
+    max-width: 80%;
+}
+
+ion-grid {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+ion-input {
+    max-width: 100px;
+    margin: auto;
+}
+
+ion-col {
+    align-items: center;
+    justify-content: center;
+}
+
+@media screen and (max-width: 425px) {
+    .container {
+        display: block;
+        align-items: center;
+        justify-content: center;
+        background-color: var(--ion-color-light-tint);
+        width: 80%;
+        height: fit-content;
+        margin-bottom: 20px;
+    }
 }
