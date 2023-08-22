@@ -8,7 +8,7 @@ import {
 } from '@ionic/react'
 import Main from '../../components/Main/Main'
 import styles from './Login.module.scss'
-import { isAdmin,test } from '../../util/api/auth/auth';
+import { isAdmin,isLoggedin,getCsrfToken,checkLoginStatus } from '../../util/api/auth/auth';
 
 
 const Login: React.FC = () => {
@@ -42,12 +42,13 @@ const Login: React.FC = () => {
 
     useEffect(() => {
         getCsrfToken()
-        test()
+        isAdmin()
+        checkLoginStatus()
     }, [])
 
     const loginUser = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-
+        console.log(csrfToken, 'csrfToken')
         try {
             const requestBody = {
                 email: email,
@@ -74,7 +75,7 @@ const Login: React.FC = () => {
             if (response.ok && data.message === 'User found') {
                 setJwt(data.token)
                 localStorage.setItem('jwt', data.token)
-                localStorage.setItem('isAuthed', 'true')
+                //localStorage.setItem('isAuthed', 'true')
                 present({
                     message: 'Login Successful',
                     duration: 3000,

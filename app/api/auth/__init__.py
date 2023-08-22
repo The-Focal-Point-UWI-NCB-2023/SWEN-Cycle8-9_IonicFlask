@@ -174,34 +174,34 @@ class IsLoggedIn(Resource):
         
         
     
-# @auth_ns.route('/isAdmin')
-# class IsLoggedIn(Resource):
-#     @requires_auth
-#     def get(self):
-#         token = request.headers.get('Authorization')  # Get the token from the Authorization header
-#         parts = token.split()
-#         token = parts[1]
-#         try:
-#             decoded_token = jwt.decode(token, encode_key, algorithms=['HS256'])
-#             #print(decoded_token)
-#             if decoded_token['role'] == 1:
-#                 response = {
-#                     'message': 'isAdmin',
-#                     'token': token
-#                 }
-#                 return response, 200
-#             else:
-#                 response = {
-#                     'message': 'notAdmin',
-#                     'token': token
-#                 }
-#                 return response, 200
-#         except jwt.ExpiredSignatureError:
-#                 response = {
-#                     'message': 'Token is expired',
-#                     'token': token
-#                 }
-#                 return response , 401
+@auth_ns.route('/isAdmin')
+class IsLoggedIn(Resource):
+    @requires_auth
+    def get(self):
+        token = request.headers.get('Authorization')  # Get the token from the Authorization header
+        parts = token.split()
+        token = parts[1]
+        try:
+            decoded_token = jwt.decode(token, encode_key, algorithms=['HS256'])
+            #print(decoded_token)
+            if decoded_token['role'] == 1:
+                response = {
+                    'message': 'isAdmin',
+                    'token': token
+                }
+                return response, 200
+            else:
+                response = {
+                    'message': 'notAdmin',
+                    'token': token
+                }
+                return response, 200
+        except jwt.ExpiredSignatureError:
+                response = {
+                    'message': 'Token is expired',
+                    'token': token
+                }
+                return response , 401
         
 # @auth_ns.route('/getUser')
 # class GetUser(Resource):

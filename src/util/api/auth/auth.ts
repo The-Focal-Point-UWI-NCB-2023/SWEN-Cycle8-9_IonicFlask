@@ -79,20 +79,25 @@ export function isAuthenticated() {
 export async function isAdmin() {
     const jwt = localStorage.getItem('jwt');
 
+    const csrfToken = await getCsrfToken()
+    //console.log("Token", csrfToken);
+
     try {
         const response = await fetch('http://127.0.0.1:8080/api/v1/auth/isAdmin', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${jwt}`,
+                'Authorization': `bearer ${jwt}`,
+                'X-CSRFToken': csrfToken,
             },
             credentials: 'include',
-            mode: 'no-cors',
+            //mode: 'no-cors',
         });
-
+            const data = await response.json();
         if (response.ok) {
-            const data = await response.text(); // Use response.text() for no-cors mode
-            return data; 
+            // Use response.text() for no-cors mode
+            console.log(data.message);
+            return data.message; 
         } else {
             console.error('Failed to check admin status');
             return false;
@@ -103,14 +108,20 @@ export async function isAdmin() {
     }
 }
 
-export async function test() {
+export async function isLoggedin() {
     const jwt = localStorage.getItem('jwt');
+    const csrfToken = await getCsrfToken()
+    //console.log("Token", csrfToken);
+
     try {
         const response = await fetch('http://127.0.0.1:8080/api/v1/auth/isLoggedin', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `bearer ${jwt}`,
+                'X-CSRFToken': csrfToken,
+
+
             },
             credentials: 'include',
             //mode: 'no-cors',
@@ -119,7 +130,7 @@ export async function test() {
         if (response.ok) {
             //const data = await response.text(); // Use response.text() for no-cors mode
             console.log(data);
-            return data; 
+            return data.message; 
         } else {
             console.log(data.message);
 
@@ -129,6 +140,19 @@ export async function test() {
     } catch (error) {
         console.error('Error during fetch:', error);
         return false;
+    }
+}
+
+export async function checkLoginStatus() {
+    try {
+        const loggedInStatus = await isLoggedin();
+
+        if (loggedInStatus === "isLoggedIn") {
+            // Redirect the user to the home page
+            window.location.href = '/home';
+        }
+    } catch (error) {
+        console.error('Error during login check:', error);
     }
 }
 
