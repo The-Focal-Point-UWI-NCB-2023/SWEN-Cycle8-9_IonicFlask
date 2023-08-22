@@ -1,54 +1,88 @@
-.img {
-    width: 100%;
-    height: 300px;
-    object-fit: contain;
-    object-position: 60% 20%;
-    margin-left: 0;
-}
+// .img {
+//     width: 100%;
+//     height: 300px;
+//     object-fit: contain;
+//     object-position: 60% 20%;
+//     margin-left: 0;
+// }
 
 .link {
     text-decoration: none;
 }
 
-ion-grid {
-    --ion-grid-column-padding: auto;
-}
+// // .card {
+// //     width: 500px;
+// //     height: fit-content;
+// //     align-items: center;
+// //     justify-content: center;
+// //     text-align: center;
+// //     box-shadow: none;
+// // }
 
-.card {
-    width: 500px;
-    height: fit-content;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    box-shadow: none;
-}
-
-ion-item {
-    --background-hover: var(--ion-color-primary);
-}
+// ion-item {
+//     --background-hover: var(--ion-color-primary);
+// }
 
 ion-button {
-    max-width: 70%;
+    max-width: fit-content;
     white-space: normal;
-    padding: 10px;
+    font-size: large;
 }
 
-@media screen and (max-width: 768px) {
-    .img {
-        width: 100%;
-        height: 200px;
-        object-fit: fill;
-        object-position: center;
-        margin-left: auto;
-        margin-right: auto;
-    }
+// @media screen and (max-width: 768px) {
+//     .img {
+//         width: 100%;
+//         height: 200px;
+//         object-fit: fill;
+//         object-position: center;
+//         margin-left: auto;
+//         margin-right: auto;
+//     }
 
-    .card {
-        width: 300px;
-        height: 400px;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-        box-shadow: none;
-    }
+//     .card {
+//         width: 300px;
+//         height: 400px;
+//         align-items: center;
+//         justify-content: center;
+//         text-align: center;
+//         box-shadow: none;
+//     }
+// }
+
+.productContainer {
+    padding: 10px;
+    //border: 2px solid rgb(231, 231, 231);
+    background-color: var(--ion-color-light-tint);
+    height: 355px;
+    border-radius: 10px;
+    margin: 10px;
+}
+
+.coverImage {
+    height: 160px;
+    background-color: white;
+    background-position: center center;
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+.productTitle {
+    color: var(--ion-color-dark);
+    overflow: hidden;
+}
+
+.productInfo {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    align-content: center;
+    font-size: large;
+}
+
+ion-badge {
+    height: fit-content;
+    width: fit-content;
+    font-size: larger;
+    color: var(--ion-color-dark);
 }

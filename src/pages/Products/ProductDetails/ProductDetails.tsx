@@ -2,21 +2,11 @@ import {
     IonBreadcrumb,
     IonBreadcrumbs,
     IonButton,
-    IonCard,
-    IonCardContent,
-    IonCardHeader,
-    IonCardSubtitle,
-    IonCardTitle,
     IonCol,
     IonGrid,
     IonIcon,
     IonImg,
     IonInput,
-    IonItem,
-    IonLabel,
-    IonList,
-    IonRow,
-    IonThumbnail,
 } from '@ionic/react'
 import Main from '../../../components/Main/Main'
 import styles from './ProductDetails.module.scss'
@@ -25,6 +15,7 @@ import { cart, cartOutline } from 'ionicons/icons'
 import Products from '../Products'
 import { useState, useEffect } from 'react'
 import { Product, getProductById } from '../../../util/api/models/products'
+import ProductCard from '../../../components/ProductCard/ProductCard'
 
 const ProductDetails: React.FC = () => {
     const { id } = useParams<{ id: string }>()
@@ -52,13 +43,14 @@ const ProductDetails: React.FC = () => {
             <div>
                 <br />
                 <IonGrid className={styles.container} fixed>
-                    <IonCol>
+                    <IonCol size="12" size-sm="4">
                         <IonImg
                             src="../../../../uploads/2.png"
                             className={styles.img}
                         />
                         {/* <IonImg src={product?.image} className={styles.img} /> */}
                     </IonCol>
+
                     <IonCol>
                         <div className={styles.content}>
                             <h2>{product?.name}</h2>

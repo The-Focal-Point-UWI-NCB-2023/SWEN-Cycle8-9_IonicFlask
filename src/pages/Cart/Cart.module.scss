@@ -1,19 +1,24 @@
 .container {
     display: flex;
+    width: 60%;
     justify-content: center;
     flex-direction: column;
     align-items: center;
+    margin-bottom: 20px;
+    font-size: xx-large;
+    padding: 10px;
 
     .cartRowTotal {
-        display: flex;
         align-items: center;
         justify-content: center;
-        flex-direction: column;
         gap: 10px;
         padding: 10px;
         border-radius: 10px;
         background-color: var(--ion-color-light-tint);
+        border: 2px solid var(--ion-color-light-shade);
         margin: 10px 0;
+        font-size: xx-large;
+        width: 60%;
 
         ion-button {
             padding: 0;
@@ -22,11 +27,16 @@
     }
 
     .cartRow {
+        padding: 10px;
+        border: 2px solid var(--ion-color-light-shade);
+        background-color: var(--ion-color-light);
+        height: 355px;
         border-radius: 10px;
-        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-        background-color: var(--ion-color-light-tint);
-        margin-bottom: 10px;
-        font-size: 24px;
+        margin: 10px;
+        display: grid;
+        grid-template-columns: 50% 50%;
+        grid-template-rows: 1;
+        font-size: xx-large;
 
         ion-col {
             display: flex;
@@ -35,9 +45,23 @@
         }
 
         .cartTitle {
+            font-size: xx-large;
+        }
+
+        .cartImg {
+            max-width: 100%;
+            height: 100%;
         }
 
         .productPrice {
+        }
+
+        .qtyContainer {
+            display: flexbox;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            font-size: x-large;
         }
 
         .productQuantity {
@@ -50,6 +74,44 @@
                 color: var(--ion-color-danger);
                 cursor: pointer;
             }
+        }
+    }
+}
+
+@media screen and (max-width: 425px) {
+    .container {
+        display: flexbox;
+        width: 100%;
+        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+
+        .cartRowTotal {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 10px;
+            padding: 10px;
+            border-radius: 10px;
+            background-color: var(--ion-color-light-tint);
+            margin: 10px 0;
+
+            ion-button {
+                padding: 0;
+                min-width: 120px;
+            }
+        }
+
+        .cartRow {
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            background-color: var(--ion-color-light-tint);
+            margin-bottom: 10px;
+            font-size: 24px;
+            display: block;
+            padding: 10px;
+            height: fit-content;
         }
     }
 }

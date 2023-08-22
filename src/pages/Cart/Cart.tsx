@@ -15,9 +15,12 @@ import {
     IonIcon,
     IonInput,
     IonTitle,
+    IonBadge,
 } from '@ionic/react'
 import { productItems } from '../Products/ProuductItemLoader'
-import { trash } from 'ionicons/icons'
+import { cart, eye, trash } from 'ionicons/icons'
+import { props } from 'cypress/types/bluebird'
+import { Link } from 'react-router-dom'
 
 const Cart: React.FC = () => {
     const [total, setTotal] = useState(0)
@@ -40,6 +43,7 @@ const Cart: React.FC = () => {
     return (
         <Main>
             <IonGrid className={styles.container}>
+                <h2>Your Shopping Cart</h2>
                 <IonRow className={styles.cartRowTotal}>
                     <IonTitle className={styles.total}>
                         Total <span>${total}</span>
@@ -48,12 +52,12 @@ const Cart: React.FC = () => {
                         CHECKOUT
                     </IonButton>
                 </IonRow>
-                {productItems.slice(0, 4).map((prod, idx) => (
+                {productItems.slice(0, 4).map((prod, index) => (
                     <IonRow className={styles.cartRow}>
                         <IonCol>
                             <IonImg
                                 src={'../../../uploads/' + prod.image + '.png'}
-                                className={styles.Cartimg}
+                                className={styles.cartImg}
                             />
                         </IonCol>
                         <IonCol>
@@ -64,21 +68,39 @@ const Cart: React.FC = () => {
                         <IonCol className={styles.productPrice}>
                             <IonText className="Price">${prod.price}</IonText>
                         </IonCol>
-                        <IonCol>
-                            <IonInput
-                                className={styles.productQuantity}
-                                type="number"
-                                placeholder="000"
-                                value={quantity}
-                                onIonChange={() => handleQuantityChange}
-                            ></IonInput>
-                        </IonCol>
 
-                        <IonCol className={styles.remove}>
-                            <IonIcon icon={trash} className={styles.delIcon} />
-                        </IonCol>
+                        <div className={styles.qtyContainer}>
+                            <IonCol>
+                                <IonInput
+                                    className={styles.productQuantity}
+                                    label="Qty"
+                                    labelPlacement="floating"
+                                    type="number"
+                                    fill="outline"
+                                    placeholder="000"
+                                    min="1"
+                                    value={quantity}
+                                    onIonChange={() => handleQuantityChange}
+                                ></IonInput>
+                            </IonCol>
+
+                            <IonCol className={styles.remove}>
+                                <IonIcon
+                                    icon={trash}
+                                    className={styles.delIcon}
+                                />
+                            </IonCol>
+                        </div>
                     </IonRow>
                 ))}
+                <IonRow className={styles.cartRowTotal}>
+                    <IonTitle className={styles.total}>
+                        Total <span>${total}</span>
+                    </IonTitle>
+                    <IonButton className={styles.checkoutBtn}>
+                        CHECKOUT
+                    </IonButton>
+                </IonRow>
             </IonGrid>
         </Main>
     )
