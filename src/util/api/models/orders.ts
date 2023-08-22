@@ -9,9 +9,10 @@ export interface Order {
 
 export async function getOrders() {
     try {
+        const jwtToken = localStorage.getItem('jwt')
         const response = await fetch(api_url_rest + `orders/`, {
             headers: {
-                Authorization: 'Bearer', // Add your bearer token here
+                Authorization: `Bearer ${jwtToken}`,
             },
         })
 

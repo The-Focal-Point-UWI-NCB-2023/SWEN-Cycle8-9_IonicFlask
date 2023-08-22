@@ -63,7 +63,7 @@ class GenerateToken(Resource):
             "role": args['role'],
             "password": args['password'],
             "iat": timestamp,
-            "exp": timestamp + timedelta(minutes=10)
+            "exp": timestamp + timedelta(minutes=9999999)
         }
         token = jwt.encode(payload, encode_key, algorithm='HS256')
         return {'token': token}

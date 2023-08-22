@@ -157,7 +157,7 @@ const Admin: React.FC = () => {
             const fetchedOrders = await getOrders()
             setOrders(fetchedOrders)
         } catch (error) {
-            console.error('Error fetching products:', error)
+            console.error('Error fetching orders:', error)
         }
     }
 
