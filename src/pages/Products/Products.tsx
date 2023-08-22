@@ -8,16 +8,31 @@ import {
 import Main from '../../components/Main/Main'
 import styles from './Products.module.scss'
 import ProductCard from '../../components/ProductCard/ProductCard'
-import { productItems } from './ProuductItemLoader'
+// import { productItems } from './ProuductItemLoader'
+import { getProducts } from '../../util/api/models/products' // Import the function
+import { useState, useEffect } from 'react'
 
 const Products: React.FC = () => {
-    const products = productItems
+    const [products, setProducts] = useState<any[]>([])
+
+    useEffect(() => {
+        fetchProducts()
+    }, [])
+
+    async function fetchProducts() {
+        try {
+            const fetchedProducts = await getProducts()
+            setProducts(fetchedProducts)
+        } catch (error) {
+            console.error('Error fetching products:', error)
+        }
+    }
 
     return (
         <Main>
             <IonList>
                 <IonGrid fixed className={styles.productGroup}>
-                    {productItems.map((product) => (
+                    {products.map((product) => (
                         <ProductCard
                             id={product.id}
                             title={product.name}
