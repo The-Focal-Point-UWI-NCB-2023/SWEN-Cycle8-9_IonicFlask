@@ -44,26 +44,39 @@ const ProductDetails: React.FC = () => {
     }
     return (
         <Main>
-            <IonGrid className={styles.container} fixed>
-                <IonCol>
-                    <IonImg src={product?.image} className={styles.img} />
-                </IonCol>
-                <IonCol>
-                    <h2>{product?.name}</h2>
-                    <h3>${product?.price.toFixed(2)}</h3>
-                    <form>
-                        <IonInput
-                            label="Outline input"
-                            labelPlacement="floating"
-                            fill="outline"
-                            placeholder="Enter text"
+            <IonBreadcrumbs>
+                <IonBreadcrumb href="/">Home</IonBreadcrumb>
+                <IonBreadcrumb href="/products">Frames</IonBreadcrumb>
+                <IonBreadcrumb href="#">{product?.name}</IonBreadcrumb>
+            </IonBreadcrumbs>
+            <div>
+                <br />
+                <IonGrid className={styles.container} fixed>
+                    <IonCol>
+                        <IonImg
+                            src="../../../../uploads/2.png"
+                            className={styles.img}
                         />
-                        <IonButton>
-                            Add to Cart <IonIcon icon={cartOutline} />
-                        </IonButton>
-                    </form>
-                </IonCol>
-            </IonGrid>
+                        {/* <IonImg src={product?.image} className={styles.img} /> */}
+                    </IonCol>
+                    <IonCol>
+                        <div className={styles.content}>
+                            <h2>{product?.name}</h2>
+                            <h3>${product?.price.toFixed(2)}</h3>
+                            <IonInput
+                                label="Quantity"
+                                labelPlacement="floating"
+                                type="number"
+                                fill="outline"
+                            ></IonInput>
+                            <IonButton>
+                                <IonIcon slot="start" icon={cart}></IonIcon>
+                                Add to Cart
+                            </IonButton>
+                        </div>
+                    </IonCol>
+                </IonGrid>
+            </div>
         </Main>
     )
 }
