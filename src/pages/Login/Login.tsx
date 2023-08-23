@@ -57,34 +57,53 @@ const Login: React.FC = () => {
     return (
         <Main>
             <h2>Login Page</h2>
-            <form id="login-form" onSubmit={handleLogin} method="post">
-                <IonList>
-                    <IonItem>
-                        <IonInput
-                            type="text"
-                            value={email}
-                            onIonChange={(e) => setEmail(e.detail.value!)}
-                            placeholder="eg. test@gmail.com"
-                            required
-                        />
-                    </IonItem>
-                    <IonItem>
-                        <IonInput
-                            type="password"
-                            value={password}
-                            onIonChange={(e) => setPassword(e.detail.value!)}
-                            placeholder="Enter your password"
-                            required
-                        />
-                    </IonItem>
-                    <IonButton type="submit" color="primary">
-                        Login
-                    </IonButton>
-                </IonList>
-                <p>
-                    Don't have an account? <a href="/register">Register</a>
-                </p>
-            </form>
+            <div className={styles.container}>
+                <form id="login-form" onSubmit={handleLogin} method="post">
+                    <div className={styles.formGroup}>
+                        <p>Welcome back!</p>
+                        <IonList>
+                            <br />
+                            <IonInput
+                                label="Email"
+                                label-placement="floating"
+                                helperText="Enter a valid email"
+                                fill="outline"
+                                type="email"
+                                inputmode="email"
+                                placeholder="Email"
+                                value={email}
+                                onIonChange={(e) => setEmail(e.detail.value!)}
+                                required
+                            />
+                            {/* </IonItem>
+                    <IonItem> */}
+                            <br />
+                            <IonInput
+                                label="Password"
+                                label-placement="floating"
+                                helperText="Type a strong password"
+                                fill="outline"
+                                type="password"
+                                placeholder="Password"
+                                value={password}
+                                onIonChange={(e) =>
+                                    setPassword(e.detail.value!)
+                                }
+                                required
+                            />
+                            <IonButton type="submit" color="primary">
+                                Login
+                            </IonButton>
+                            <div>
+                                <p className={styles.register}>
+                                    Don't have an account?{' '}
+                                    <a href="/register">Register</a>{' '}
+                                </p>
+                            </div>
+                        </IonList>
+                    </div>
+                </form>
+            </div>
         </Main>
     )
 }

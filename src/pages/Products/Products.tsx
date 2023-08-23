@@ -32,11 +32,12 @@ const Products: React.FC = () => {
 
     return (
         <Main>
+            <h2>Shop from our collection of frames here!</h2>
             <IonList>
                 <IonGrid fixed={true} className={styles.productGroup}>
                     <IonRow class="ion-justify-content-around">
                         {products.map((product) => (
-                            <IonCol size="12" size-sm="4">
+                            <IonCol size="12" size-sm="6" size-md="5">
                                 <ProductCard
                                     id={product.id}
                                     title={product.name}

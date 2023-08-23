@@ -55,12 +55,14 @@ const ProductDetails: React.FC = () => {
                         <div className={styles.content}>
                             <h2>{product?.name}</h2>
                             <h3>${product?.price.toFixed(2)}</h3>
-                            <IonInput
-                                label="Quantity"
-                                labelPlacement="floating"
-                                type="number"
-                                fill="outline"
-                            ></IonInput>
+                            <div className={styles.qty}>
+                                <IonInput
+                                    label="Quantity"
+                                    labelPlacement="floating"
+                                    type="number"
+                                    fill="outline"
+                                ></IonInput>
+                            </div>
                             <IonButton>
                                 <IonIcon slot="start" icon={cart}></IonIcon>
                                 Add to Cart

@@ -30,9 +30,11 @@ ion-grid {
     text-align: center;
 }
 
-ion-input {
-    max-width: 100px;
-    margin: auto;
+.qty {
+    margin: 20px;
+    width: 100px;
+    justify-content: center;
+    align-items: center;
 }
 
 ion-col {
