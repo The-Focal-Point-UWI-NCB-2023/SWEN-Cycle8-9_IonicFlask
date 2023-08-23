@@ -28,11 +28,29 @@ import Products from '../pages/Products/Products'
 import ProductDetails from '../pages/Products/ProductDetails/ProductDetails'
 import Cart from '../pages/Cart/Cart'
 import Admin from '../pages/Admin/Admin'
+import { logoutUser, isLoggedin, userAdmin } from '../util/api/auth/auth'
+import { useState, useEffect } from 'react'
 
 const Router: React.FC = () => {
     //Auth Check
-    const isAuthed = true
-    const isAdmin = true
+    const [isAuthed, setIsAuthed] = useState(
+        localStorage.getItem('isAuthed') === 'true'
+    )
+    const [isAdmin, setIsAdmin] = useState(Boolean)
+
+    useEffect(() => {
+        const storedIsAuthed = localStorage.getItem('isAuthed')
+        if (storedIsAuthed) {
+            setIsAuthed(storedIsAuthed === 'true')
+        }
+
+        async function checkUserAdmin() {
+            const isAdminResponse = await userAdmin()
+            setIsAdmin(isAdminResponse)
+        }
+        console.log(isAdmin, 'isAdmin')
+        checkUserAdmin()
+    }, [])
 
     return (
         <IonReactRouter>
@@ -83,12 +101,14 @@ const Router: React.FC = () => {
                         <IonIcon icon={glassesOutline} />
                         <IonLabel>Products</IonLabel>
                     </IonTabButton>
-
-                    <IonTabButton tab="cart" href="/cart">
-                        <IonIcon icon={cartOutline} />
-                        <IonLabel>Cart</IonLabel>
-                    </IonTabButton>
-
+                    {isAuthed ? (
+                        <IonTabButton tab="cart" href="/cart">
+                            <IonIcon icon={cartOutline} />
+                            <IonLabel>Cart</IonLabel>
+                        </IonTabButton>
+                    ) : (
+                        ''
+                    )}
                     {isAuthed && isAdmin ? (
                         <IonTabButton tab="admin" href="/admin">
                             <IonIcon icon={hammerOutline} />
@@ -99,7 +119,8 @@ const Router: React.FC = () => {
                     )}
 
                     {isAuthed ? (
-                        <IonTabButton tab="logout" href="/logout">
+                        //<IonTabButton tab="logout" onClick = {logoutUser} /href="/logout">
+                        <IonTabButton tab="logout" onClick={logoutUser}>
                             <IonIcon icon={logOutOutline} />
                             <IonLabel>Logout</IonLabel>
                         </IonTabButton>

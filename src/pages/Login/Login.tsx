@@ -6,6 +6,14 @@ import {
     IonList,
     useIonToast,
 } from '@ionic/react'
+import {
+    userAdmin,
+    isLoggedin,
+    getCsrfToken,
+    checkLoginStatus,
+    current_User,
+    loginUser,
+} from '../../util/api/auth/auth'
 import Main from '../../components/Main/Main'
 import styles from './Login.module.scss'
 
@@ -17,81 +25,39 @@ const Login: React.FC = () => {
     const [csrfToken, setCsrfToken] = useState('')
     const [jwt, setJwt] = useState('')
 
-    async function getCsrfToken() {
-        try {
-            const response = await fetch(
-                'http://localhost:8080/api/v1/auth/csrf-token',
-                {
-                    method: 'GET',
-                    credentials: 'include',
-                }
-            )
-
-            if (response.status === 200) {
-                const data = await response.json()
-                setCsrfToken(data.csrf_token)
-            } else {
-                throw new Error('Failed to fetch CSRF token')
-            }
-        } catch (error) {
-            console.error(error)
-        }
-    }
-
     useEffect(() => {
         getCsrfToken()
+        userAdmin()
+        current_User()
+        checkLoginStatus()
     }, [])
 
-    const loginUser = async (e: React.FormEvent<HTMLFormElement>) => {
+    const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+        console.log('reached')
         e.preventDefault()
-
-        try {
-            const requestBody = {
-                email: email,
-                password: password,
-            }
-            const response = await fetch(
-                'http://localhost:8080/api/v1/auth/login',
-                {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRFToken': csrfToken,
-                    },
-                    credentials: 'include',
-                    mode: 'cors',
-                    body: JSON.stringify(requestBody),
-                }
-            )
-
-            const data = await response.json()
-
-            if (response.ok && data.message === 'User found') {
-                setJwt(data.token)
-                localStorage.setItem('jwt', data.token)
-                present({
-                    message: 'Login Successful',
-                    duration: 3000,
-                    color: 'success',
-                })
-                window.location.href = '/home'
-            } else {
-                setError('Login Failed')
-                present({
-                    message: 'Login Failed',
-                    duration: 3000,
-                    color: 'danger',
-                })
-            }
-        } catch (error) {
-            console.error(error)
+        const loginResponse = await loginUser(email, password)
+        console.log('Login Resp', loginResponse.status, loginResponse.message)
+        if (loginResponse.message === 'User found') {
+            present({
+                message: 'Login Successful',
+                duration: 3000,
+                color: 'success',
+            })
+            window.location.href = '/home'
+        } else {
+            setError('Login Failed')
+            present({
+                message: 'Login Failed',
+                duration: 3000,
+                color: 'danger',
+            })
         }
     }
 
     return (
         <Main>
             <h2>Login Page</h2>
-            <form id="login-form" onSubmit={loginUser} method="post">
+            <form id="login-form" onSubmit={handleLogin} method="post">
                 <IonList>
                     <IonItem>
                         <IonInput
@@ -122,5 +88,4 @@ const Login: React.FC = () => {
         </Main>
     )
 }
-
 export default Login

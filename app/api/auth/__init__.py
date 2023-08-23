@@ -9,6 +9,7 @@ from datetime import datetime
 from functools import wraps
 from app.api.auth.jwt_auth import GenerateToken  # Import the GenerateToken class
 from flask_wtf.csrf import generate_csrf
+from flask_cors import cross_origin
 
 # Define the auth namespace
 auth_ns = Namespace('auth', path='/v1/auth', description='Authentication operations')
@@ -32,6 +33,7 @@ register_parser.add_argument('email', required=True, help='Email address')
 register_parser.add_argument('password', required=True, help='Password')
 
 # ... Your other imports and setup ...
+encode_key = os.environ.get("SECRET_KEY")
 
 @auth_ns.route('/')
 class AuthIndex(Resource):
@@ -49,7 +51,7 @@ class Login(Resource):
 
         if user is not None and check_password_hash(user.password, password):
             login_user(user)
-            generate_token_resource = generate_token(user.id,user.email,user.role,user.password)
+            generate_token_resource = generate_token(user.id,user.full_name,user.email,user.role)
             token_response = generate_token_resource
             tk = token_response.get('token')
             #headers = {'X-CSRF-Token': generate_csrf()}
@@ -82,7 +84,13 @@ class Register(Resource):
             user = Users(full_name=full_name, email=email, password=password, role=role)
             db.session.add(user)
             db.session.commit()
-            return user, 201
+            user1 = {
+                'id': user.id,
+                'full_name': full_name,
+                'email': email,
+                'role': role
+            }
+            return user1, 201
         except Exception as e:
             abort(409, message="Invalid field input")
 
@@ -145,6 +153,99 @@ class CSRFTokenResource(Resource):
         csrf_token = generate_csrf()
         return {"csrf_token": csrf_token}
     
+
+@auth_ns.route('/isLoggedin')
+class IsLoggedIn(Resource):
+    def get(self):
+        header = request.headers.get('Authorization')
+
+        if header is None:
+            response = {
+                'message': 'false',
+            }
+            return response, 401
+
+        parts = header.split()
+
+        if len(parts) != 2 or parts[0].lower() != 'bearer':
+            response = {
+                'message': 'Invalid token format',
+            }
+            return response, 401
+
+        token = parts[1]
+        try:
+            decoded_token = jwt.decode(token, encode_key, algorithms=['HS256'])
+            response = {
+                'message': 'true',
+            }
+            return response, 200
+        except jwt.ExpiredSignatureError:
+            response = {
+                'message': 'Token is expired',
+            }
+            return response, 401
+        except jwt.DecodeError:
+            response = {
+                'message': 'false',
+            }
+            return response, 401
+        
+@auth_ns.route('/isAdmin')
+class IsLoggedIn(Resource):
+    @requires_auth
+    def get(self):
+        token = request.headers.get('Authorization')  
+        parts = token.split()
+        token = parts[1]
+        try:
+            decoded_token = jwt.decode(token, encode_key, algorithms=['HS256'])
+            #print(decoded_token)
+            if decoded_token['role'] == 1:
+                response = {
+                    'message': 'true',
+                    
+                }
+                return response, 200
+            else:
+                response = {
+                    'message': 'false',
+                    
+                }
+                return response, 200
+        except jwt.ExpiredSignatureError:
+                response = {
+                    'message': 'Token is expired',
+                    'token': token
+                }
+                return response , 401        
+    
+        
+@auth_ns.route('/CurrentUser')
+class CurrUser(Resource):
+    @requires_auth
+    def get(self):
+        token = request.headers.get('Authorization')  
+        parts = token.split()
+        token = parts[1]
+        try:
+            decoded_token = jwt.decode(token, encode_key, algorithms=['HS256'])
+            user = {
+                'id': decoded_token['user_id'],
+                'name': decoded_token['name'],
+                'email': decoded_token['email'],
+                'role': decoded_token['role'],
+            }
+            response = {
+                'user': user,
+            }
+            return response, 200
+        except jwt.ExpiredSignatureError:
+                response = {
+                    'message': 'Token is expired',
+                    'token': token
+                }
+                return response , 401            
 
 # Add namespaces to the API
 api.add_namespace(auth_ns)
