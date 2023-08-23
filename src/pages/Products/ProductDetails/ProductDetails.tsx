@@ -35,11 +35,11 @@ const ProductDetails: React.FC = () => {
     }
     return (
         <Main>
-            <IonBreadcrumbs>
-                <IonBreadcrumb href="/">Home</IonBreadcrumb>
-                <IonBreadcrumb href="/products">Frames</IonBreadcrumb>
-                <IonBreadcrumb href="#">{product?.name}</IonBreadcrumb>
-            </IonBreadcrumbs>
+            {/* <IonBreadcrumbs>
+                <IonBreadcrumb routerLink="/">Home</IonBreadcrumb>
+                <IonBreadcrumb routerLink="/products">Frames</IonBreadcrumb>
+                <IonBreadcrumb routerLink="#">{product?.name}</IonBreadcrumb>
+            </IonBreadcrumbs> */}
             <div>
                 <br />
                 <IonGrid className={styles.container} fixed>

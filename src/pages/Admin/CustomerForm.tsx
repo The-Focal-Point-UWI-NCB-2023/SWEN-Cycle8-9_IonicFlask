@@ -11,16 +11,17 @@ import {
 import { api_url_rest, getCsrfToken } from '../../util/constants'
 import styles from './Modals.module.scss'
 
-const UserForm = ({ initialValues }) => {
-    const [userName, setUserName] = useState(initialValues.name || '')
-    const [userEmail, setUserEmail] = useState(initialValues.email || '')
-    const [userRole, setUserRole] = useState(initialValues.role || '')
-    const [userID, setProductID] = useState(initialValues.id)
+const UserForm = ({ initialValues, onSubmit }) => {
+    const [userName, setUserName] = useState(initialValues.name)
+    const [userEmail, setUserEmail] = useState(initialValues.email)
+    const [userRole, setUserRole] = useState(initialValues.role)
+    const [userID, setUserId] = useState(initialValues.id)
 
     const handleSubmit = async (e) => {
         e.preventDefault()
 
         try {
+            const jwt = localStorage.getItem('jwt')
             const csrfToken = await getCsrfToken()
             const formData = new FormData()
             formData.append('full_name', userName)
@@ -31,6 +32,7 @@ const UserForm = ({ initialValues }) => {
                 method: 'PUT',
                 headers: {
                     'X-CSRFToken': csrfToken,
+                    Authorization: `bearer ${jwt}`,
                 },
                 credentials: 'include',
                 mode: 'cors',
@@ -39,6 +41,7 @@ const UserForm = ({ initialValues }) => {
 
             const data = await response.json()
             console.log('Updated user successfully')
+            onSubmit()
         } catch (error) {
             // Handle success
             console.error('Error creating user:', error)
