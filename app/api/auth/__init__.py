@@ -98,14 +98,28 @@ class Logout(Resource):
 def load_user(id):
     return db.session.execute(db.select(Users).filter_by(id=id)).scalar()
 
-def admin_required(f):
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if current_user.role != 1:
-            return {'message':  'You are not authorized to view this page.'}, 401
-        return f(*args, **kwargs)
-    return decorated_function
+def admin_required(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        jwt_token = request.headers.get('Authorization')  # Get the JWT token from headers
+        
+        if jwt_token:
+            try:
+                decoded_payload = jwt.decode(jwt_token.split()[1], os.environ.get("SECRET_KEY"), algorithms=['HS256'])
+                user_role = decoded_payload.get('role')
+                
+                if user_role == 1:  # Assuming role 1 is for admins
+                    return func(*args, **kwargs)
+                else:
+                    abort(403, message='Access denied. Admin role required.')
+            except jwt.ExpiredSignatureError:
+                abort(401, message='Token has expired.')
+            except (jwt.DecodeError, jwt.InvalidTokenError):
+                abort(401, message='Invalid token.')
+        else:
+            abort(401, message='Token missing.')
 
+    return wrapper
 # @admin_required
 @api.doc(security='apiKey')
 @auth_ns.route('/admin')

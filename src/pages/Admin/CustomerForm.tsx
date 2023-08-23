@@ -9,11 +9,11 @@ import {
 } from '@ionic/react'
 import { api_url_rest, getCsrfToken } from '../../util/constants'
 
-const UserForm = ({ initialValues }) => {
+const UserForm = ({ initialValues, onSubmit }) => {
     const [userName, setUserName] = useState(initialValues.name || '')
     const [userEmail, setUserEmail] = useState(initialValues.email || '')
     const [userRole, setUserRole] = useState(initialValues.role || '')
-    const [userID, setProductID] = useState(initialValues.id)
+    const [userID, setUserId] = useState(initialValues.id)
 
     const handleSubmit = async (e) => {
         e.preventDefault()
@@ -37,6 +37,7 @@ const UserForm = ({ initialValues }) => {
 
             const data = await response.json()
             console.log('Updated user successfully')
+            onSubmit()
         } catch (error) {
             // Handle success
             console.error('Error creating user:', error)
@@ -72,7 +73,7 @@ const UserForm = ({ initialValues }) => {
                         name="role"
                         value={userRole}
                         placeholder="Enter user role"
-                        onIonChange={(e) => userRole(e.detail.value)}
+                        onIonChange={(e) => setUserRole(e.detail.value)}
                     />
                 </IonItem>
                 <input type="hidden" name="id" value={userID} />

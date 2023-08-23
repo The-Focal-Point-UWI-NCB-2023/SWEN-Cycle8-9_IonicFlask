@@ -9,7 +9,7 @@ import {
 } from '@ionic/react'
 import { api_url_rest, getCsrfToken } from '../../util/constants'
 
-const ProductForm = ({ initialValues }) => {
+const ProductForm = ({ initialValues, onSubmit }) => {
     const [productName, setProductName] = useState(initialValues.name || '')
     const [productDescription, setProductDescription] = useState(
         initialValues.description || ''
@@ -47,6 +47,7 @@ const ProductForm = ({ initialValues }) => {
 
                 const data = await response.json()
                 console.log('Created Product:', data)
+                onSubmit()
             } else if (mode === 'update') {
                 const response = await fetch(
                     api_url_rest + `products/${productID}`,
@@ -63,6 +64,7 @@ const ProductForm = ({ initialValues }) => {
 
                 const data = await response.json()
                 console.log('Updated product successfully')
+                onSubmit()
             }
             // Handle success
         } catch (error) {

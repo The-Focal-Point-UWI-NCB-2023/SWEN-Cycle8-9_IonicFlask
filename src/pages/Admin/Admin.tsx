@@ -65,20 +65,9 @@ const Admin: React.FC = () => {
         fetchProducts()
         fetchOrders()
         fetchUsers()
-        // fetchLineItems()
-        // fetchcreateOrder(orderData)
     }, [])
 
-    useEffect(() => {
-        // console.log('Working prod')
-        console.log(productsList[0])
-        console.log('test')
-        // console.log('before')
-        // console.log(orderss)
-        // console.log(userss)
-        // console.log('next')
-        // console.log(lineitmess)
-    }, [productsList])
+    useEffect(() => {}, [productsList])
 
     const orderData = {
         user_id: 20,
@@ -264,6 +253,7 @@ const Admin: React.FC = () => {
     }
     const closeAddProductModal = () => {
         setShowModal(false)
+        fetchProducts()
     }
 
     const [modalVisibilities, setModalVisibilities] = useState(
@@ -280,6 +270,7 @@ const Admin: React.FC = () => {
         const updatedVisibilities = [...modalVisibilities]
         updatedVisibilities[index] = false
         setModalVisibilities(updatedVisibilities)
+        fetchProducts()
     }
 
     const [customermodalVisibilities, setcustomerModalVisibilities] = useState(
@@ -296,6 +287,7 @@ const Admin: React.FC = () => {
         const updatedCustomerVisibilities = [...customermodalVisibilities]
         updatedCustomerVisibilities[index] = false
         setcustomerModalVisibilities(updatedCustomerVisibilities)
+        fetchUsers()
     }
 
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false)
@@ -307,6 +299,7 @@ const Admin: React.FC = () => {
 
     const closeDeleteConfirmation = () => {
         setShowDeleteConfirmation(false)
+        fetchProducts()
     }
 
     return (
@@ -380,6 +373,9 @@ const Admin: React.FC = () => {
                                             email: users.email,
                                             role: users.role,
                                         }}
+                                        onSubmit={() =>
+                                            closeCustomerEditModal(rowIndex)
+                                        }
                                     ></UserForm>
                                 </MyModal>
                             </IonRow>
@@ -406,6 +402,7 @@ const Admin: React.FC = () => {
                                     status: '',
                                     mode: 'create',
                                 }}
+                                onSubmit={() => closeAddProductModal()}
                             ></ProductForm>
                         </MyModal>
 
@@ -431,7 +428,7 @@ const Admin: React.FC = () => {
                                             `$${prod[header]}`
                                         ) : header === 'image' ? (
                                             <img
-                                                src={`="../../../uploads/${prod[header]}`}
+                                                src={`${prod[header]}`}
                                                 alt="Product"
                                                 className={styles.productImage}
                                             />
@@ -463,7 +460,10 @@ const Admin: React.FC = () => {
                                                 id: prod.id,
                                                 mode: 'update',
                                             }}
-                                        />{' '}
+                                            onSubmit={() =>
+                                                closeProductEditModal(rowIndex)
+                                            }
+                                        />
                                     </MyModal>
                                     <IonIcon
                                         icon={trash}

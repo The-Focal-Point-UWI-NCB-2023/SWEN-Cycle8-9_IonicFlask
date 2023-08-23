@@ -27,7 +27,7 @@ product_parser.add_argument(
     "price", type=float, required=True, help="Price is required"
 )
 product_parser.add_argument('image', location='files',
-                           type=FileStorage, required=True)
+                           type=FileStorage, required=False)
 product_parser.add_argument(
     "status", type=str, required=True, help="Status is required"
 )
@@ -51,6 +51,8 @@ class ProductsResource(Resource):
     @products_ns.marshal_with(product_model)
     def post(self):
         args = product_parser.parse_args()
+        if args['image'] == None:
+            abort(400, message='Image Required')
         image_file = args['image']  # Get the uploaded image file
 
         if image_file:
@@ -88,11 +90,16 @@ class ProductResource(Resource):
         if product:
             try:
                 args = product_parser.parse_args()
+                if args['image'] == None:
+                    image = args.pop('image', None)
+                    for key, value in args.items():
+                        setattr(product, key, value)
+                        db.session.commit() 
                 image_file = args['image']  # Get the uploaded image file
-
+                upload_folder = os.environ.get("UPLOAD_FOLDER")
                 if image_file:
                     filename = secure_filename(image_file.filename)
-                    image_path = os.path.join('./uploads', filename)
+                    image_path = os.path.join(upload_folder, filename)
                     image_file.save(image_path)
 
                 args['image'] = image_path  # Update the 'image' field to the image path

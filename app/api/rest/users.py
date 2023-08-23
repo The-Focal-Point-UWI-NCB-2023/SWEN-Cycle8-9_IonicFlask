@@ -20,7 +20,7 @@ user_parser.add_argument(
 )
 user_parser.add_argument("email", type=str, required=True, help="Email is required")
 user_parser.add_argument(
-    "password", type=str, required=True, help="Password is required"
+    "password", type=str, required=False, help="Password is required"
 )
 user_parser.add_argument("role", type=int, required=True, help="Role is required")
 
