@@ -45,9 +45,9 @@ const Login: React.FC = () => {
             })
             window.location.href = '/home'
         } else {
-            setError('Login Failed')
+            setError('Email or Password is incorrect')
             present({
-                message: 'Login Failed',
+                message: 'Email or Password is incorrect',
                 duration: 3000,
                 color: 'danger',
             })
