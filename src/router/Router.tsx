@@ -48,7 +48,7 @@ const Router: React.FC = () => {
                     <Route exact path="/success" component={SuccessPage} />
 
                     {/* Failure */}
-                    <Route exact path="/failure" component={FailurePage} />   
+                    <Route exact path="/failure" component={FailurePage} />
 
                     {/* Register */}
                     <Route exact path="/register" component={Register} />
@@ -81,8 +81,6 @@ const Router: React.FC = () => {
                             )
                         }}
                     />
-
-    
 
                     {/* Fallback Route */}
                     <Route render={() => <Redirect to="/landing" />} />

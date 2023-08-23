@@ -56,13 +56,12 @@ const Cart: React.FC = () => {
 
     const handleCheckout = () => {
         makePayment()
-            .then(response =>{
-                console.log("Payment successful")
+            .then((response) => {
+                console.log('Payment successful')
             })
-            .catch(error => {
+            .catch((error) => {
                 console.log('There is an error at redirecting')
-            });
-
+            })
     }
 
     return (
@@ -73,7 +72,10 @@ const Cart: React.FC = () => {
                     <IonTitle className={styles.total}>
                         Total <span>${total}</span>
                     </IonTitle>
-                    <IonButton className={styles.checkoutBtn} onClick={handleCheckout}>
+                    <IonButton
+                        className={styles.checkoutBtn}
+                        onClick={handleCheckout}
+                    >
                         CHECKOUT
                     </IonButton>
                 </IonRow>
