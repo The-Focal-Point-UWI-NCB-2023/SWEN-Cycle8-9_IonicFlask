@@ -28,6 +28,8 @@ import Products from '../pages/Products/Products'
 import ProductDetails from '../pages/Products/ProductDetails/ProductDetails'
 import Cart from '../pages/Cart/Cart'
 import Admin from '../pages/Admin/Admin'
+import SuccessPage from '../pages/Payment/Success'
+import FailurePage from '../pages/Payment/Failure'
 
 const Router: React.FC = () => {
     //Auth Check
@@ -41,6 +43,12 @@ const Router: React.FC = () => {
                     {/* Landing */}
                     <Route exact path="/landing" component={Landing} />
                     <Redirect exact from="/" to="/landing" />
+
+                    {/* Success */}
+                    <Route exact path="/success" component={SuccessPage} />
+
+                    {/* Failure */}
+                    <Route exact path="/failure" component={FailurePage} />   
 
                     {/* Register */}
                     <Route exact path="/register" component={Register} />
@@ -73,6 +81,8 @@ const Router: React.FC = () => {
                             )
                         }}
                     />
+
+    
 
                     {/* Fallback Route */}
                     <Route render={() => <Redirect to="/landing" />} />

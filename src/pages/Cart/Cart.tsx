@@ -21,6 +21,7 @@ import { productItems } from '../Products/ProuductItemLoader'
 import { cart, eye, trash } from 'ionicons/icons'
 import { props } from 'cypress/types/bluebird'
 import { Link } from 'react-router-dom'
+import { makePayment } from '../../util/api/payments/payment'
 
 const Cart: React.FC = () => {
     const [total, setTotal] = useState(0)
@@ -53,6 +54,17 @@ const Cart: React.FC = () => {
         setQuantity(newQuantity)
     }
 
+    const handleCheckout = () => {
+        makePayment()
+            .then(response =>{
+                console.log("Payment successful")
+            })
+            .catch(error => {
+                console.log('There is an error at redirecting')
+            });
+
+    }
+
     return (
         <Main>
             <IonGrid className={styles.container}>
@@ -61,7 +73,7 @@ const Cart: React.FC = () => {
                     <IonTitle className={styles.total}>
                         Total <span>${total}</span>
                     </IonTitle>
-                    <IonButton className={styles.checkoutBtn}>
+                    <IonButton className={styles.checkoutBtn} onClick={handleCheckout}>
                         CHECKOUT
                     </IonButton>
                 </IonRow>
