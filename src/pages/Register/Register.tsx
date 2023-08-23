@@ -23,26 +23,6 @@ const Register: React.FC = () => {
     const [present] = useIonToast()
     const [csrfToken, setCsrfToken] = useState('')
 
-    // async function getCsrfToken() {
-    //     try {
-    //         const response = await fetch(
-    //             api_url_auth + `csrf-token`,
-    //             {
-    //                 method: 'GET',
-    //                 credentials: 'include',
-    //             }
-    //         )
-    //         //console.log(response.status);
-    //         if (response.status === 200) {
-    //             const data = await response.json()
-    //             setCsrfToken(data.csrf_token)
-    //         } else {
-    //             throw new Error('Failed to fetch CSRF token')
-    //         }
-    //     } catch (error) {
-    //         console.error(error)
-    //     }
-    // }
 
     useEffect(() => {
         getCsrfToken()
@@ -71,57 +51,6 @@ const Register: React.FC = () => {
             })
         }
     }
-
-
-    // const RegisterUser = async (e: React.FormEvent<HTMLFormElement>) => {
-    //     e.preventDefault()
-
-    //     try {
-    //         const requestBody = {
-    //             full_name: name,
-    //             email: email,
-    //             password: password,
-    //         }
-
-    //         const response = await fetch(
-    //             api_url_auth + `register`,
-    //             {
-    //                 method: 'POST',
-    //                 headers: {
-    //                     'Content-Type': 'application/json',
-    //                     'X-CSRFToken': csrfToken,
-    //                 },
-    //                 credentials: 'include',
-    //                 mode: 'cors',
-    //                 body: JSON.stringify(requestBody),
-    //             }
-    //         )
-
-    //         const data = await response.json()
-
-    //         if (response.ok) {
-    //             setSuccess(data.message)
-    //             present({
-    //                 message: 'User Registered Successfully',
-    //                 duration: 3000,
-    //                 color: 'success',
-    //             })
-    //             window.location.href = '/login'
-    //         } else {
-    //             //console.log(data.message)
-
-    //             setError(data.message)
-    //             present({
-    //                 message: error,
-    //                 duration: 3000,
-    //                 color: 'danger',
-    //             })
-    //         }
-    //     } catch (error) {
-    //         console.error(error)
-    //     }
-    // }
-
 
     return (
         <Main>

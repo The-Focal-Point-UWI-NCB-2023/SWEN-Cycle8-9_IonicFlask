@@ -104,12 +104,14 @@ const Router: React.FC = () => {
                         <IonIcon icon={glassesOutline} />
                         <IonLabel>Products</IonLabel>
                     </IonTabButton>
-
+                    { isAuthed ? (
                     <IonTabButton tab="cart" href="/cart">
                         <IonIcon icon={cartOutline} />
                         <IonLabel>Cart</IonLabel>
                     </IonTabButton>
-
+                    ):(
+                        ''
+                    )}
                     {isAuthed && isAdmin ? (
                         <IonTabButton tab="admin" href="/admin">
                             <IonIcon icon={hammerOutline} />

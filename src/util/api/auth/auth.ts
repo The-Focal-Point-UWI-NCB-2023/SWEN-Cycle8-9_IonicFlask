@@ -34,27 +34,6 @@ export async function loginUser(email, password) {
     }
 }
 
-    //     if (response.ok && data.message === 'User found') {
-    //         localStorage.setItem('jwt', data.token)
-    //         localStorage.setItem('isAuthed', 'true')
-    //         return {
-    //             success: true,
-    //             message: 'Login Successful',
-    //         };
-    //     } else {
-    //         return {
-    //             success: false,
-    //             message: 'Login Failed',
-    //         };
-    //     }
-    // } catch (error) {
-    //     console.error(error);
-    //     return {
-    //         success: false,
-    //         message: 'An error occurred during login',
-    //     };
-    // }
-// }
 
 export async function registerUser(name, email, password) {
     const csrfToken = await getCsrfToken();

@@ -16,8 +16,6 @@ import {
 } from '../../util/api/auth/auth';
 import Main from '../../components/Main/Main'
 import styles from './Login.module.scss'
-import { api_url_auth } from '../../util/constants';
-
 
 const Login: React.FC = () => {
     const [email, setEmail] = useState<string>('')
@@ -26,27 +24,6 @@ const Login: React.FC = () => {
     const [present] = useIonToast()
     const [csrfToken, setCsrfToken] = useState('')
     const [jwt, setJwt] = useState('')
-
-    // async function getCsrfToken() {
-    //     try {
-    //         const response = await fetch(
-    //             api_url_auth + `csrf-token`,
-    //             {
-    //                 method: 'GET',
-    //                 credentials: 'include',
-    //             }
-    //         )
-
-    //         if (response.status === 200) {
-    //             const data = await response.json()
-    //             setCsrfToken(data.csrf_token)
-    //         } else {
-    //             throw new Error('Failed to fetch CSRF token')
-    //         }
-    //     } catch (error) {
-    //         console.error(error)
-    //     }
-    // }
 
     useEffect(() => {
         getCsrfToken()
