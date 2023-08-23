@@ -54,7 +54,7 @@ def seed_database(app: Flask):
                 name = fake.text(max_nb_chars=20)
                 description = "".join(fake.paragraph(nb_sentences=5))
                 price = randint(0, 2000)
-                image = randint(0, 5)
+                image = randint(1, 5)
                 status = "published"
                 user_id = users[randint(0, user_count - 1)].id
                 products.append(

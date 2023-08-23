@@ -9,7 +9,7 @@ import {
 } from '@ionic/react'
 import { api_url_rest, getCsrfToken } from '../../util/constants'
 
-const ProductForm = ({ initialValues }) => {
+const ProductForm = ({ initialValues, onSubmit }) => {
     const [productName, setProductName] = useState(initialValues.name || '')
     const [productDescription, setProductDescription] = useState(
         initialValues.description || ''
@@ -20,6 +20,7 @@ const ProductForm = ({ initialValues }) => {
     )
     const [mode, setMode] = useState(initialValues.mode)
     const [productID, setProductID] = useState(initialValues.id)
+    const [userID, setUserID] = useState(initialValues.user_id)
 
     const handleSubmit = async (e) => {
         e.preventDefault()
@@ -31,14 +32,16 @@ const ProductForm = ({ initialValues }) => {
             formData.append('description', productDescription)
             formData.append('price', productPrice)
             formData.append('status', productStatus)
-            formData.append('user_id', '21')
+            formData.append('user_id', userID)
             formData.append('image', document.getElementById('image').files[0])
 
             if (mode === 'create') {
+                const jwt = localStorage.getItem('jwt')
                 const response = await fetch(api_url_rest + 'products/', {
                     method: 'POST',
                     headers: {
                         'X-CSRFToken': csrfToken,
+                        Authorization: `bearer ${jwt}`,
                     },
                     credentials: 'include',
                     mode: 'cors',
@@ -47,13 +50,16 @@ const ProductForm = ({ initialValues }) => {
 
                 const data = await response.json()
                 console.log('Created Product:', data)
+                onSubmit()
             } else if (mode === 'update') {
+                const jwt = localStorage.getItem('jwt')
                 const response = await fetch(
                     api_url_rest + `products/${productID}`,
                     {
                         method: 'PUT',
                         headers: {
                             'X-CSRFToken': csrfToken,
+                            Authorization: `bearer ${jwt}`,
                         },
                         credentials: 'include',
                         mode: 'cors',
@@ -63,6 +69,7 @@ const ProductForm = ({ initialValues }) => {
 
                 const data = await response.json()
                 console.log('Updated product successfully')
+                onSubmit()
             }
             // Handle success
         } catch (error) {
@@ -123,7 +130,6 @@ const ProductForm = ({ initialValues }) => {
                     <input id="image" name="image" type="file" />
                 </IonItem>
                 <IonItem>
-                    <input type="hidden" name="user_id" value="21" />
                     <IonButton color="primary" onClick={handleSubmit}>
                         Save
                     </IonButton>

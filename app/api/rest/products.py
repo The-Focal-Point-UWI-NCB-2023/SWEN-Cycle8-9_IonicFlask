@@ -1,4 +1,5 @@
 from app.api import Namespace, Resource, fields, reqparse,abort,os
+from app.api.auth import admin_required
 from app.models import Products, db
 from werkzeug.datastructures import FileStorage
 from werkzeug.utils import secure_filename
@@ -27,7 +28,7 @@ product_parser.add_argument(
     "price", type=float, required=True, help="Price is required"
 )
 product_parser.add_argument('image', location='files',
-                           type=FileStorage, required=True)
+                           type=FileStorage, required=False)
 product_parser.add_argument(
     "status", type=str, required=True, help="Status is required"
 )
@@ -49,8 +50,11 @@ class ProductsResource(Resource):
 
     @products_ns.expect(product_parser)
     @products_ns.marshal_with(product_model)
+    @admin_required
     def post(self):
         args = product_parser.parse_args()
+        if args['image'] == None:
+            abort(400, message='Image Required')
         image_file = args['image']  # Get the uploaded image file
 
         if image_file:
@@ -81,6 +85,7 @@ class ProductResource(Resource):
         return product
 
 
+    @admin_required
     @products_ns.expect(product_parser)
     @products_ns.marshal_with(product_model)
     def put(self, product_id):
@@ -88,11 +93,16 @@ class ProductResource(Resource):
         if product:
             try:
                 args = product_parser.parse_args()
+                if args['image'] == None:
+                    image = args.pop('image', None)
+                    for key, value in args.items():
+                        setattr(product, key, value)
+                        db.session.commit() 
                 image_file = args['image']  # Get the uploaded image file
-
+                upload_folder = os.environ.get("UPLOAD_FOLDER")
                 if image_file:
                     filename = secure_filename(image_file.filename)
-                    image_path = os.path.join('./uploads', filename)
+                    image_path = os.path.join(upload_folder, filename)
                     image_file.save(image_path)
 
                 args['image'] = image_path  # Update the 'image' field to the image path
@@ -106,6 +116,7 @@ class ProductResource(Resource):
             abort(404, message="Product not found")
         
 
+    @admin_required
     @products_ns.response(204, "Product deleted")
     def delete(self, product_id):
         product = Products.query.get(product_id)

@@ -9,16 +9,17 @@ import {
 } from '@ionic/react'
 import { api_url_rest, getCsrfToken } from '../../util/constants'
 
-const UserForm = ({ initialValues }) => {
-    const [userName, setUserName] = useState(initialValues.name || '')
-    const [userEmail, setUserEmail] = useState(initialValues.email || '')
-    const [userRole, setUserRole] = useState(initialValues.role || '')
-    const [userID, setProductID] = useState(initialValues.id)
+const UserForm = ({ initialValues, onSubmit }) => {
+    const [userName, setUserName] = useState(initialValues.name)
+    const [userEmail, setUserEmail] = useState(initialValues.email)
+    const [userRole, setUserRole] = useState(initialValues.role)
+    const [userID, setUserId] = useState(initialValues.id)
 
     const handleSubmit = async (e) => {
         e.preventDefault()
 
         try {
+            const jwt = localStorage.getItem('jwt')
             const csrfToken = await getCsrfToken()
             const formData = new FormData()
             formData.append('full_name', userName)
@@ -29,6 +30,7 @@ const UserForm = ({ initialValues }) => {
                 method: 'PUT',
                 headers: {
                     'X-CSRFToken': csrfToken,
+                    Authorization: `bearer ${jwt}`,
                 },
                 credentials: 'include',
                 mode: 'cors',
@@ -37,6 +39,7 @@ const UserForm = ({ initialValues }) => {
 
             const data = await response.json()
             console.log('Updated user successfully')
+            onSubmit()
         } catch (error) {
             // Handle success
             console.error('Error creating user:', error)
@@ -61,7 +64,7 @@ const UserForm = ({ initialValues }) => {
                         label="email"
                         name="email"
                         value={userEmail}
-                        placeholder="Enter user  email"
+                        placeholder="Enter user email"
                         onIonChange={(e) => setUserEmail(e.detail.value)}
                     />
                 </IonItem>
@@ -72,7 +75,7 @@ const UserForm = ({ initialValues }) => {
                         name="role"
                         value={userRole}
                         placeholder="Enter user role"
-                        onIonChange={(e) => userRole(e.detail.value)}
+                        onIonChange={(e) => setUserRole(e.detail.value)}
                     />
                 </IonItem>
                 <input type="hidden" name="id" value={userID} />
