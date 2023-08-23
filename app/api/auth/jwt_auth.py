@@ -63,7 +63,7 @@ class GenerateToken(Resource):
             "role": args['role'],
             "password": args['password'],
             "iat": timestamp,
-            "exp": timestamp + timedelta(minutes=10)
+            "exp": timestamp + timedelta(minutes=9999999)
         }
         token = jwt.encode(payload, encode_key, algorithm='HS256')
         return {'token': token}
@@ -76,19 +76,22 @@ class Protected(Resource):
     def get(self):
         return {'message': 'You are authorized to view this page.'}
 
-def generate_token(id,email,role,password):
+def generate_token(id,name,email,role):
     timestamp = datetime.utcnow()
     payload = {
         "user_id": id,
+        "name": name,
         "email": email,
         "role": role,
-        "password": password,
         "iat": timestamp,
-        "exp": timestamp + timedelta(minutes=10)
+        "exp": timestamp + timedelta(minutes=100000)
     }
     token = jwt.encode(payload, encode_key, algorithm='HS256')
     return {'token': token}
 
+# @jwt_auth_ns.route('/decode')
+# def decode_token():
+
+
 # Add the jwt_auth_ns namespace to your main API
 api.add_namespace(jwt_auth_ns)
-

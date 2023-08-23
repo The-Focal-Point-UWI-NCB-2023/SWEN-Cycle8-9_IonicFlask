@@ -6,8 +6,17 @@ import {
     IonList,
     useIonToast,
 } from '@ionic/react'
+import { 
+    userAdmin,
+    isLoggedin,
+    getCsrfToken,
+    checkLoginStatus,
+    current_User 
+} from '../../util/api/auth/auth';
 import Main from '../../components/Main/Main'
 import styles from './Login.module.scss'
+import { api_url_auth } from '../../util/constants';
+
 
 const Login: React.FC = () => {
     const [email, setEmail] = useState<string>('')
@@ -20,7 +29,7 @@ const Login: React.FC = () => {
     async function getCsrfToken() {
         try {
             const response = await fetch(
-                'http://localhost:8080/api/v1/auth/csrf-token',
+                api_url_auth + `csrf-token`,
                 {
                     method: 'GET',
                     credentials: 'include',
@@ -40,19 +49,21 @@ const Login: React.FC = () => {
 
     useEffect(() => {
         getCsrfToken()
+        userAdmin()
+        current_User()
+        checkLoginStatus()
     }, [])
 
     const loginUser = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-
+        //console.log(csrfToken, 'csrfToken')
         try {
             const requestBody = {
                 email: email,
                 password: password,
             }
-
             const response = await fetch(
-                'http://localhost:8080/api/v1/auth/login',
+                api_url_auth + `login`,
                 {
                     method: 'POST',
                     headers: {
@@ -66,11 +77,11 @@ const Login: React.FC = () => {
             )
 
             const data = await response.json()
-            
 
             if (response.ok && data.message === 'User found') {
                 setJwt(data.token)
                 localStorage.setItem('jwt', data.token)
+                localStorage.setItem('isAuthed', 'true')
                 present({
                     message: 'Login Successful',
                     duration: 3000,
@@ -117,7 +128,7 @@ const Login: React.FC = () => {
                         Login
                     </IonButton>
                 </IonList>
-                <p >
+                <p>
                     Don't have an account? <a href="/register">Register</a>
                 </p>
             </form>
