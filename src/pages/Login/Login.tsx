@@ -62,35 +62,37 @@ const Login: React.FC = () => {
                     <div className={styles.formGroup}>
                         <p>Welcome back!</p>
                         <IonList>
-                            <br />
-                            <IonInput
-                                label="Email"
-                                label-placement="floating"
-                                helperText="Enter a valid email"
-                                fill="outline"
-                                type="email"
-                                inputmode="email"
-                                placeholder="Email"
-                                value={email}
-                                onIonChange={(e) => setEmail(e.detail.value!)}
-                                required
-                            />
-                            {/* </IonItem>
-                    <IonItem> */}
-                            <br />
-                            <IonInput
-                                label="Password"
-                                label-placement="floating"
-                                helperText="Type a strong password"
-                                fill="outline"
-                                type="password"
-                                placeholder="Password"
-                                value={password}
-                                onIonChange={(e) =>
-                                    setPassword(e.detail.value!)
-                                }
-                                required
-                            />
+                            <IonItem>
+                                <IonInput
+                                    label="Email"
+                                    label-placement="floating"
+                                    helperText="Enter a valid email"
+                                    fill="outline"
+                                    type="email"
+                                    inputmode="email"
+                                    placeholder="Email"
+                                    value={email}
+                                    onIonChange={(e) =>
+                                        setEmail(e.detail.value!)
+                                    }
+                                    required
+                                />
+                            </IonItem>
+                            <IonItem>
+                                <IonInput
+                                    label="Password"
+                                    label-placement="floating"
+                                    helperText="Type a strong password"
+                                    fill="outline"
+                                    type="password"
+                                    placeholder="Password"
+                                    value={password}
+                                    onIonChange={(e) =>
+                                        setPassword(e.detail.value!)
+                                    }
+                                    required
+                                />
+                            </IonItem>
                             <IonButton type="submit" color="primary">
                                 Login
                             </IonButton>

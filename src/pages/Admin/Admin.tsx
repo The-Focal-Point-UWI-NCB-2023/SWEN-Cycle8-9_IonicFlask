@@ -474,6 +474,7 @@ const Admin: React.FC = () => {
                         <IonRow className={styles.headerRow}>
                             {order_headers.map((header, index) => (
                                 <IonCol
+                                    size-sm="2"
                                     key={`header_${index}`}
                                     className={styles.headerCol}
                                 >
@@ -489,14 +490,18 @@ const Admin: React.FC = () => {
                             ))}
                         </IonRow>
 
-                        <div className={styles.orderInfo}>
-                            {orderList.map((order, rowIndex) => (
-                                <IonRow
-                                    key={`user_${rowIndex}`}
-                                    className={styles.userRow}
-                                >
+                        {orderList.map((order, rowIndex) => (
+                            <IonRow
+                                key={`user_${rowIndex}`}
+                                className={styles.userRow}
+                            >
+                                <div className={styles.orderInfo}>
                                     {order_headers.map((header) => (
                                         <IonCol
+                                            size="2"
+                                            size-sm="2"
+                                            size-md="2"
+                                            size-lg="2"
                                             key={`col_${rowIndex}_${header}`}
                                         >
                                             {header === 'total_amount'
@@ -504,9 +509,9 @@ const Admin: React.FC = () => {
                                                 : order[header]}{' '}
                                         </IonCol>
                                     ))}
-                                </IonRow>
-                            ))}
-                        </div>
+                                </div>
+                            </IonRow>
+                        ))}
                     </>
                 ) : null}
             </IonGrid>

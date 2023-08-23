@@ -32,7 +32,10 @@ const Products: React.FC = () => {
 
     return (
         <Main>
-            <h2>Shop from our collection of frames here!</h2>
+            <div className={styles.productTitle}>
+                <h2>PRODUCTS</h2>
+                <h3>Shop from our envied collection of frames here!</h3>
+            </div>
             <IonList>
                 <IonGrid fixed={true} className={styles.productGroup}>
                     <IonRow class="ion-justify-content-around">

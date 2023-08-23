@@ -21,8 +21,6 @@
 
 .headerRow {
     padding: 0.5%;
-    margin-bottom: 1%;
-    margin-top: 1%;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
     background-color: #007bff;
     color: #f0ead6;
@@ -30,9 +28,6 @@
 }
 
 .headerCol {
-    font-weight: bold;
-    text-align: center;
-    padding: 15px 0;
     font-weight: bold;
     text-align: center;
     padding: 15px 0;
@@ -80,10 +75,14 @@
 
 .orderInfo {
     width: 100%;
-    display: grid;
-    flex-direction: column;
-    justify-content: center;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: justify;
     align-items: center;
+    height: fit-content;
+    // padding: 30px;
+    // margin: 15px;
 }
 
 .userRow > * {
