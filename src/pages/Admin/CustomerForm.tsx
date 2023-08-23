@@ -10,9 +10,9 @@ import {
 import { api_url_rest, getCsrfToken } from '../../util/constants'
 
 const UserForm = ({ initialValues, onSubmit }) => {
-    const [userName, setUserName] = useState(initialValues.name || '')
-    const [userEmail, setUserEmail] = useState(initialValues.email || '')
-    const [userRole, setUserRole] = useState(initialValues.role || '')
+    const [userName, setUserName] = useState(initialValues.name)
+    const [userEmail, setUserEmail] = useState(initialValues.email)
+    const [userRole, setUserRole] = useState(initialValues.role)
     const [userID, setUserId] = useState(initialValues.id)
 
     const handleSubmit = async (e) => {
@@ -62,7 +62,7 @@ const UserForm = ({ initialValues, onSubmit }) => {
                         label="email"
                         name="email"
                         value={userEmail}
-                        placeholder="Enter user  email"
+                        placeholder="Enter user email"
                         onIonChange={(e) => setUserEmail(e.detail.value)}
                     />
                 </IonItem>

@@ -4,8 +4,8 @@ export interface User {
     id: number
     full_name: string
     email: string
-    password: number
-    role: string
+    password: string
+    role: number
 }
 
 export async function getUsers() {
