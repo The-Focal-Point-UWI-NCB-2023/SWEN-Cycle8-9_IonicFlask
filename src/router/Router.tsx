@@ -63,9 +63,10 @@ const Router: React.FC = () => {
                     {/* Register */}
                     <Route exact path="/register" component={Register} />
 
-                    {/* Login */}                           
-                    <Route exact
-                     path="/login"
+                    {/* Login */}
+                    <Route
+                        exact
+                        path="/login"
                         render={() => {
                             return isAuthed ? (
                                 <Redirect exact from="/" to="/landing" />
@@ -86,8 +87,9 @@ const Router: React.FC = () => {
                     />
 
                     {/* Cart */}
-                    <Route exact
-                     path="/cart"
+                    <Route
+                        exact
+                        path="/cart"
                         render={() => {
                             return isAuthed ? (
                                 <Cart />
@@ -116,7 +118,14 @@ const Router: React.FC = () => {
                     <Route render={() => <Redirect to="/landing" />} />
                 </IonRouterOutlet>
 
-                <IonTabBar slot={window.orientation > 1 ? 'bottom' : 'top'}>
+                <IonTabBar
+                    slot={
+                        navigator.userAgent.toLowerCase().indexOf('android') >
+                        -1
+                            ? 'bottom'
+                            : 'top'
+                    }
+                >
                     <IonTabButton tab="products" href="/products">
                         <IonIcon icon={glassesOutline} />
                         <IonLabel>Products</IonLabel>
