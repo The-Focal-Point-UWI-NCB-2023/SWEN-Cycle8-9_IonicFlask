@@ -1,5 +1,59 @@
 import { api_url_auth } from "../../constants"
 
+export async function loginUser(email, password) {
+    const csrfToken = await getCsrfToken()
+    console.log(csrfToken, "CSRF Token");
+    console.log(email, password, "Email and Password");
+    try {
+        const requestBody = {
+            email: email,
+            password: password,
+        }
+        const response = await fetch(
+            api_url_auth + `login`,
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken,
+                },
+                credentials: 'include',
+                mode: 'cors',
+                body: JSON.stringify(requestBody),
+            }
+        )
+        const data = await response.json()
+        console.log('Login:', data)
+        return data
+    } catch (error) {
+        console.error('Error during login:', error)
+        throw error
+    }
+}
+
+    //     if (response.ok && data.message === 'User found') {
+    //         localStorage.setItem('jwt', data.token)
+    //         localStorage.setItem('isAuthed', 'true')
+    //         return {
+    //             success: true,
+    //             message: 'Login Successful',
+    //         };
+    //     } else {
+    //         return {
+    //             success: false,
+    //             message: 'Login Failed',
+    //         };
+    //     }
+    // } catch (error) {
+    //     console.error(error);
+    //     return {
+    //         success: false,
+    //         message: 'An error occurred during login',
+    //     };
+    // }
+// }
+
+
 export async function getCsrfToken() {
     try {
         const tokenResponse = await fetch(
@@ -121,3 +175,5 @@ export function logoutUser() {
     localStorage.removeItem('jwt');
     window.location.href = '/login'; 
 }
+
+
