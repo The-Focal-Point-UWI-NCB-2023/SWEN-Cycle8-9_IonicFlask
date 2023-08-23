@@ -1,86 +1,136 @@
-import React, { useState } from 'react';
-import { IonItem, IonLabel, IonInput, IonButton } from '@ionic/react';
+import React, { useState } from 'react'
+import {
+    IonList,
+    IonItem,
+    IonInput,
+    IonButton,
+    IonSelect,
+    IonSelectOption,
+} from '@ionic/react'
+import { api_url_rest, getCsrfToken } from '../../util/constants'
 
-interface ProductFormProps {
-  initialProduct: {
-    image: string;
-    title: string;
-    description: string;
-    price: number;
-  };
-  onSubmit: (updatedProduct: {
-    image: string;
-    title: string;
-    description: string;
-    price: number;
-  }) => void;
+const ProductForm = ({ initialValues }) => {
+    const [productName, setProductName] = useState(initialValues.name || '')
+    const [productDescription, setProductDescription] = useState(
+        initialValues.description || ''
+    )
+    const [productPrice, setProductPrice] = useState(initialValues.price || '')
+    const [productStatus, setProductStatus] = useState(
+        initialValues.status || 'available'
+    )
+    const [mode, setMode] = useState(initialValues.mode)
+    const [productID, setProductID] = useState(initialValues.id)
+
+    const handleSubmit = async (e) => {
+        e.preventDefault()
+
+        try {
+            const csrfToken = await getCsrfToken()
+            const formData = new FormData()
+            formData.append('name', productName)
+            formData.append('description', productDescription)
+            formData.append('price', productPrice)
+            formData.append('status', productStatus)
+            formData.append('user_id', '21')
+            formData.append('image', document.getElementById('image').files[0])
+
+            if (mode === 'create') {
+                const response = await fetch(api_url_rest + 'products/', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': csrfToken,
+                    },
+                    credentials: 'include',
+                    mode: 'cors',
+                    body: formData,
+                })
+
+                const data = await response.json()
+                console.log('Created Product:', data)
+            } else if (mode === 'update') {
+                const response = await fetch(
+                    api_url_rest + `products/${productID}`,
+                    {
+                        method: 'PUT',
+                        headers: {
+                            'X-CSRFToken': csrfToken,
+                        },
+                        credentials: 'include',
+                        mode: 'cors',
+                        body: formData,
+                    }
+                )
+
+                const data = await response.json()
+                console.log('Updated product successfully')
+            }
+            // Handle success
+        } catch (error) {
+            console.error('Error creating product:', error)
+            // Handle error
+        }
+    }
+
+    return (
+        <form id="form" action="#" method="post" encType="multipart/form-data">
+            <IonList>
+                <IonItem>
+                    <IonInput
+                        label="Name"
+                        name="name"
+                        value={productName}
+                        placeholder="e.g. A Pink Chair"
+                        onIonChange={(e) => setProductName(e.detail.value)}
+                    />
+                </IonItem>
+                <IonItem>
+                    <IonInput
+                        label="Description"
+                        name="description"
+                        value={productDescription}
+                        placeholder="Enter product description"
+                        onIonChange={(e) =>
+                            setProductDescription(e.detail.value)
+                        }
+                    />
+                </IonItem>
+                <IonItem>
+                    <IonInput
+                        type="number"
+                        label="Price"
+                        name="price"
+                        value={productPrice}
+                        placeholder="Enter product price"
+                        onIonChange={(e) => setProductPrice(e.detail.value)}
+                    />
+                </IonItem>
+                <IonItem>
+                    <IonSelect
+                        value={productStatus}
+                        placeholder="Select product status"
+                        onIonChange={(e) => setProductStatus(e.detail.value)}
+                    >
+                        <IonSelectOption value="available">
+                            Available
+                        </IonSelectOption>
+                        <IonSelectOption value="out_of_stock">
+                            Out of Stock
+                        </IonSelectOption>
+                    </IonSelect>
+                </IonItem>
+                <IonItem>
+                    <label htmlFor="image">Image</label>
+                    <input id="image" name="image" type="file" />
+                </IonItem>
+                <IonItem>
+                    <input type="hidden" name="user_id" value="21" />
+                    <IonButton color="primary" onClick={handleSubmit}>
+                        Save
+                    </IonButton>
+                </IonItem>
+            </IonList>
+        </form>
+    )
 }
 
-const ProductForm: React.FC<ProductFormProps> = ({ initialProduct, onSubmit }) => {
-  const [product, setProduct] = useState(initialProduct);
- 
-  const [selectedImage, setSelectedImage] = useState<File | null>(null);
-
-  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      setSelectedImage(file);
-    }
-  };
-
-
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
-    setProduct((prevProduct) => ({
-      ...prevProduct,
-      [name]: value,
-    }));
-  };
-
-  const handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
-    onSubmit(product);
-  };
-
-  return (
-    <form  className=''onSubmit={handleSubmit}>
-      <IonItem>
-        <IonLabel position="stacked">Upload Image</IonLabel>
-        <input type="file" accept="image/*" onChange={handleImageChange} />
-      </IonItem>
-      <IonItem>
-        <IonLabel position="stacked">Title</IonLabel>
-        <IonInput
-          name="title"
-          value={product.title}
-          onIonChange={() => handleInputChange}
-          required
-        />
-      </IonItem>
-      <IonItem>
-        <IonLabel position="stacked">Description</IonLabel>
-        <IonInput
-          name="description"
-          value={product.description}
-          onIonChange={() =>handleInputChange}
-          required
-        />
-      </IonItem>
-      <IonItem>
-        <IonLabel position="stacked">Price</IonLabel>
-        <IonInput
-          name="price"
-          type="number"
-          value={product.price.toString()}
-          onIonChange={() => handleInputChange}
-          required
-        />
-      </IonItem>
-      <IonButton expand="full" type="submit">
-        Save Changes
-      </IonButton>
-    </form>
-  );
-};
-
-export default ProductForm;
+export default ProductForm

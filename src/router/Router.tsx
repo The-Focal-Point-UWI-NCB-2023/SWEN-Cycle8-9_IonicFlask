@@ -31,8 +31,6 @@ import Admin from '../pages/Admin/Admin'
 import { logoutUser, isLoggedin, userAdmin } from '../util/api/auth/auth';
 import { useState, useEffect } from 'react'
 
-
-
 const Router: React.FC = () => {
     //Auth Check
     const [isAuthed, setIsAuthed] = useState(localStorage.getItem('isAuthed') === 'true');

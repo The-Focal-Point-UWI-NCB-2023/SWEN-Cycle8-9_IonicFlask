@@ -35,6 +35,7 @@ const Login: React.FC = () => {
     const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
         console.log('reached')
         e.preventDefault()
+<<<<<<< HEAD
         const loginResponse = await loginUser(email, password)
         console.log("Login Resp", loginResponse.status, loginResponse.message)
         if ( loginResponse.message === 'User found') {
@@ -51,6 +52,49 @@ const Login: React.FC = () => {
                 duration: 3000,
                 color: 'danger',
             })
+=======
+
+        try {
+            const requestBody = {
+                email: email,
+                password: password,
+            }
+            const response = await fetch(
+                'http://localhost:8080/api/v1/auth/login',
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrfToken,
+                    },
+                    credentials: 'include',
+                    mode: 'cors',
+                    body: JSON.stringify(requestBody),
+                }
+            )
+
+            const data = await response.json()
+
+            if (response.ok && data.message === 'User found') {
+                setJwt(data.token)
+                localStorage.setItem('jwt', data.token)
+                present({
+                    message: 'Login Successful',
+                    duration: 3000,
+                    color: 'success',
+                })
+                window.location.href = '/home'
+            } else {
+                setError('Login Failed')
+                present({
+                    message: 'Login Failed',
+                    duration: 3000,
+                    color: 'danger',
+                })
+            }
+        } catch (error) {
+            console.error(error)
+>>>>>>> dev
         }
     }
 
@@ -83,7 +127,7 @@ const Login: React.FC = () => {
                         Login
                     </IonButton>
                 </IonList>
-                <p >
+                <p>
                     Don't have an account? <a href="/register">Register</a>
                 </p>
             </form>
