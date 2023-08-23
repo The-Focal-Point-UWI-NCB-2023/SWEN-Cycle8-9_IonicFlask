@@ -4,6 +4,7 @@ export async function loginUser(email, password) {
     const csrfToken = await getCsrfToken()
     console.log(csrfToken, "CSRF Token");
     console.log(email, password, "Email and Password");
+
     try {
         const requestBody = {
             email: email,
@@ -24,6 +25,8 @@ export async function loginUser(email, password) {
         )
         const data = await response.json()
         console.log('Login:', data)
+        localStorage.setItem('jwt', data.token)
+        localStorage.setItem('isAuthed', 'true')
         return data
     } catch (error) {
         console.error('Error during login:', error)
