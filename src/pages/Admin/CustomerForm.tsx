@@ -19,6 +19,7 @@ const UserForm = ({ initialValues, onSubmit }) => {
         e.preventDefault()
 
         try {
+            const jwt = localStorage.getItem('jwt')
             const csrfToken = await getCsrfToken()
             const formData = new FormData()
             formData.append('full_name', userName)
@@ -29,6 +30,7 @@ const UserForm = ({ initialValues, onSubmit }) => {
                 method: 'PUT',
                 headers: {
                     'X-CSRFToken': csrfToken,
+                    Authorization: `bearer ${jwt}`,
                 },
                 credentials: 'include',
                 mode: 'cors',

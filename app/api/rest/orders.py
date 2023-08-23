@@ -4,7 +4,7 @@ from flask_login import current_user
 import jwt
 from app.api import Namespace, Resource, fields, reqparse,abort
 from app.models import Orders, db, Line_Items
-from app.api.auth.jwt_auth import requires_auth  # Import the GenerateToken class
+from app.api.auth import admin_required  # Import the GenerateToken class
 
 
 orders_ns = Namespace('orders',path="/v1/rest/orders", 
@@ -33,8 +33,8 @@ orders_parser.add_argument('X-CSRFToken', location='headers', required=False, he
 @orders_ns.route('/')
 class OrderListResource(Resource):
 
+    @admin_required
     @orders_ns.marshal_list_with(order_model)
-    @requires_auth
     def get(self):
         orders = Orders.query.all()
         if orders == []:
@@ -58,6 +58,7 @@ class OrderListResource(Resource):
 @orders_ns.param("order_id", "A unique identifier associated with an order")
 @orders_ns.route('/<int:order_id>')
 class OrderResource(Resource):
+    @admin_required
     @orders_ns.marshal_list_with(order_model)
     def get(self, order_id):
         order = Orders.query.get(order_id)
@@ -73,13 +74,11 @@ class OrderResource(Resource):
             'line_items': line_items
             }
             return specific_order
-        elif order:
-            print(current_user)
-            return current_user
         elif not order:
             abort(404, message="Order not found")
 
 
+    @admin_required
     @orders_ns.expect(orders_parser)
     def put(self, order_id):
         order = Orders.query.get(order_id)
@@ -94,6 +93,7 @@ class OrderResource(Resource):
         elif order is None:
             abort(404, message="Order not found")
 
+    @admin_required
     def delete(self, order_id):
         order = Orders.query.get(order_id)
         if order:

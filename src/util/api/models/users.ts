@@ -10,9 +10,10 @@ export interface User {
 
 export async function getUsers() {
     try {
+        const jwt = localStorage.getItem('jwt')
         const response = await fetch(api_url_rest + `users/`, {
             headers: {
-                Authorization: 'Bearer', // Add your bearer token here
+                Authorization: `bearer ${jwt}`,
             },
         })
         const data = await response.json()
@@ -49,12 +50,14 @@ export async function createUser(userData: User) {
 
 export async function updateUser(userId: String, updateduserData: User) {
     try {
+        const jwt = localStorage.getItem('jwt')
         const csrfToken = await getCsrfToken()
         const response = await fetch(api_url_rest + `users/${userId}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
                 'X-CSRFToken': csrfToken,
+                Authorization: `bearer ${jwt}`,
             },
             credentials: 'include',
             mode: 'cors',

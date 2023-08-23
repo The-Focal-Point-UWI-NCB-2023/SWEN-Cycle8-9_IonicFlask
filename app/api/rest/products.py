@@ -1,4 +1,5 @@
 from app.api import Namespace, Resource, fields, reqparse,abort,os
+from app.api.auth import admin_required
 from app.models import Products, db
 from werkzeug.datastructures import FileStorage
 from werkzeug.utils import secure_filename
@@ -49,6 +50,7 @@ class ProductsResource(Resource):
 
     @products_ns.expect(product_parser)
     @products_ns.marshal_with(product_model)
+    @admin_required
     def post(self):
         args = product_parser.parse_args()
         if args['image'] == None:
@@ -83,6 +85,7 @@ class ProductResource(Resource):
         return product
 
 
+    @admin_required
     @products_ns.expect(product_parser)
     @products_ns.marshal_with(product_model)
     def put(self, product_id):
@@ -113,6 +116,7 @@ class ProductResource(Resource):
             abort(404, message="Product not found")
         
 
+    @admin_required
     @products_ns.response(204, "Product deleted")
     def delete(self, product_id):
         product = Products.query.get(product_id)

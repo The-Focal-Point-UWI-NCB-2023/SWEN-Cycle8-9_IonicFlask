@@ -26,7 +26,7 @@ export async function getProducts() {
             },
         })
         const data = await response.json()
-        console.log(data) // Logging the data for debugging purposes
+        // console.log(data) // Logging the data for debugging purposes
         return data // Return the fetched data
     } catch (error) {
         console.error('Error fetching products:', error)
@@ -90,12 +90,14 @@ export async function updateProduct(
     updatedProductData: Product
 ) {
     try {
+        const jwt = localStorage.getItem('jwt')
         const csrfToken = await getCsrfToken()
         const response = await fetch(api_url_rest + `products/${productId}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
                 'X-CSRFToken': csrfToken,
+                Authorization: `bearer ${jwt}`,
             },
             credentials: 'include',
             mode: 'cors',
@@ -113,12 +115,14 @@ export async function updateProduct(
 
 export async function deleteProduct(productId: String) {
     try {
+        const jwt = localStorage.getItem('jwt')
         const csrfToken = await getCsrfToken()
         const response = await fetch(api_url_rest + `products/${productId}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
                 'X-CSRFToken': csrfToken,
+                Authorization: `bearer ${jwt}`,
             },
             credentials: 'include',
             mode: 'cors',

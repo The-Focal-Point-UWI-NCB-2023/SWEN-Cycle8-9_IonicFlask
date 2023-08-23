@@ -35,10 +35,12 @@ const ProductForm = ({ initialValues, onSubmit }) => {
             formData.append('image', document.getElementById('image').files[0])
 
             if (mode === 'create') {
+                const jwt = localStorage.getItem('jwt')
                 const response = await fetch(api_url_rest + 'products/', {
                     method: 'POST',
                     headers: {
                         'X-CSRFToken': csrfToken,
+                        Authorization: `bearer ${jwt}`,
                     },
                     credentials: 'include',
                     mode: 'cors',
@@ -49,12 +51,14 @@ const ProductForm = ({ initialValues, onSubmit }) => {
                 console.log('Created Product:', data)
                 onSubmit()
             } else if (mode === 'update') {
+                const jwt = localStorage.getItem('jwt')
                 const response = await fetch(
                     api_url_rest + `products/${productID}`,
                     {
                         method: 'PUT',
                         headers: {
                             'X-CSRFToken': csrfToken,
+                            Authorization: `bearer ${jwt}`,
                         },
                         credentials: 'include',
                         mode: 'cors',
