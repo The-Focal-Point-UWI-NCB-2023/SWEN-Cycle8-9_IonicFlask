@@ -20,6 +20,17 @@ export async function makePayment() {
         cancel_url: 'https://www.google.com/',
     }
 
+    const requestData = {
+        success_url: 'https://www.google.com/',
+        cancel_url: 'https://www.google.com/',
+        name: 'Product Name',
+        description: 'Product Description',
+        images: ['https://i.imgur.com/4Iac5ON.jpeg'],
+        unit_amount_decimal: '1000', // Example unit amount in decimal
+        quantity: 1,
+    }
+
+    const test = JSON.stringify(requestData)
     const test_body = JSON.stringify(payload)
     try {
         const csrfToken = await getCsrfToken()
@@ -33,9 +44,11 @@ export async function makePayment() {
                 },
                 credentials: 'include',
                 mode: 'cors',
-                body: test_body,
+                body: test,
             }
         )
+        const data = await response.json()
+        return data
     } catch (error) {
         console.error('Error creating payment:', error)
         throw error

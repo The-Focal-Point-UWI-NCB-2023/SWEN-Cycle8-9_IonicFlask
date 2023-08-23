@@ -66,4 +66,5 @@ class CreateCheckoutSession(Resource):
         except Exception as e:
             return str(e), 500
 
-        return redirect(checkout_session.url, code=303)
+        return(checkout_session.url)
+        # return redirect(checkout_session.url, code=303)

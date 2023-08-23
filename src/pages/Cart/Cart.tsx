@@ -30,6 +30,7 @@ const Cart: React.FC = () => {
     const [productToDeleteId, setProductToDeleteId] = useState<number | null>(
         null
     )
+    const [stripeLink, setStripeLink] = useState()
 
     const openDeleteConfirmation = (productId: number) => {
         setProductToDeleteId(productId)
@@ -54,14 +55,24 @@ const Cart: React.FC = () => {
         setQuantity(newQuantity)
     }
 
-    const handleCheckout = () => {
-        makePayment()
-            .then((response) => {
-                console.log('Payment successful')
-            })
-            .catch((error) => {
-                console.log('There is an error at redirecting')
-            })
+    // const handleCheckout = () => {
+    //     makePayment()
+    //         .then((response) => {
+    //             console.log('Payment successful')
+    //         })
+    //         .catch((error) => {
+    //             console.log('There is an error at redirecting')
+    //         })
+    // }
+
+    async function handleCheckout() {
+        try {
+            const fetchedURL = await makePayment()
+            setStripeLink(fetchedURL)
+            window.location.href = fetchedURL
+        } catch (error) {
+            console.error('Error fetching products:', error)
+        }
     }
 
     return (
