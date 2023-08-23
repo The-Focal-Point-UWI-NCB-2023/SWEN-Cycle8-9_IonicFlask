@@ -312,26 +312,29 @@ const Admin: React.FC = () => {
     return (
         <Main>
             <IonGrid fixed={true} className={styles.adminContainer}>
-                <IonRow className={styles.buttons}>
-                    <IonButton
-                        className={styles.button}
-                        onClick={() => handleButtonClick('CUSTOMERS')}
-                    >
-                        CUSTOMERS
-                    </IonButton>
-                    <IonButton
-                        className={styles.button}
-                        onClick={() => handleButtonClick('PRODUCTS')}
-                    >
-                        PRODUCTS
-                    </IonButton>
-                    <IonButton
-                        className={styles.button}
-                        onClick={() => handleButtonClick('ORDERS')}
-                    >
-                        ORDERS
-                    </IonButton>
+                <IonRow>
+                    <div className={styles.buttons}>
+                        <IonButton
+                            className={styles.button}
+                            onClick={() => handleButtonClick('CUSTOMERS')}
+                        >
+                            CUSTOMERS
+                        </IonButton>
+                        <IonButton
+                            className={styles.button}
+                            onClick={() => handleButtonClick('PRODUCTS')}
+                        >
+                            PRODUCTS
+                        </IonButton>
+                        <IonButton
+                            className={styles.button}
+                            onClick={() => handleButtonClick('ORDERS')}
+                        >
+                            ORDERS
+                        </IonButton>
+                    </div>
                 </IonRow>
+
                 {activeContent === 'CUSTOMERS' ? (
                     <>
                         <IonRow className={styles.headerRow}>
@@ -352,20 +355,26 @@ const Admin: React.FC = () => {
                                 key={`user_${rowIndex}`}
                                 className={styles.userRow}
                             >
-                                {userHeaders.slice(0, -1).map((header) => (
-                                    <IonCol key={`col_${rowIndex}_${header}`}>
-                                        {users[header]}
+                                <div className={styles.userInfo}>
+                                    {userHeaders.slice(0, -1).map((header) => (
+                                        <IonCol
+                                            size="6"
+                                            key={`col_${rowIndex}_${header}`}
+                                        >
+                                            {users[header]}
+                                        </IonCol>
+                                    ))}
+
+                                    <IonCol className={styles.actionCol}>
+                                        <IonIcon
+                                            icon={create}
+                                            className={styles.createIcon}
+                                            onClick={() =>
+                                                openCustomerEditModal(rowIndex)
+                                            }
+                                        />
                                     </IonCol>
-                                ))}
-                                <IonCol className={styles.actionCol}>
-                                    <IonIcon
-                                        icon={create}
-                                        className={styles.createIcon}
-                                        onClick={() =>
-                                            openCustomerEditModal(rowIndex)
-                                        }
-                                    />
-                                </IonCol>
+                                </div>
 
                                 <MyModal
                                     isOpen={customermodalVisibilities[rowIndex]}
@@ -409,7 +418,7 @@ const Admin: React.FC = () => {
                             ></ProductForm>
                         </MyModal>
 
-                        <IonRow className={styles.headerRow}>
+                        {/* <IonRow className={styles.headerRow}>
                             {prodHeaders.map((header, index) => (
                                 <IonCol
                                     key={`header_${index}`}
@@ -419,27 +428,36 @@ const Admin: React.FC = () => {
                                         header.slice(1)}
                                 </IonCol>
                             ))}
-                        </IonRow>
+                        </IonRow> */}
                         {productsList.map((prod, rowIndex) => (
                             <IonRow
                                 key={`user_${rowIndex}`}
                                 className={styles.userRow}
                             >
-                                {prodHeaders.slice(0, -1).map((header) => (
-                                    <IonCol key={`col_${rowIndex}_${header}`}>
-                                        {header === 'price' ? (
-                                            `$${prod[header]}`
-                                        ) : header === 'image' ? (
-                                            <img
-                                                src={`="../../../uploads/${prod[header]}`}
-                                                alt="Product"
-                                                className={styles.productImage}
-                                            />
-                                        ) : (
-                                            prod[header]
-                                        )}{' '}
-                                    </IonCol>
-                                ))}
+                                <div className={styles.productInfo}>
+                                    {prodHeaders.slice(0, -1).map((header) => (
+                                        <div className={styles.productInfoCon}>
+                                            <IonCol
+                                                size="6"
+                                                key={`col_${rowIndex}_${header}`}
+                                            >
+                                                {header === 'price' ? (
+                                                    `$${prod[header]}`
+                                                ) : header === 'image' ? (
+                                                    <img
+                                                        src={`="../../../uploads/${prod[header]}`}
+                                                        alt="Product"
+                                                        className={
+                                                            styles.productImage
+                                                        }
+                                                    />
+                                                ) : (
+                                                    prod[header]
+                                                )}{' '}
+                                            </IonCol>
+                                        </div>
+                                    ))}
+                                </div>
                                 <IonCol className={styles.actionCol}>
                                     <IonIcon
                                         icon={create}
@@ -529,20 +547,25 @@ const Admin: React.FC = () => {
                                 </IonCol>
                             ))}
                         </IonRow>
-                        {orderList.map((order, rowIndex) => (
-                            <IonRow
-                                key={`user_${rowIndex}`}
-                                className={styles.userRow}
-                            >
-                                {order_headers.map((header) => (
-                                    <IonCol key={`col_${rowIndex}_${header}`}>
-                                        {header === 'total_amount'
-                                            ? `$${order[header]}`
-                                            : order[header]}{' '}
-                                    </IonCol>
-                                ))}
-                            </IonRow>
-                        ))}
+
+                        <div className={styles.orderInfo}>
+                            {orderList.map((order, rowIndex) => (
+                                <IonRow
+                                    key={`user_${rowIndex}`}
+                                    className={styles.userRow}
+                                >
+                                    {order_headers.map((header) => (
+                                        <IonCol
+                                            key={`col_${rowIndex}_${header}`}
+                                        >
+                                            {header === 'total_amount'
+                                                ? `$${order[header]}`
+                                                : order[header]}{' '}
+                                        </IonCol>
+                                    ))}
+                                </IonRow>
+                            ))}
+                        </div>
                     </>
                 ) : null}
             </IonGrid>

@@ -1,5 +1,6 @@
 import {
     IonButton,
+    IonImg,
     IonInput,
     IonItem,
     IonList,
@@ -96,30 +97,52 @@ const Register: React.FC = () => {
 
     return (
         <Main>
-            <h1>Register</h1>
-            <form id="register-form" onSubmit={RegisterUser}>
-                <div className={styles.formGroup}>
-                    <IonList>
-                        <IonItem>
+            <h2>Register</h2>
+
+            <div className={styles.container}>
+                <IonImg className={styles.img} src="/thefocalpoints_Logo.jpg" />
+
+                <form id="register-form" onSubmit={RegisterUser}>
+                    <div className={styles.formGroup}>
+                        <p>Create a Focal Frames account today!</p>
+                        <IonList>
+                            {/* <IonItem> */}
                             <IonInput
+                                label="Name"
+                                label-placement="floating"
+                                helperText="Enter your full name"
+                                fill="outline"
                                 type="text"
                                 placeholder="Name"
                                 value={name}
                                 onIonChange={(e) => setName(e.detail.value!)}
                                 required
                             />
-                        </IonItem>
-                        <IonItem>
+
+                            {/* </IonItem> */}
+                            {/* <IonItem> */}
+                            <br />
                             <IonInput
+                                label="Email"
+                                label-placement="floating"
+                                helperText="Enter a valid email"
+                                fill="outline"
                                 type="email"
+                                inputmode="email"
+                                pattern="email"
                                 placeholder="Email"
                                 value={email}
                                 onIonChange={(e) => setEmail(e.detail.value!)}
                                 required
                             />
-                        </IonItem>
-                        <IonItem>
+                            {/* </IonItem>
+                            <IonItem> */}
+                            <br />
                             <IonInput
+                                label="Password"
+                                label-placement="floating"
+                                helperText="Type a strong password"
+                                fill="outline"
                                 type="password"
                                 placeholder="Password"
                                 value={password}
@@ -128,25 +151,31 @@ const Register: React.FC = () => {
                                 }
                                 required
                             />
-                        </IonItem>
-                        {/* <IonItem>
-                        <IonInput name="password_confirmation" type="password" placeholder="Confirm Password" required />
-                    </IonItem> */}
-                        <IonButton
-                            type="submit"
-                            color="primary"
-                            // onClick={(e) => {
-                            //     //RegisterUser(e)
-                            // }}
-                        >
-                            Register
-                        </IonButton>
-                    </IonList>
-                </div>
-                <p className={styles.register}>
-                    Already have an account? <a href="/login">Login</a>
-                </p>
-            </form>
+                            {/* </IonItem> */}
+
+                            {/* <IonItem>
+                            <IonInput name="password_confirmation" type="password" placeholder="Confirm Password" required />
+                        </IonItem> */}
+                            <br />
+                            <IonButton
+                                type="submit"
+                                color="primary"
+                                // onClick={(e) => {
+                                //     //RegisterUser(e)
+                                // }}
+                            >
+                                Register
+                            </IonButton>
+                        </IonList>
+                        <div>
+                            <p className={styles.register}>
+                                Already have an account?{' '}
+                                <a href="/login">Login</a>
+                            </p>
+                        </div>
+                    </div>
+                </form>
+            </div>
         </Main>
     )
 }

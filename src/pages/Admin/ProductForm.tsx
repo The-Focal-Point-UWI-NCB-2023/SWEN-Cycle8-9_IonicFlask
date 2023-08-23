@@ -8,6 +8,7 @@ import {
     IonSelectOption,
 } from '@ionic/react'
 import { api_url_rest, getCsrfToken } from '../../util/constants'
+import styles from './Modals.module.scss'
 
 const ProductForm = ({ initialValues }) => {
     const [productName, setProductName] = useState(initialValues.name || '')
@@ -72,64 +73,88 @@ const ProductForm = ({ initialValues }) => {
     }
 
     return (
-        <form id="form" action="#" method="post" encType="multipart/form-data">
-            <IonList>
-                <IonItem>
-                    <IonInput
-                        label="Name"
-                        name="name"
-                        value={productName}
-                        placeholder="e.g. A Pink Chair"
-                        onIonChange={(e) => setProductName(e.detail.value)}
-                    />
-                </IonItem>
-                <IonItem>
-                    <IonInput
-                        label="Description"
-                        name="description"
-                        value={productDescription}
-                        placeholder="Enter product description"
-                        onIonChange={(e) =>
-                            setProductDescription(e.detail.value)
-                        }
-                    />
-                </IonItem>
-                <IonItem>
-                    <IonInput
-                        type="number"
-                        label="Price"
-                        name="price"
-                        value={productPrice}
-                        placeholder="Enter product price"
-                        onIonChange={(e) => setProductPrice(e.detail.value)}
-                    />
-                </IonItem>
-                <IonItem>
-                    <IonSelect
-                        value={productStatus}
-                        placeholder="Select product status"
-                        onIonChange={(e) => setProductStatus(e.detail.value)}
-                    >
-                        <IonSelectOption value="available">
-                            Available
-                        </IonSelectOption>
-                        <IonSelectOption value="out_of_stock">
-                            Out of Stock
-                        </IonSelectOption>
-                    </IonSelect>
-                </IonItem>
-                <IonItem>
-                    <label htmlFor="image">Image</label>
-                    <input id="image" name="image" type="file" />
-                </IonItem>
-                <IonItem>
-                    <input type="hidden" name="user_id" value="21" />
-                    <IonButton color="primary" onClick={handleSubmit}>
-                        Save
-                    </IonButton>
-                </IonItem>
-            </IonList>
-        </form>
+        <div className={styles.container}>
+            <form
+                id="form"
+                action="#"
+                method="post"
+                encType="multipart/form-data"
+            >
+                <IonList>
+                    <IonItem>
+                        <IonInput
+                            label-placement="floating"
+                            helperText="Enter user's name"
+                            fill="outline"
+                            label="Name"
+                            name="name"
+                            value={productName}
+                            placeholder="e.g. A Pink Chair"
+                            onIonChange={(e) => setProductName(e.detail.value)}
+                        />
+                    </IonItem>
+                    <IonItem>
+                        <IonInput
+                            label="Description"
+                            label-placement="floating"
+                            helperText="Enter product's description"
+                            fill="outline"
+                            name="description"
+                            value={productDescription}
+                            placeholder="Enter product description"
+                            onIonChange={(e) =>
+                                setProductDescription(e.detail.value)
+                            }
+                        />
+                    </IonItem>
+                    <IonItem>
+                        <IonInput
+                            name="price"
+                            label-placement="floating"
+                            helperText="Enter product's price"
+                            fill="outline"
+                            type="number"
+                            label="Price"
+                            value={productPrice}
+                            placeholder="Enter product price"
+                            onIonChange={(e) => setProductPrice(e.detail.value)}
+                        />
+                    </IonItem>
+                    <IonItem>
+                        <IonSelect
+                            value={productStatus}
+                            label="Status"
+                            label-placement="floating"
+                            fill="outline"
+                            interface="popover"
+                            placeholder="Select product status"
+                            onIonChange={(e) =>
+                                setProductStatus(e.detail.value)
+                            }
+                        >
+                            <IonSelectOption value="available">
+                                Available
+                            </IonSelectOption>
+                            <IonSelectOption value="out_of_stock">
+                                Out of Stock
+                            </IonSelectOption>
+                        </IonSelect>
+                    </IonItem>
+                    <IonItem>
+                        <label htmlFor="image">Image</label>
+                        <input id="image" name="image" type="file" />
+                    </IonItem>
+                    <div className={styles.save}>
+                        <IonItem>
+                            <input type="hidden" name="user_id" value="21" />
+                            <IonButton color="primary" onClick={handleSubmit}>
+                                Save
+                            </IonButton>
+                        </IonItem>
+                    </div>
+                </IonList>
+            </form>
+        </div>
     )
 }
 
