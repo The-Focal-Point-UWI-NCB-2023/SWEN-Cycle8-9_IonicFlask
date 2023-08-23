@@ -56,6 +56,39 @@ export async function loginUser(email, password) {
     // }
 // }
 
+export async function registerUser(name, email, password) {
+    const csrfToken = await getCsrfToken();
+    try {
+        const requestBody = {
+            full_name: name,
+            email: email,
+            password: password,
+        };
+
+        const response = await fetch(
+            api_url_auth + `register`,
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken,
+                },
+                credentials: 'include',
+                mode: 'cors',
+                body: JSON.stringify(requestBody),
+            }
+        );
+
+        const data = await response.json();
+        console.log('Register:', data);
+        //console.log('Register:', data);
+        return data;
+    } catch (error) {
+        console.error('Error during registration:', error);
+        throw error;
+    }
+}
+
 
 export async function getCsrfToken() {
     try {
@@ -178,5 +211,23 @@ export function logoutUser() {
     localStorage.removeItem('jwt');
     window.location.href = '/login'; 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

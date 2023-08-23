@@ -10,7 +10,7 @@ import Main from '../../components/Main/Main'
 import styles from './Register.module.scss'
 import { Redirect } from 'react-router'
 import { api_url_auth } from '../../util/constants'
-import { checkLoginStatus } from '../../util/api/auth/auth'
+import { checkLoginStatus, registerUser, getCsrfToken } from '../../util/api/auth/auth'
 
 
 const Register: React.FC = () => {
@@ -23,85 +23,110 @@ const Register: React.FC = () => {
     const [present] = useIonToast()
     const [csrfToken, setCsrfToken] = useState('')
 
-    async function getCsrfToken() {
-        try {
-            const response = await fetch(
-                api_url_auth + `csrf-token`,
-                {
-                    method: 'GET',
-                    credentials: 'include',
-                }
-            )
-            //console.log(response.status);
-            if (response.status === 200) {
-                const data = await response.json()
-                setCsrfToken(data.csrf_token)
-            } else {
-                throw new Error('Failed to fetch CSRF token')
-            }
-        } catch (error) {
-            console.error(error)
-        }
-    }
+    // async function getCsrfToken() {
+    //     try {
+    //         const response = await fetch(
+    //             api_url_auth + `csrf-token`,
+    //             {
+    //                 method: 'GET',
+    //                 credentials: 'include',
+    //             }
+    //         )
+    //         //console.log(response.status);
+    //         if (response.status === 200) {
+    //             const data = await response.json()
+    //             setCsrfToken(data.csrf_token)
+    //         } else {
+    //             throw new Error('Failed to fetch CSRF token')
+    //         }
+    //     } catch (error) {
+    //         console.error(error)
+    //     }
+    // }
 
     useEffect(() => {
         getCsrfToken()
         checkLoginStatus()
     }, [])
 
-    const RegisterUser = async (e: React.FormEvent<HTMLFormElement>) => {
+    const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-
-        try {
-            const requestBody = {
-                full_name: name,
-                email: email,
-                password: password,
-            }
-
-            const response = await fetch(
-                api_url_auth + `register`,
-                {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRFToken': csrfToken,
-                    },
-                    credentials: 'include',
-                    mode: 'cors',
-                    body: JSON.stringify(requestBody),
-                }
-            )
-
-            const data = await response.json()
-
-            if (response.ok) {
-                setSuccess(data.message)
-                present({
-                    message: 'User Registered Successfully',
-                    duration: 3000,
-                    color: 'success',
-                })
-                window.location.href = '/login'
-            } else {
-                //console.log(data.message)
-
-                setError(data.message)
-                present({
-                    message: error,
-                    duration: 3000,
-                    color: 'danger',
-                })
-            }
-        } catch (error) {
-            console.error(error)
+        const registerResponse = await registerUser(name, email, password)
+        //console.log("Register Resp", registerResponse.status, registerResponse.message)
+        console.log("Register Resp", registerResponse.full_name, registerResponse.email, registerResponse.password)
+        if ( registerResponse.email != null) {
+            present({
+                message: 'User Registered Successfully',
+                duration: 3000,
+                color: 'success',
+            })
+            console.log("Yes I", registerResponse.user)
+            window.location.href = '/login'
+        } else {
+            setError('Registration Failed')
+            present({
+                message: 'Registration Failed',
+                duration: 3000,
+                color: 'danger',
+            })
         }
     }
+
+
+    // const RegisterUser = async (e: React.FormEvent<HTMLFormElement>) => {
+    //     e.preventDefault()
+
+    //     try {
+    //         const requestBody = {
+    //             full_name: name,
+    //             email: email,
+    //             password: password,
+    //         }
+
+    //         const response = await fetch(
+    //             api_url_auth + `register`,
+    //             {
+    //                 method: 'POST',
+    //                 headers: {
+    //                     'Content-Type': 'application/json',
+    //                     'X-CSRFToken': csrfToken,
+    //                 },
+    //                 credentials: 'include',
+    //                 mode: 'cors',
+    //                 body: JSON.stringify(requestBody),
+    //             }
+    //         )
+
+    //         const data = await response.json()
+
+    //         if (response.ok) {
+    //             setSuccess(data.message)
+    //             present({
+    //                 message: 'User Registered Successfully',
+    //                 duration: 3000,
+    //                 color: 'success',
+    //             })
+    //             window.location.href = '/login'
+    //         } else {
+    //             //console.log(data.message)
+
+    //             setError(data.message)
+    //             present({
+    //                 message: error,
+    //                 duration: 3000,
+    //                 color: 'danger',
+    //             })
+    //         }
+    //     } catch (error) {
+    //         console.error(error)
+    //     }
+    // }
+
 
     return (
         <Main>
             <h1>Register</h1>
-            <form id="register-form" onSubmit={RegisterUser}>
+            <form id="register-form" onSubmit={handleRegister}>
                 <div className={styles.formGroup}>
                     <IonList>
                         <IonItem>
@@ -137,7 +162,7 @@ const Register: React.FC = () => {
                         <IonInput name="password_confirmation" type="password" placeholder="Confirm Password" required />
                     </IonItem> */}
                         <IonButton
-                            type="submit"
+                            type='submit'
                             color="primary"
                         >
                             Register

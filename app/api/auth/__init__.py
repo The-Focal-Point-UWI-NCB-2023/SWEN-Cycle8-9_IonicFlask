@@ -84,7 +84,13 @@ class Register(Resource):
             user = Users(full_name=full_name, email=email, password=password, role=role)
             db.session.add(user)
             db.session.commit()
-            return user, 201
+            user1 = {
+                'id': user.id,
+                'full_name': full_name,
+                'email': email,
+                'role': role
+            }
+            return user1, 201
         except Exception as e:
             abort(409, message="Invalid field input")
 
@@ -139,7 +145,6 @@ class IsLoggedIn(Resource):
     def get(self):
         header = request.headers.get('Authorization')
 
-        # Check if Authorization header is missing
         if header is None:
             response = {
                 'message': 'false',
@@ -176,7 +181,7 @@ class IsLoggedIn(Resource):
 class IsLoggedIn(Resource):
     @requires_auth
     def get(self):
-        token = request.headers.get('Authorization')  # Get the token from the Authorization header
+        token = request.headers.get('Authorization')  
         parts = token.split()
         token = parts[1]
         try:
@@ -206,7 +211,7 @@ class IsLoggedIn(Resource):
 class CurrUser(Resource):
     @requires_auth
     def get(self):
-        token = request.headers.get('Authorization')  # Get the token from the Authorization header
+        token = request.headers.get('Authorization')  
         parts = token.split()
         token = parts[1]
         try:
