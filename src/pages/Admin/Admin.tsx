@@ -49,6 +49,7 @@ import {
     getLineItems,
     updateLineItem,
 } from '../../util/api/models/line_items'
+import { current_User } from '../../util/api/auth/auth'
 
 const Admin: React.FC = () => {
     const [activeContent, setActiveContent] = useState('CUSTOMERS')
@@ -59,12 +60,14 @@ const Admin: React.FC = () => {
     const [productToDeleteId, setProductToDeleteId] = useState<number | null>(
         null
     )
+    const [currentUser, setCurrentUser] = useState<any>([])
 
     // For testing to see if fetch api works
     useEffect(() => {
         fetchProducts()
         fetchOrders()
         fetchUsers()
+        fetchCurrentUser()
     }, [])
 
     useEffect(() => {}, [productsList])
@@ -87,15 +90,17 @@ const Admin: React.FC = () => {
         }
     }
 
-    //Products fetch
-    const productData = {
-        name: 'New Product',
-        description: 'A new product',
-        price: 19.99,
-        image: 'image.jpg',
-        status: 'TEST',
-        user_id: 20,
+    async function fetchCurrentUser() {
+        try {
+            const fetchedCurrentUser = await current_User()
+            setCurrentUser(fetchedCurrentUser)
+        } catch (error) {
+            console.log(error)
+        }
     }
+
+    //Products fetch
+
     async function fetchProducts() {
         try {
             const fetchedProducts = await getProducts()
@@ -105,37 +110,10 @@ const Admin: React.FC = () => {
         }
     }
 
-    async function fetchcreateProduct(newProduct: Product) {
-        try {
-            // Call your API to create the new product
-            const createdProduct = await createProduct(newProduct)
-        } catch (error) {
-            console.error('Error creating product:', error)
-        }
-    }
-
     async function fetchDeleteProduct(productId: string) {
         try {
             // Call your API to delete a product
             const deletedProduct = await deleteProduct(productId)
-        } catch (error) {
-            console.error('Error creating product:', error)
-        }
-    }
-
-    async function fetchUpdateProduct(productId: string, newProduct: Product) {
-        try {
-            // Call your API to create the new product
-            const updatedProduct = await updateProduct(productId, newProduct)
-        } catch (error) {
-            console.error('Error creating product:', error)
-        }
-    }
-
-    async function fetchProductsById(productId: string) {
-        try {
-            // Call your API to create the new product
-            const fetchedProductByID = await getProductById(productId)
         } catch (error) {
             console.error('Error creating product:', error)
         }
@@ -151,44 +129,6 @@ const Admin: React.FC = () => {
             console.error('Error fetching orders:', error)
         }
     }
-
-    async function fetchcreateOrder(newOrder: Order) {
-        try {
-            // Call your API to create the new product
-            const createdOder = await createOrder(newOrder)
-        } catch (error) {
-            console.error('Error creating product:', error)
-        }
-    }
-
-    async function fetchDeleteOrder(orderID: string) {
-        try {
-            // Call your API to create the new product
-            const deletedOrder = await deleteOrder(orderID)
-        } catch (error) {
-            console.error('Error creating product:', error)
-        }
-    }
-
-    async function fetchUpdateOrder(orderID: string, newOrder: Order) {
-        try {
-            // Call your API to create the new product
-            const updatedOrder = await updateOrder(orderID, newOrder)
-        } catch (error) {
-            console.error('Error creating product:', error)
-        }
-    }
-
-    async function fetchOrderById(orderID: string) {
-        try {
-            // Call your API to create the new product
-            const fetchedOrderByID = await getOrderById(orderID)
-        } catch (error) {
-            console.error('Error creating product:', error)
-        }
-    }
-
-    //Line Items Fetch
 
     //Line Items Fetch
 
@@ -396,6 +336,7 @@ const Admin: React.FC = () => {
                         >
                             <ProductForm
                                 initialValues={{
+                                    user_id: currentUser.id,
                                     name: '',
                                     description: '',
                                     price: 0,

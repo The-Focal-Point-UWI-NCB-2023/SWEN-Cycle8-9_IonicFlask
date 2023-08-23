@@ -20,6 +20,7 @@ const ProductForm = ({ initialValues, onSubmit }) => {
     )
     const [mode, setMode] = useState(initialValues.mode)
     const [productID, setProductID] = useState(initialValues.id)
+    const [userID, setUserID] = useState(initialValues.user_id)
 
     const handleSubmit = async (e) => {
         e.preventDefault()
@@ -31,7 +32,7 @@ const ProductForm = ({ initialValues, onSubmit }) => {
             formData.append('description', productDescription)
             formData.append('price', productPrice)
             formData.append('status', productStatus)
-            formData.append('user_id', '21')
+            formData.append('user_id', userID)
             formData.append('image', document.getElementById('image').files[0])
 
             if (mode === 'create') {
@@ -129,7 +130,6 @@ const ProductForm = ({ initialValues, onSubmit }) => {
                     <input id="image" name="image" type="file" />
                 </IonItem>
                 <IonItem>
-                    <input type="hidden" name="user_id" value="21" />
                     <IonButton color="primary" onClick={handleSubmit}>
                         Save
                     </IonButton>
