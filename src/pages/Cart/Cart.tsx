@@ -22,6 +22,8 @@ import { cart, eye, trash } from 'ionicons/icons'
 import { props } from 'cypress/types/bluebird'
 import { Link } from 'react-router-dom'
 import { makePayment } from '../../util/api/payments/payment'
+import { getOrderByUserID } from '../../util/api/models/orders'
+import { current_User } from '../../util/api/auth/auth'
 
 const Cart: React.FC = () => {
     const [total, setTotal] = useState(0)
@@ -30,7 +32,57 @@ const Cart: React.FC = () => {
     const [productToDeleteId, setProductToDeleteId] = useState<number | null>(
         null
     )
+    const [currentUser, setCurrentUser] = useState<any>([])
+    const [userLineItems, setLineItems] = useState([])
+
+    async function fetchCurrentUser() {
+        try {
+            const fetchedCurrentUser = await current_User()
+            setCurrentUser(fetchedCurrentUser)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    useEffect(() => {
+        fetchCurrentUser()
+    }, [])
+
     const [stripeLink, setStripeLink] = useState()
+
+    const orderData = {
+        id: 62,
+        user_id: 42,
+        billing_address: 'lorem ipsum',
+        total_amount: '0.00',
+        status: 'pending',
+        line_items: [
+            {
+                product_id: 56,
+                product_name: 'I',
+                product_image: './uploads\\Screenshot_2023-06-08_113411.png',
+                product_price: '10.00',
+                qty: 1,
+            },
+            {
+                product_id: 56,
+                product_name: 'I',
+                product_image: './uploads\\Screenshot_2023-06-08_113411.png',
+                product_price: '10.00',
+                qty: 1,
+            },
+            {
+                product_id: 56,
+                product_name: 'I',
+                product_image: './uploads\\Screenshot_2023-06-08_113411.png',
+                product_price: '10.00',
+                qty: 1,
+            },
+        ],
+    }
+
+    const parsedLineItems = orderData.line_items
+    console.log(parsedLineItems)
 
     const openDeleteConfirmation = (productId: number) => {
         setProductToDeleteId(productId)
@@ -42,11 +94,15 @@ const Cart: React.FC = () => {
     }
 
     useEffect(() => {
-        const subtotal = productItems
+        const subtotal = parsedLineItems
             .slice(0, 4)
-            .reduce((acc, product) => acc + product.price, 0)
+            .reduce(
+                (acc, product) => acc + parseFloat(product.product_price),
+                0
+            )
         setTotal(subtotal)
-    }, [])
+        populateOrder()
+    }, [currentUser])
 
     const handleQuantityChange = (
         event: React.ChangeEvent<HTMLInputElement>
@@ -75,6 +131,17 @@ const Cart: React.FC = () => {
         }
     }
 
+    async function populateOrder() {
+        try {
+            const userOrder = await getOrderByUserID(currentUser.id)
+            console.log('User Order Data:', userOrder) // Add this log
+            setLineItems(userOrder)
+            console.log('After:', userLineItems) // Add this log
+        } catch (error) {
+            console.error('Error fetching products:', error)
+        }
+    }
+
     return (
         <Main>
             <IonGrid className={styles.container}>
@@ -90,21 +157,23 @@ const Cart: React.FC = () => {
                         CHECKOUT
                     </IonButton>
                 </IonRow>
-                {productItems.slice(0, 4).map((prod, index) => (
+                {parsedLineItems.map((prod, index) => (
                     <IonRow className={styles.cartRow}>
                         <IonCol>
                             <IonImg
-                                src={'../../../uploads/' + prod.image + '.png'}
+                                src={prod.product_image}
                                 className={styles.cartImg}
                             />
                         </IonCol>
                         <IonCol>
                             <IonTitle className={styles.cartTitle}>
-                                {prod.name}
+                                {prod.product_name}
                             </IonTitle>
                         </IonCol>
                         <IonCol className={styles.productPrice}>
-                            <IonText className="Price">${prod.price}</IonText>
+                            <IonText className="Price">
+                                ${prod.product_price}
+                            </IonText>
                         </IonCol>
 
                         <div className={styles.qtyContainer}>
@@ -117,7 +186,7 @@ const Cart: React.FC = () => {
                                     fill="outline"
                                     placeholder="000"
                                     min="1"
-                                    value={quantity}
+                                    value={prod.qty}
                                     onIonChange={() => handleQuantityChange}
                                 ></IonInput>
                             </IonCol>
@@ -127,7 +196,7 @@ const Cart: React.FC = () => {
                                     icon={trash}
                                     className={styles.delIcon}
                                     onClick={() =>
-                                        openDeleteConfirmation(prod.id)
+                                        openDeleteConfirmation(prod.product_id)
                                     }
                                 />
                             </IonCol>

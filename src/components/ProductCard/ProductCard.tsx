@@ -12,19 +12,36 @@ import {
     IonCol,
     IonNote,
 } from '@ionic/react'
-import { PropsWithChildren } from 'react'
+import { PropsWithChildren, useState } from 'react'
 import styles from './ProductCard.module.scss'
 import { Link } from 'react-router-dom'
 import { cart, eye, star } from 'ionicons/icons'
+import { createOrder, Order } from '../../util/api/models/orders'
 
 interface Props {
     id: number
     image: string
     title: string
     price: number
+    user: any
 }
 
 const ProductCard: React.FC<PropsWithChildren<Props>> = (props) => {
+    async function addToCart() {
+        try {
+            const orderData = {
+                user_id: props.user.id, // Replace with the actual user ID
+                billing_address: 'lorem ipsum', // Replace with the user's billing address
+                total_amount: 0, // Set the total amount based on the product price
+                status: 'pending', // Set the initial status for the order
+            }
+
+            const newOrder = await createOrder(orderData)
+            console.log('Order created:', newOrder)
+        } catch (error) {
+            console.error(error)
+        }
+    }
     return (
         // <IonItem button>
         //     <Link to={'products/' + props.id} className={styles.link}>
@@ -83,7 +100,7 @@ const ProductCard: React.FC<PropsWithChildren<Props>> = (props) => {
                                 </IonButton>
                             </Link>
                             <Link to={'cart'} className={styles.link}>
-                                <IonButton>
+                                <IonButton onClick={addToCart}>
                                     <IonIcon slot="start" icon={cart}></IonIcon>
                                     Add to Cart
                                 </IonButton>
