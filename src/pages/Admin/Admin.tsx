@@ -49,6 +49,7 @@ import {
     getLineItems,
     updateLineItem,
 } from '../../util/api/models/line_items'
+import { current_User } from '../../util/api/auth/auth'
 
 const Admin: React.FC = () => {
     const [activeContent, setActiveContent] = useState('CUSTOMERS')
@@ -59,26 +60,17 @@ const Admin: React.FC = () => {
     const [productToDeleteId, setProductToDeleteId] = useState<number | null>(
         null
     )
+    const [currentUser, setCurrentUser] = useState<any>([])
 
     // For testing to see if fetch api works
     useEffect(() => {
         fetchProducts()
         fetchOrders()
         fetchUsers()
-        // fetchLineItems()
-        // fetchcreateOrder(orderData)
+        fetchCurrentUser()
     }, [])
 
-    useEffect(() => {
-        // console.log('Working prod')
-        console.log(productsList[0])
-        console.log('test')
-        // console.log('before')
-        // console.log(orderss)
-        // console.log(userss)
-        // console.log('next')
-        // console.log(lineitmess)
-    }, [productsList])
+    useEffect(() => {}, [productsList])
 
     const orderData = {
         user_id: 20,
@@ -98,15 +90,17 @@ const Admin: React.FC = () => {
         }
     }
 
-    //Products fetch
-    const productData = {
-        name: 'New Product',
-        description: 'A new product',
-        price: 19.99,
-        image: 'image.jpg',
-        status: 'TEST',
-        user_id: 20,
+    async function fetchCurrentUser() {
+        try {
+            const fetchedCurrentUser = await current_User()
+            setCurrentUser(fetchedCurrentUser)
+        } catch (error) {
+            console.log(error)
+        }
     }
+
+    //Products fetch
+
     async function fetchProducts() {
         try {
             const fetchedProducts = await getProducts()
@@ -116,37 +110,10 @@ const Admin: React.FC = () => {
         }
     }
 
-    async function fetchcreateProduct(newProduct: Product) {
-        try {
-            // Call your API to create the new product
-            const createdProduct = await createProduct(newProduct)
-        } catch (error) {
-            console.error('Error creating product:', error)
-        }
-    }
-
     async function fetchDeleteProduct(productId: string) {
         try {
             // Call your API to delete a product
             const deletedProduct = await deleteProduct(productId)
-        } catch (error) {
-            console.error('Error creating product:', error)
-        }
-    }
-
-    async function fetchUpdateProduct(productId: string, newProduct: Product) {
-        try {
-            // Call your API to create the new product
-            const updatedProduct = await updateProduct(productId, newProduct)
-        } catch (error) {
-            console.error('Error creating product:', error)
-        }
-    }
-
-    async function fetchProductsById(productId: string) {
-        try {
-            // Call your API to create the new product
-            const fetchedProductByID = await getProductById(productId)
         } catch (error) {
             console.error('Error creating product:', error)
         }
@@ -162,44 +129,6 @@ const Admin: React.FC = () => {
             console.error('Error fetching orders:', error)
         }
     }
-
-    async function fetchcreateOrder(newOrder: Order) {
-        try {
-            // Call your API to create the new product
-            const createdOder = await createOrder(newOrder)
-        } catch (error) {
-            console.error('Error creating product:', error)
-        }
-    }
-
-    async function fetchDeleteOrder(orderID: string) {
-        try {
-            // Call your API to create the new product
-            const deletedOrder = await deleteOrder(orderID)
-        } catch (error) {
-            console.error('Error creating product:', error)
-        }
-    }
-
-    async function fetchUpdateOrder(orderID: string, newOrder: Order) {
-        try {
-            // Call your API to create the new product
-            const updatedOrder = await updateOrder(orderID, newOrder)
-        } catch (error) {
-            console.error('Error creating product:', error)
-        }
-    }
-
-    async function fetchOrderById(orderID: string) {
-        try {
-            // Call your API to create the new product
-            const fetchedOrderByID = await getOrderById(orderID)
-        } catch (error) {
-            console.error('Error creating product:', error)
-        }
-    }
-
-    //Line Items Fetch
 
     //Line Items Fetch
 
@@ -264,6 +193,7 @@ const Admin: React.FC = () => {
     }
     const closeAddProductModal = () => {
         setShowModal(false)
+        fetchProducts()
     }
 
     const [modalVisibilities, setModalVisibilities] = useState(
@@ -280,6 +210,7 @@ const Admin: React.FC = () => {
         const updatedVisibilities = [...modalVisibilities]
         updatedVisibilities[index] = false
         setModalVisibilities(updatedVisibilities)
+        fetchProducts()
     }
 
     const [customermodalVisibilities, setcustomerModalVisibilities] = useState(
@@ -296,6 +227,7 @@ const Admin: React.FC = () => {
         const updatedCustomerVisibilities = [...customermodalVisibilities]
         updatedCustomerVisibilities[index] = false
         setcustomerModalVisibilities(updatedCustomerVisibilities)
+        fetchUsers()
     }
 
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false)
@@ -307,6 +239,7 @@ const Admin: React.FC = () => {
 
     const closeDeleteConfirmation = () => {
         setShowDeleteConfirmation(false)
+        fetchProducts()
     }
 
     return (
@@ -380,6 +313,9 @@ const Admin: React.FC = () => {
                                             email: users.email,
                                             role: users.role,
                                         }}
+                                        onSubmit={() =>
+                                            closeCustomerEditModal(rowIndex)
+                                        }
                                     ></UserForm>
                                 </MyModal>
                             </IonRow>
@@ -400,12 +336,14 @@ const Admin: React.FC = () => {
                         >
                             <ProductForm
                                 initialValues={{
+                                    user_id: currentUser.id,
                                     name: '',
                                     description: '',
                                     price: 0,
                                     status: '',
                                     mode: 'create',
                                 }}
+                                onSubmit={() => closeAddProductModal()}
                             ></ProductForm>
                         </MyModal>
 
@@ -431,7 +369,7 @@ const Admin: React.FC = () => {
                                             `$${prod[header]}`
                                         ) : header === 'image' ? (
                                             <img
-                                                src={`="../../../uploads/${prod[header]}`}
+                                                src={`${prod[header]}`}
                                                 alt="Product"
                                                 className={styles.productImage}
                                             />
@@ -463,7 +401,10 @@ const Admin: React.FC = () => {
                                                 id: prod.id,
                                                 mode: 'update',
                                             }}
-                                        />{' '}
+                                            onSubmit={() =>
+                                                closeProductEditModal(rowIndex)
+                                            }
+                                        />
                                     </MyModal>
                                     <IonIcon
                                         icon={trash}
