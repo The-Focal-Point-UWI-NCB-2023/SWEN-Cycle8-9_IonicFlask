@@ -71,8 +71,17 @@ const Router: React.FC = () => {
                     {/* Register */}
                     <Route exact path="/register" component={Register} />
 
-                    {/* Login */}
-                    <Route exact path="/login" component={Login} />
+                    {/* Login */}                           
+                    <Route exact
+                     path="/login"
+                        render={() => {
+                            return isAuthed ? (
+                                <Redirect exact from="/" to="/landing" />
+                            ) : (
+                                <Login />
+                            )
+                        }}
+                    />
 
                     {/* Products */}
                     <Route exact path="/products" component={Products} />
@@ -85,7 +94,18 @@ const Router: React.FC = () => {
                     />
 
                     {/* Cart */}
-                    <Route exact path="/cart" component={Cart} />
+                    <Route exact
+                     path="/cart"
+                        render={() => {
+                            return isAuthed ? (
+                                <Cart />
+                            ) : (
+                                <Redirect exact from="/" to="/landing" />
+                            )
+                        }}
+                    />
+                    {/* <Route exact path="/cart"
+                      component={Cart} /> */}
 
                     {/* Admin */}
                     <Route

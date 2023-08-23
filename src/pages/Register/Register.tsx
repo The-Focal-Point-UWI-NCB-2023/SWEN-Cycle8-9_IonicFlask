@@ -45,9 +45,9 @@ const Register: React.FC = () => {
             //console.log("Yes I", registerResponse.user)
             window.location.href = '/login'
         } else {
-            setError('Registration Failed')
+            setError('Email is already registered')
             present({
-                message: 'Registration Failed',
+                message: 'Email is already registered',
                 duration: 3000,
                 color: 'danger',
             })
