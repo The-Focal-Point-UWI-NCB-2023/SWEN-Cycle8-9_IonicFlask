@@ -2,8 +2,8 @@ import { api_url_auth } from "../../constants"
 
 export async function loginUser(email, password) {
     const csrfToken = await getCsrfToken()
-    console.log(csrfToken, "CSRF Token");
-    console.log(email, password, "Email and Password");
+    //console.log(csrfToken, "CSRF Token");
+    //console.log(email, password, "Email and Password");
 
     try {
         const requestBody = {
@@ -24,16 +24,15 @@ export async function loginUser(email, password) {
             }
         )
         const data = await response.json()
-        console.log('Login:', data)
+        //console.log('Login:', data)
         localStorage.setItem('jwt', data.token)
         localStorage.setItem('isAuthed', 'true')
         return data
     } catch (error) {
-        console.error('Error during login:', error)
+        //console.error('Error during login:', error)
         throw error
     }
 }
-
 
 export async function registerUser(name, email, password) {
     const csrfToken = await getCsrfToken();
@@ -133,14 +132,14 @@ export async function current_User() {
         });
         const data = await response.json()
         if (response.ok) {
-            console.log(data.user);
+            //console.log(data.user);
             return data.user;
         } else {
             //console.log(data.message);
             return data;
         }
     } catch (error) {
-        console.error('Error during fetch:', error);
+        //console.error('Error during fetch:', error);
         return error;
     }
 }
@@ -160,14 +159,14 @@ export async function isLoggedin() {
         });
         const data = await response.json()
         if (response.ok) {
-            console.log(data);
+            //console.log(data);
             return data.message; 
         } else {
-            console.log(data.message);
+            //console.log(data.message);
             return data.message;
         }
     } catch (error) {
-        console.error('Error during fetch:', error);
+        //console.error('Error during fetch:', error);
         return false;
     }
 }
@@ -175,13 +174,14 @@ export async function isLoggedin() {
 export async function checkLoginStatus() {
     try {
         const loggedInStatus = await isLoggedin();
-        console.log(loggedInStatus, "Status");
+        //console.log(loggedInStatus, "Status");
         if (loggedInStatus === "true") {
             // Redirect the user to the home page
             window.location.href = '/home';
         }
     }catch (error) {
-        console.error('Error during fetch:', error);
+        //console.error('Error during fetch:', error);
+        return false;
     }     
 }
 
@@ -190,23 +190,4 @@ export function logoutUser() {
     localStorage.removeItem('jwt');
     window.location.href = '/login'; 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

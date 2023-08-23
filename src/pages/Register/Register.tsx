@@ -33,14 +33,14 @@ const Register: React.FC = () => {
         e.preventDefault()
         const registerResponse = await registerUser(name, email, password)
         //console.log("Register Resp", registerResponse.status, registerResponse.message)
-        console.log("Register Resp", registerResponse.full_name, registerResponse.email, registerResponse.password)
+        //console.log("Register Resp", registerResponse.full_name, registerResponse.email, registerResponse.password)
         if ( registerResponse.email != null) {
             present({
                 message: 'User Registered Successfully',
                 duration: 3000,
                 color: 'success',
             })
-            console.log("Yes I", registerResponse.user)
+            //console.log("Yes I", registerResponse.user)
             window.location.href = '/login'
         } else {
             setError('Registration Failed')
