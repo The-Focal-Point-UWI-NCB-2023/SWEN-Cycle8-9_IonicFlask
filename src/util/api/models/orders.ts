@@ -67,12 +67,14 @@ export async function getOrdersWithLineItems(data: Order[]){
 
 export async function createOrder(orderData: Order) {
     try {
+        const jwtToken = localStorage.getItem('jwt')
         const csrfToken = await getCsrfToken()
         const response = await fetch(api_url_rest + `orders/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'X-CSRFToken': csrfToken,
+                Authorization: `Bearer ${jwtToken}`,
             },
             credentials: 'include',
             mode: 'cors',
@@ -90,12 +92,14 @@ export async function createOrder(orderData: Order) {
 
 export async function updateOrder(orderId: string, updatedOrderData: Order) {
     try {
+        const jwtToken = localStorage.getItem('jwt')
         const csrfToken = await getCsrfToken()
         const response = await fetch(api_url_rest + `orders/${orderId}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
                 'X-CSRFToken': csrfToken,
+                Authorization: `Bearer ${jwtToken}`,
             },
             credentials: 'include',
             mode: 'cors',
@@ -112,12 +116,14 @@ export async function updateOrder(orderId: string, updatedOrderData: Order) {
 
 export async function deleteOrder(orderId: string) {
     try {
+        const jwtToken = localStorage.getItem('jwt')
         const csrfToken = await getCsrfToken()
         const response = await fetch(api_url_rest + `orders/${orderId}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
                 'X-CSRFToken': csrfToken,
+                Authorization: `Bearer ${jwtToken}`,
             },
             credentials: 'include',
             mode: 'cors',
@@ -136,6 +142,7 @@ export async function deleteOrder(orderId: string) {
 
 export async function getOrderById(orderId: string) {
     try {
+        const jwtToken = localStorage.getItem('jwt')
         const response = await fetch(api_url_rest + `orders/${orderId}`)
         const data = await response.json()
         // console.log('Order by ID:', data)
@@ -148,7 +155,18 @@ export async function getOrderById(orderId: string) {
 
 export async function getOrderByUserID(userID: string) {
     try {
-        const response = await fetch(api_url_rest + `orders/user/${userID}`)
+        const jwtToken = localStorage.getItem('jwt')
+        const csrfToken = await getCsrfToken()
+        const response = await fetch(api_url_rest + `orders/user/${userID}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken,
+                Authorization: `Bearer ${jwtToken}`,
+            },
+            credentials: 'include',
+            mode: 'cors',
+        })
         const data = await response.json()
         // console.log('Order by UserID:', data)
         return data
