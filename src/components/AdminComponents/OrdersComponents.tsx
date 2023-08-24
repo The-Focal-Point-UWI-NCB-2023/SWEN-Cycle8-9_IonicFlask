@@ -2,7 +2,7 @@ import { IonCol, IonRow } from "@ionic/react"
 import { order_headers } from "../../pages/Admin/AdminFunctions"
 import styles from "./AdminComponents.module.scss"
 import { Order, getOrders } from "../../util/api/models/orders";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {LineItem,createLineItem,deleteLineItem,getLineItemById,getLineItems,updateLineItem,} from '../../util/api/models/line_items'
 
 export const AdminOrders: React.FC = () => {
@@ -10,7 +10,9 @@ export const AdminOrders: React.FC = () => {
 const [orderList, setOrders] = useState<Order[]>([])
 const [lineitmess, setLineItems] = useState<LineItem>()
 
-
+    useEffect(() => {
+        fetchOrders()
+    }, [])
     //Orders Fetch
 
     async function fetchOrders() {
