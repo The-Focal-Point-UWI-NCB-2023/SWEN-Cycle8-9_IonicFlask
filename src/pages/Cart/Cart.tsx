@@ -27,6 +27,7 @@ import { Link } from 'react-router-dom'
 import { makePayment } from '../../util/api/payments/payment'
 import { getOrderByUserID } from '../../util/api/models/orders'
 import { current_User } from '../../util/api/auth/auth'
+import { deleteLineItem } from '../../util/api/models/line_items'
 
 const Cart: React.FC = () => {
     const [total, setTotal] = useState(0)
@@ -58,23 +59,10 @@ const Cart: React.FC = () => {
         status: 'pending',
         line_items: [
             {
+                id: 92,
                 product_id: 56,
                 product_name: 'I',
-                product_image: './uploads/Screenshot_2023-06-08_113411.png',
-                product_price: '10.00',
-                qty: 1,
-            },
-            {
-                product_id: 56,
-                product_name: 'I',
-                product_image: './uploads/Screenshot_2023-06-08_113411.png',
-                product_price: '10.00',
-                qty: 1,
-            },
-            {
-                product_id: 56,
-                product_name: 'I',
-                product_image: './uploads/Screenshot_2023-06-08_113411.png',
+                product_image: './uploads\\Screenshot_2023-06-08_113411.png',
                 product_price: '10.00',
                 qty: 1,
             },
@@ -91,11 +79,12 @@ const Cart: React.FC = () => {
 
     const closeDeleteConfirmation = () => {
         setShowDeleteConfirmation(false)
+        populateOrder()
     }
 
     useEffect(() => {
+        fetchCurrentUser()
         ;(async () => {
-            fetchCurrentUser()
             const subtotal = parsedLineItems
                 .slice(0, 4)
                 .reduce(
@@ -105,7 +94,7 @@ const Cart: React.FC = () => {
             setTotal(subtotal)
             populateOrder()
         })()
-    }, [setLineItems])
+    }, [currentUser])
 
     const handleQuantityChange = (
         event: React.ChangeEvent<HTMLInputElement>
@@ -146,6 +135,7 @@ const Cart: React.FC = () => {
     async function populateOrder() {
         try {
             const userOrder = await getOrderByUserID(currentUser.id)
+            console.log(userOrder)
             // console.log("User Order Data:", userOrder); // Add this log
             setLineItems(userOrder)
             console.log('After:', userLineItems) // Add this log
@@ -187,7 +177,7 @@ const Cart: React.FC = () => {
                     Back to Shopping
                 </IonButton>
 
-                {parsedLineItems.map((prod, index) => (
+                {userLineItems.map((prod, index) => (
                     <IonRow className={styles.cartRow}>
                         <IonCol>
                             <IonImg
@@ -245,7 +235,7 @@ const Cart: React.FC = () => {
                                         text: 'Delete',
                                         handler: () => {
                                             if (productToDeleteId != null) {
-                                                fetchDeleteProduct(
+                                                deleteLineItem(
                                                     productToDeleteId.toString()
                                                 )
                                                 setProductToDeleteId(null)

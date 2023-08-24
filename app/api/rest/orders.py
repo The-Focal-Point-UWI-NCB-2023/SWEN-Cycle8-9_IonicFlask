@@ -138,6 +138,7 @@ class UserOrderResource(Resource):
                 product = Products.query.get(item.product_id)  
                 if product:
                     line_item_details = {
+                        'id':item.id,
                         'product_id': item.product_id,
                         'product_name': product.name,
                         'product_image': product.image, 
