@@ -13,13 +13,25 @@ import ProductCard from '../../components/ProductCard/ProductCard'
 // import { productItems } from './ProuductItemLoader'
 import { getProducts } from '../../util/api/models/products' // Import the function
 import { useState, useEffect } from 'react'
+import { current_User } from '../../util/api/auth/auth'
 
 const Products: React.FC = () => {
     const [products, setProducts] = useState<any[]>([])
+    const [currentUser, setCurrentUser] = useState<any[]>([])
 
     useEffect(() => {
         fetchProducts()
+        fetchCurrentUser()
     }, [])
+
+    async function fetchCurrentUser() {
+        try {
+            const fetchedCurrentUser = await current_User()
+            setCurrentUser(fetchedCurrentUser)
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
     async function fetchProducts() {
         try {
@@ -42,6 +54,7 @@ const Products: React.FC = () => {
                         {products.map((product) => (
                             <IonCol size="12" size-sm="6" size-md="5">
                                 <ProductCard
+                                    user={currentUser}
                                     id={product.id}
                                     title={product.name}
                                     price={product.price}
