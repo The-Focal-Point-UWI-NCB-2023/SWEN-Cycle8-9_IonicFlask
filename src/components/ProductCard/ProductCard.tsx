@@ -125,12 +125,12 @@ const ProductCard: React.FC<PropsWithChildren<Props>> = (props) => {
                                     View Product
                                 </IonButton>
                             </Link>
-                            <Link to={'cart'} className={styles.link}>
+                            {/* <Link to={'cart'} className={styles.link}>
                                 <IonButton onClick={addToCart}>
                                     <IonIcon slot="start" icon={cart}></IonIcon>
                                     Add to Cart
                                 </IonButton>
-                            </Link>
+                            </Link> */}
                         </div>
                     </div>
                 </IonCol>
