@@ -46,7 +46,7 @@ export const UserAdmin: React.FC = () => {
 
     useEffect(() => {
         fetchUsers()
-    })
+    }, [])
 
     return (
         <>
