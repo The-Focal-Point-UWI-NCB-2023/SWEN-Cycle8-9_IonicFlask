@@ -33,8 +33,8 @@ app = create_app()
 db.init_app(app)
 migrate = Migrate(app, db)
 
-# csrf = CSRFProtect()
-# csrf.init_app(app)
+csrf = CSRFProtect()
+csrf.init_app(app)
 
 # Initialize Flask-Login Manager
 login_manager.init_app(app)
