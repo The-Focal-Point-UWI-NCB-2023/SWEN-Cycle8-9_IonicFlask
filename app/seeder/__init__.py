@@ -50,8 +50,9 @@ def seed_database(app: Flask):
 
             # Make Products
             products = []
+            names = ["Dianne", "Jolly", "Keychell", "Donnalyn", "Brandi", "Shandi", "Kilworth", "Yulissa","Ramzan", "Cicillia"]
             for i in range(product_count):
-                name = fake.text(max_nb_chars=20)
+                name = names[i%len(names)]
                 description = "".join(fake.paragraph(nb_sentences=5))
                 price = randint(0, 2000)
                 image = randint(1, 5)
