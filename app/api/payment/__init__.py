@@ -1,8 +1,10 @@
 import json
-from app.api import Namespace, Resource, fields, reqparse,abort,os,Resource
+from app.api import Namespace, Resource, fields, reqparse,abort,os,Resource,db
 from flask import Flask, request, redirect
 from decimal import Decimal
 import stripe
+
+from app.models.orders import Orders
 payment_ns = Namespace("payment",path="/v1/rest/payment", description="Payment processing API")
 
 # Set your Stripe API key here
@@ -32,6 +34,7 @@ payment_parser.add_argument('unit_amount_decimal', type=str, required=True, acti
 payment_parser.add_argument('quantity', type=int, required=True, action='append', help='Quantity of the item is required')
 payment_parser.add_argument('X-CSRFToken', type=str, location='headers', required=True, help='CSRF Token is required')
 
+order_id = None
 
 @payment_ns.route('/create-checkout-session', methods=['POST'])
 class CreateCheckoutSession(Resource):
@@ -41,6 +44,7 @@ class CreateCheckoutSession(Resource):
     @payment_ns.response(303, "Redirect to Checkout")
     def post(self):   
         try:
+            global order_id  
         # args = payment_parser.parse_args()
             payload_str = request.data.decode('utf-8')
             payload_json = json.loads(payload_str)       
@@ -61,19 +65,48 @@ class CreateCheckoutSession(Resource):
                     "quantity": line_item['qty']
                 }
                 line_itemsLst.append(line_item_data)
-
+            order_id = args['id']
             # print(line_itemsLst)
 
             print("These are the line items:", line_itemsLst)
             checkout_session = stripe.checkout.Session.create(
             line_items= line_itemsLst,
-                            mode='payment',
-                            success_url='https://www.google.com/',
-                            cancel_url='https://www.google.com/',
-                    )
+            mode='payment',
+            success_url='https://www.google.com/',
+            cancel_url='https://www.google.com/',
+                                                    )
             return(checkout_session.url)
         except Exception as e:
             return str(e), 500
 
 
                     
+@payment_ns.route('/webhook')
+class Webhook(Resource):
+        
+    def post(self):
+        global order_id  
+        parser = reqparse.RequestParser()
+        parser.add_argument('id')
+        data = parser.parse_args()
+        event_id = data['id']
+
+        try:
+            event = stripe.Event.retrieve(event_id)
+        except stripe.error.StripeError as e:
+            return {'error': str(e)}, 400
+
+        if event.type == 'payment_intent.succeeded':
+            order = Orders.query.get(order_id)
+            order.status = "completed"
+            db.session.commit()
+            pass
+
+        elif event.type == 'payment_intent.payment_failed':
+            order = Orders.query.get(order_id)
+            order.status = "cancelled"
+            db.session.commit()
+            pass
+
+        return {'status': 'success'}, 200
+    
