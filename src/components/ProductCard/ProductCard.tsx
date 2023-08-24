@@ -73,6 +73,12 @@ const ProductCard: React.FC<PropsWithChildren<Props>> = (props) => {
                             </div>
                         </div>
                         <div>
+                            <Link to={'cart'} className={styles.link}>
+                                <IonButton>
+                                    <IonIcon slot="start" icon={cart}></IonIcon>
+                                    Add to Cart
+                                </IonButton>
+                            </Link>
                             <Link
                                 to={'products/' + props.id}
                                 className={styles.link}
@@ -80,12 +86,6 @@ const ProductCard: React.FC<PropsWithChildren<Props>> = (props) => {
                                 <IonButton>
                                     <IonIcon slot="start" icon={eye}></IonIcon>
                                     View Product
-                                </IonButton>
-                            </Link>
-                            <Link to={'cart'} className={styles.link}>
-                                <IonButton>
-                                    <IonIcon slot="start" icon={cart}></IonIcon>
-                                    Add to Cart
                                 </IonButton>
                             </Link>
                         </div>
