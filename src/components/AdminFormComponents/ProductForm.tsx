@@ -139,11 +139,11 @@ const ProductForm = ({ initialValues, onSubmit }) => {
                                 setProductStatus(e.detail.value)
                             }
                         >
-                            <IonSelectOption value="available">
-                                Available
+                            <IonSelectOption value="published">
+                                Published
                             </IonSelectOption>
-                            <IonSelectOption value="out_of_stock">
-                                Out of Stock
+                            <IonSelectOption value="pending">
+                                Pending
                             </IonSelectOption>
                         </IonSelect>
                     </IonItem>
