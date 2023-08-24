@@ -1,5 +1,6 @@
 import {
     IonButton,
+    IonImg,
     IonInput,
     IonItem,
     IonList,
@@ -9,6 +10,12 @@ import { useState, useEffect } from 'react'
 import Main from '../../components/Main/Main'
 import styles from './Register.module.scss'
 import { Redirect } from 'react-router'
+import { api_url_auth } from '../../util/constants'
+import {
+    checkLoginStatus,
+    registerUser,
+    getCsrfToken,
+} from '../../util/api/auth/auth'
 
 const Register: React.FC = () => {
     const [name, setName] = useState<string>('')
@@ -20,133 +27,117 @@ const Register: React.FC = () => {
     const [present] = useIonToast()
     const [csrfToken, setCsrfToken] = useState('')
 
-    async function getCsrfToken() {
-        try {
-            const response = await fetch(
-                'http://localhost:8080/api/v1/auth/csrf-token',
-                {
-                    method: 'GET',
-                    credentials: 'include',
-                }
-            )
-            //console.log(response.status);
-            if (response.status === 200) {
-                const data = await response.json()
-                setCsrfToken(data.csrf_token)
-            } else {
-                throw new Error('Failed to fetch CSRF token')
-            }
-        } catch (error) {
-            console.error(error)
-        }
-    }
-
     useEffect(() => {
         getCsrfToken()
+        checkLoginStatus()
     }, [])
 
-    const RegisterUser = async (e: React.FormEvent<HTMLFormElement>) => {
+    const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-
-        try {
-            const requestBody = {
-                full_name: name,
-                email: email,
-                password: password,
-            }
-
-            const response = await fetch(
-                'http://localhost:8080/api/v1/auth/register',
-                {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRFToken': csrfToken,
-                    },
-                    credentials: 'include',
-                    mode: 'cors',
-                    body: JSON.stringify(requestBody),
-                }
-            )
-
-            const data = await response.json()
-
-            if (response.ok) {
-                setSuccess(data.message)
-                present({
-                    message: 'User Registered Successfully',
-                    duration: 3000,
-                    color: 'success',
-                })
-                window.location.href = '/login'
-            } else {
-                //console.log(data.message)
-
-                setError(data.message)
-                present({
-                    message: error,
-                    duration: 3000,
-                    color: 'danger',
-                })
-            }
-        } catch (error) {
-            console.error(error)
+        const registerResponse = await registerUser(name, email, password)
+        //console.log("Register Resp", registerResponse.status, registerResponse.message)
+        //console.log("Register Resp", registerResponse.full_name, registerResponse.email, registerResponse.password)
+        if (registerResponse.email != null) {
+            present({
+                message: 'User Registered Successfully',
+                duration: 3000,
+                color: 'success',
+            })
+            //console.log("Yes I", registerResponse.user)
+            window.location.href = '/login'
+        } else {
+            setError('Email is already registered')
+            present({
+                message: 'Email is already registered',
+                duration: 3000,
+                color: 'danger',
+            })
         }
     }
 
     return (
         <Main>
-            <h1>Register</h1>
-            <form id="register-form" onSubmit={RegisterUser}>
-                <div className={styles.formGroup}>
-                    <IonList>
-                        <IonItem>
-                            <IonInput
-                                type="text"
-                                placeholder="Name"
-                                value={name}
-                                onIonChange={(e) => setName(e.detail.value!)}
-                                required
-                            />
-                        </IonItem>
-                        <IonItem>
-                            <IonInput
-                                type="email"
-                                placeholder="Email"
-                                value={email}
-                                onIonChange={(e) => setEmail(e.detail.value!)}
-                                required
-                            />
-                        </IonItem>
-                        <IonItem>
-                            <IonInput
-                                type="password"
-                                placeholder="Password"
-                                value={password}
-                                onIonChange={(e) =>
-                                    setPassword(e.detail.value!)
-                                }
-                                required
-                            />
-                        </IonItem>
-                        {/* <IonItem>
-                        <IonInput name="password_confirmation" type="password" placeholder="Confirm Password" required />
-                    </IonItem> */}
-                        <IonButton
-                            type='submit'
-                            color="primary"
-                            // onClick={(e) => {
-                            //     //RegisterUser(e)
-                            // }}
-                        >
-                            Register
-                        </IonButton>
-                    </IonList>
-                </div>
-                <p className={styles.register}>
-                    Already have an account? <a href="/login">Login</a>
-                </p>
-            </form>
+            <h2>Register a New Account</h2>
+
+            <div className={styles.container}>
+                <IonImg className={styles.img} src="/thefocalpoints_Logo.jpg" />
+
+                <form id="register-form" onSubmit={handleRegister}>
+                    <div className={styles.formGroup}>
+                        <p>Create a Focal Frames account today!</p>
+                        <IonList>
+                            <IonItem>
+                                <IonInput
+                                    label="Name"
+                                    label-placement="floating"
+                                    helperText="Enter your full name"
+                                    fill="outline"
+                                    type="text"
+                                    placeholder="Name"
+                                    value={name}
+                                    onIonChange={(e) =>
+                                        setName(e.detail.value!)
+                                    }
+                                    required
+                                />
+                            </IonItem>
+                            <IonItem>
+                                <br />
+                                <IonInput
+                                    label="Email"
+                                    label-placement="floating"
+                                    helperText="Enter a valid email"
+                                    fill="outline"
+                                    type="email"
+                                    inputmode="email"
+                                    placeholder="Email"
+                                    value={email}
+                                    onIonChange={(e) =>
+                                        setEmail(e.detail.value!)
+                                    }
+                                    required
+                                />
+                            </IonItem>
+                            <IonItem>
+                                <br />
+                                <IonInput
+                                    label="Password"
+                                    label-placement="floating"
+                                    helperText="Type a strong password"
+                                    fill="outline"
+                                    type="password"
+                                    placeholder="Password"
+                                    value={password}
+                                    onIonChange={(e) =>
+                                        setPassword(e.detail.value!)
+                                    }
+                                    required
+                                />
+                            </IonItem>
+
+                            {/* <IonItem>
+                            <IonInput name="password_confirmation" type="password" placeholder="Confirm Password" required />
+                        </IonItem> */}
+                            <br />
+                            <IonButton
+                                type="submit"
+                                color="primary"
+                                // onClick={(e) => {
+                                //     //RegisterUser(e)
+                                // }}
+                            >
+                                Register
+                            </IonButton>
+                        </IonList>
+                        <div>
+                            <p className={styles.register}>
+                                Already have an account?{' '}
+                                <a href="/login">Login</a>
+                            </p>
+                        </div>
+                    </div>
+                </form>
+            </div>
         </Main>
     )
 }

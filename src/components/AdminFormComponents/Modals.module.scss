@@ -1,0 +1,39 @@
+.container {
+    display: flexbox;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    border-radius: 20px;
+    width: 80%;
+    margin: auto;
+}
+
+ion-title {
+    text-align: center;
+    font-size: xx-large;
+    margin: 15px;
+}
+
+ion-list {
+    margin: auto;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+ion-input,
+ion-select {
+    max-width: 100%;
+    margin: 10px;
+}
+
+ion-button {
+    max-width: fit-content;
+    max-height: fit-content;
+}
+
+@media screen and (max-width: 570px) {
+    ion-title {
+        font-size: small;
+    }
+}

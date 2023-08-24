@@ -1,5 +1,8 @@
-from app.api import Namespace, Resource, fields, reqparse,abort
+from app.api import Namespace, Resource, fields, reqparse,abort,os
+from app.api.auth import admin_required
 from app.models import Products, db
+from werkzeug.datastructures import FileStorage
+from werkzeug.utils import secure_filename
 
 products_ns = Namespace("products", path="/v1/rest/products", 
     description="API operations related to managing product information, including adding, retrieving, updating, and deleting products. This namespace provides endpoints to interact with product data, allowing administrators to manage product listings, pricing, availability, and details. Products can be searched by ID, and their name, description, price, image, status, and user ID information are accessible for administration purposes.")
@@ -24,7 +27,8 @@ product_parser.add_argument(
 product_parser.add_argument(
     "price", type=float, required=True, help="Price is required"
 )
-product_parser.add_argument("image", type=str, required=True, help="Image is required")
+product_parser.add_argument('image', location='files',
+                           type=FileStorage, required=False)
 product_parser.add_argument(
     "status", type=str, required=True, help="Status is required"
 )
@@ -46,15 +50,28 @@ class ProductsResource(Resource):
 
     @products_ns.expect(product_parser)
     @products_ns.marshal_with(product_model)
+    @admin_required
     def post(self):
         args = product_parser.parse_args()
+        if args['image'] == None:
+            abort(400, message='Image Required')
+        image_file = args['image']  # Get the uploaded image file
+
+        if image_file:
+            filename = secure_filename(image_file.filename)
+            image_path = os.path.join('./uploads', filename)
+            image_path = image_path.replace('\\', '/')
+            image_file.save(image_path)
+
+            args['image'] = image_path  # Update the 'image' field to the image path
+
         new_product = Products(**args)
         try:
             db.session.add(new_product)
             db.session.commit()
             return new_product, 201
         except Exception as e:
-            abort(409, message="Invalid field input")
+            abort(409, message=e)
 
 @products_ns.route("/<int:product_id>")
 @products_ns.response(404, "Product not found")
@@ -69,6 +86,7 @@ class ProductResource(Resource):
         return product
 
 
+    @admin_required
     @products_ns.expect(product_parser)
     @products_ns.marshal_with(product_model)
     def put(self, product_id):
@@ -76,15 +94,30 @@ class ProductResource(Resource):
         if product:
             try:
                 args = product_parser.parse_args()
+                if args['image'] == None:
+                    image = args.pop('image', None)
+                    for key, value in args.items():
+                        setattr(product, key, value)
+                        db.session.commit() 
+                image_file = args['image']  # Get the uploaded image file
+                upload_folder = os.environ.get("UPLOAD_FOLDER")
+                if image_file:
+                    filename = secure_filename(image_file.filename)
+                    image_path = os.path.join(upload_folder, filename)
+                    image_file.save(image_path)
+
+                args['image'] = image_path  # Update the 'image' field to the image path
+
                 for key, value in args.items():
                     setattr(product, key, value)
                 db.session.commit()
             except Exception as e:
-                abort(409, message="Invalid field input")
+                abort(409, message=e)
         elif product is None:
             abort(404, message="Product not found")
         
 
+    @admin_required
     @products_ns.response(204, "Product deleted")
     def delete(self, product_id):
         product = Products.query.get(product_id)

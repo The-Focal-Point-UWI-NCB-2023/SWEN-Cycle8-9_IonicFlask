@@ -12,7 +12,6 @@ const Main: React.FC<PropsWithChildren> = (props) => {
             <IonContent fullscreen>
                 <main className={styles.main}>{props.children}</main>
             </IonContent>
-
             <Footer />
         </IonPage>
     )

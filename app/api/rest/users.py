@@ -1,5 +1,6 @@
 from app.api import Namespace, Resource, fields, reqparse, abort
 from app.models import Users, db
+from app.api.auth import admin_required
 
 users_ns = Namespace("users", path="/v1/rest/users",
                       description="API operations related to managing user accounts, including creating, retrieving, updating, and deleting user information. This namespace provides endpoints to interact with user data, allowing administrators to manage user profiles and authentication details. Users can be searched by ID, and their full name, email, and role information are accessible for administration purposes.",)
@@ -20,7 +21,7 @@ user_parser.add_argument(
 )
 user_parser.add_argument("email", type=str, required=True, help="Email is required")
 user_parser.add_argument(
-    "password", type=str, required=True, help="Password is required"
+    "password", type=str, required=False, help="Password is required"
 )
 user_parser.add_argument("role", type=int, required=True, help="Role is required")
 
@@ -29,13 +30,15 @@ user_parser.add_argument("role", type=int, required=True, help="Role is required
 @users_ns.response(404, "User not found")
 @users_ns.route("/")
 class UsersResource(Resource):
+    @admin_required
     @users_ns.marshal_list_with(user_model)
     def get(self):
-        users = Users.query.all()
+        users = Users.query.all()   
         if users == []:
             abort(404,message="No users found")
         return users
 
+    @admin_required
     @users_ns.expect(user_parser)
     @users_ns.marshal_with(user_model)
     def post(self):
@@ -54,6 +57,7 @@ class UsersResource(Resource):
 @users_ns.response(404, "User not found")
 @users_ns.param("user_id", "A unique identifier associated with a user")
 class UserResource(Resource):
+    @admin_required
     @users_ns.marshal_with(user_model)
     def get(self, user_id):
         user = Users.query.get(user_id)
@@ -62,6 +66,7 @@ class UserResource(Resource):
         elif user is None:
             abort(404,message='User with this ID does not exist')
 
+    @admin_required
     @users_ns.expect(user_parser)
     @users_ns.marshal_with(user_model)
     def put(self, user_id):
@@ -74,11 +79,12 @@ class UserResource(Resource):
                 db.session.commit()
                 return user
             except Exception as e:
-                abort(409, message="Invalid field input")
+                abort(409, message=e)
         elif user is None:
             abort(404,message='User with this ID does not exist')
 
 
+    @admin_required
     @users_ns.response(204, "User deleted")
     @users_ns.marshal_with(user_model)
     def delete(self, user_id):
