@@ -138,7 +138,7 @@ const [lineitmes, setLineItems] = useState<LineItem>()
                                             Product ID: {order.lineItems.product_id}
                                         </IonRow>
                                         <IonRow>
-                                            Order ID: {order.lineItems.order_id}
+                                            Order ID: {order.lineItems.order_id }
                                             </IonRow>
                                         <IonRow>
                                             Quantity: {order.lineItems.qty}
