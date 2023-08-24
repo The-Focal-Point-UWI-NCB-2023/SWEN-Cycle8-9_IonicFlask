@@ -71,8 +71,6 @@ const Router: React.FC = () => {
                     {/* Register */}
                     <Route exact path="/register" component={Register} />
 
-                    <Route exact path="/admin" component={Admin} />
-
                     {/* Login */}
                     <Route
                         exact
@@ -112,7 +110,7 @@ const Router: React.FC = () => {
                       component={Cart} /> */}
 
                     {/* Admin */}
-                    {/*
+                    
                     <Route
                         exact
                         path="/admin"
@@ -123,7 +121,7 @@ const Router: React.FC = () => {
                                 <Redirect exact from="/" to="/landing" />
                             )
                         }}
-                    />*/}
+                    />
 
                     {/* Fallback Route */}
                     <Route render={() => <Redirect to="/landing" />} />
