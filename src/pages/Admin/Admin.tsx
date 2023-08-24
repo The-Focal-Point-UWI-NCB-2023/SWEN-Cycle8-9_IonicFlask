@@ -1,12 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import Main from '../../components/Main/Main'
 import styles from './Admin.module.scss'
-import {
-    IonCol,
-    IonGrid,
-    IonRow,
-    IonButton,
-} from '@ionic/react'
+import { IonCol, IonGrid, IonRow, IonButton } from '@ionic/react'
 import {
     userHeaders,
     test_users,
@@ -51,7 +46,6 @@ const Admin: React.FC = () => {
 
     useEffect(() => {}, [productsList])
 
-
     //Users Fetch
 
     async function fetchCurrentUser() {
@@ -63,14 +57,9 @@ const Admin: React.FC = () => {
         }
     }
 
- 
     const handleButtonClick = (content: React.SetStateAction<string>) => {
         setActiveContent(content)
     }
-
-
-
-
 
     return (
         <Main>

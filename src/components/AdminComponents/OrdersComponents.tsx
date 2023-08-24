@@ -1,15 +1,20 @@
-import { IonCol, IonRow } from "@ionic/react"
-import { order_headers } from "../../pages/Admin/AdminFunctions"
-import styles from "./AdminComponents.module.scss"
-import { Order, getOrders } from "../../util/api/models/orders";
-import { useState } from "react";
-import {LineItem,createLineItem,deleteLineItem,getLineItemById,getLineItems,updateLineItem,} from '../../util/api/models/line_items'
+import { IonCol, IonRow } from '@ionic/react'
+import { order_headers } from '../../pages/Admin/AdminFunctions'
+import styles from './AdminComponents.module.scss'
+import { Order, getOrders } from '../../util/api/models/orders'
+import { useState } from 'react'
+import {
+    LineItem,
+    createLineItem,
+    deleteLineItem,
+    getLineItemById,
+    getLineItems,
+    updateLineItem,
+} from '../../util/api/models/line_items'
 
 export const AdminOrders: React.FC = () => {
-
-const [orderList, setOrders] = useState<Order[]>([])
-const [lineitmess, setLineItems] = useState<LineItem>()
-
+    const [orderList, setOrders] = useState<Order[]>([])
+    const [lineitmess, setLineItems] = useState<LineItem>()
 
     //Orders Fetch
 
@@ -75,9 +80,9 @@ const [lineitmess, setLineItems] = useState<LineItem>()
         }
     }
 
-        return (
-            <>
-               <IonRow className={styles.headerRow}>
+    return (
+        <>
+            <IonRow className={styles.headerRow}>
                 {order_headers.map((header, index) => (
                     <IonCol
                         key={`header_${index}`}
@@ -87,24 +92,18 @@ const [lineitmess, setLineItems] = useState<LineItem>()
                             .split('_')
                             .map(
                                 (word) =>
-                                    word.charAt(0).toUpperCase() +
-                                    word.slice(1)
+                                    word.charAt(0).toUpperCase() + word.slice(1)
                             )
                             .join(' ')}
                     </IonCol>
                 ))}
-                </IonRow>
+            </IonRow>
 
-                <div className={styles.orderInfo}>
+            <div className={styles.orderInfo}>
                 {orderList.map((order, rowIndex) => (
-                    <IonRow
-                        key={`user_${rowIndex}`}
-                        className={styles.userRow}
-                    >
+                    <IonRow key={`user_${rowIndex}`} className={styles.userRow}>
                         {order_headers.map((header) => (
-                            <IonCol
-                                key={`col_${rowIndex}_${header}`}
-                            >
+                            <IonCol key={`col_${rowIndex}_${header}`}>
                                 {header === 'total_amount'
                                     ? `$${order[header]}`
                                     : order[header]}{' '}
@@ -112,15 +111,7 @@ const [lineitmess, setLineItems] = useState<LineItem>()
                         ))}
                     </IonRow>
                 ))}
-                </div>
-            
-            </>
-
-        )
+            </div>
+        </>
+    )
 }
-
-
-
-
-
-

@@ -7,7 +7,7 @@ export interface Product {
     image: string
     status: string
     user_id: number
-    id:number
+    id: number
 }
 
 export interface Product {
@@ -17,7 +17,7 @@ export interface Product {
     image: string
     status: string
     user_id: number
-    id:number
+    id: number
 }
 
 export async function getProducts() {
