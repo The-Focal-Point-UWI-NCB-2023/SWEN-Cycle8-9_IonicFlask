@@ -12,7 +12,7 @@ import {
     IonCol,
     IonNote,
 } from '@ionic/react'
-import { PropsWithChildren } from 'react'
+import { PropsWithChildren, useState, useEffect } from 'react'
 import styles from './ProductCard.module.scss'
 import { Link } from 'react-router-dom'
 import { cart, eye, star } from 'ionicons/icons'
@@ -25,6 +25,10 @@ interface Props {
 }
 
 const ProductCard: React.FC<PropsWithChildren<Props>> = (props) => {
+    const [isAuthed, setIsAuthed] = useState(
+        localStorage.getItem('isAuthed') === 'true'
+    )
+
     return (
         // <IonItem button>
         //     <Link to={'products/' + props.id} className={styles.link}>
@@ -52,6 +56,7 @@ const ProductCard: React.FC<PropsWithChildren<Props>> = (props) => {
         //         </IonCard>
         //     </Link>
         // </IonItem>
+
         <IonItem button>
             <Link to={'products/' + props.id} className={styles.link}>
                 <IonCol>
@@ -73,17 +78,32 @@ const ProductCard: React.FC<PropsWithChildren<Props>> = (props) => {
                             </div>
                         </div>
                         <div>
-                            <Link to={'cart'} className={styles.link}>
-                                <IonButton>
-                                    <IonIcon slot="start" icon={cart}></IonIcon>
-                                    Add to Cart
-                                </IonButton>
-                            </Link>
+                            {isAuthed ? (
+                                <Link to={'cart'} className={styles.link}>
+                                    <IonButton>
+                                        <IonIcon
+                                            slot="start"
+                                            icon={cart}
+                                        ></IonIcon>
+                                        Add to Cart
+                                    </IonButton>
+                                </Link>
+                            ) : (
+                                <Link to={'login'} className={styles.link}>
+                                    <IonButton>
+                                        <IonIcon
+                                            slot="start"
+                                            icon={cart}
+                                        ></IonIcon>
+                                        Add to Cart
+                                    </IonButton>
+                                </Link>
+                            )}
                             <Link
                                 to={'products/' + props.id}
                                 className={styles.link}
                             >
-                                <IonButton>
+                                <IonButton id={styles.viewButton}>
                                     <IonIcon slot="start" icon={eye}></IonIcon>
                                     View Product
                                 </IonButton>

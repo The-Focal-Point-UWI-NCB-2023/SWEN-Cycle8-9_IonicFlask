@@ -76,3 +76,13 @@ ion-badge {
         height: fit-content;
     }
 }
+
+@media screen and (max-width: 562px) {
+    .productContainer {
+        height: fit-content;
+    }
+
+    #viewButton {
+        display: none;
+    }
+}

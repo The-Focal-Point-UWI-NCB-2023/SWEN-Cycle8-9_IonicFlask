@@ -22,6 +22,8 @@ const ProductDetails: React.FC = () => {
     const { id } = useParams<{ id: string }>()
     const [product, setProduct] = useState<Product>()
 
+    const [isAuthed] = useState(localStorage.getItem('isAuthed') === 'true')
+
     useEffect(() => {
         fetchProduct()
     }, [])
@@ -48,7 +50,7 @@ const ProductDetails: React.FC = () => {
                     <IonCol size="12" size-sm="4">
                         <IonImg
                             src="../../../../uploads/2.png"
-                            className={styles.img}
+                            className={styles.coverImage}
                         />
                         {/* <IonImg src={product?.image} className={styles.img} /> */}
                     </IonCol>
@@ -64,10 +66,22 @@ const ProductDetails: React.FC = () => {
                                 type="number"
                                 fill="outline"
                             ></IonInput>
-                            <IonButton>
-                                <IonIcon slot="start" icon={cart}></IonIcon>
-                                Add to Cart
-                            </IonButton>
+                            {isAuthed ? (
+                                <IonButton>
+                                    <IonIcon slot="start" icon={cart}></IonIcon>
+                                    Add to Cart
+                                </IonButton>
+                            ) : (
+                                <Link to={'/login'} className={styles.link}>
+                                    <IonButton>
+                                        <IonIcon
+                                            slot="start"
+                                            icon={cart}
+                                        ></IonIcon>
+                                        Add to Cart
+                                    </IonButton>
+                                </Link>
+                            )}
                             <IonButton routerLink="/products">
                                 <IonIcon
                                     slot="start"
