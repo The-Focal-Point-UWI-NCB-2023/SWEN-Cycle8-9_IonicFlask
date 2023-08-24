@@ -41,6 +41,7 @@ export async function createOrder(orderData: Order) {
 
         const data = await response.json()
         console.log('Created Order:', data)
+        return data
     } catch (error) {
         console.error('Error creating order:', error)
         throw error
@@ -97,7 +98,19 @@ export async function getOrderById(orderId: string) {
     try {
         const response = await fetch(api_url_rest + `orders/${orderId}`)
         const data = await response.json()
-        console.log('Order by ID:', data)
+        // console.log('Order by ID:', data)
+        return data
+    } catch (error) {
+        console.error('Error fetching order:', error)
+        throw error
+    }
+}
+
+export async function getOrderByUserID(userID: string) {
+    try {
+        const response = await fetch(api_url_rest + `orders/user/${userID}`)
+        const data = await response.json()
+        // console.log('Order by UserID:', data)
         return data
     } catch (error) {
         console.error('Error fetching order:', error)

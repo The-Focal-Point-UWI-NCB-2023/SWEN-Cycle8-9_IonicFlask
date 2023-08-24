@@ -67,6 +67,7 @@ class ProductsResource(Resource):
         if image_file:
             filename = secure_filename(image_file.filename)
             image_path = os.path.join('./uploads', filename)
+            image_path = image_path.replace('\\', '/')
             image_file.save(image_path)
 
             args['image'] = image_path  # Update the 'image' field to the image path

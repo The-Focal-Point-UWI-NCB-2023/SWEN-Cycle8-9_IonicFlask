@@ -1,7 +1,10 @@
-from app.api import Namespace, Resource, fields, reqparse,abort,os,Resource
+import json
+from app.api import Namespace, Resource, fields, reqparse,abort,os,Resource,db
 from flask import Flask, request, redirect
 from decimal import Decimal
 import stripe
+
+from app.models.orders import Orders
 payment_ns = Namespace("payment",path="/v1/rest/payment", description="Payment processing API")
 
 # Set your Stripe API key here
@@ -22,7 +25,7 @@ payment_model = payment_ns.model('CreateCheckoutSession', {
 
 payment_parser = reqparse.RequestParser()
 
-payment_parser.add_argument('success_url', type=str, required=True, help='Success url is required')
+payment_parser.add_argument('success_url', type=str, required=False, help='Success url is required')
 payment_parser.add_argument('cancel_url', type=str, required=True,  help='Cancel url is required')
 payment_parser.add_argument('name', type=str, required=True, action='append', help='Name of the product is required')
 payment_parser.add_argument('description', type=str, required=True, action='append',  help='Description of the product is required')
@@ -32,20 +35,23 @@ payment_parser.add_argument('quantity', type=int, required=True, action='append'
 payment_parser.add_argument('X-CSRFToken', type=str, location='headers', required=True, help='CSRF Token is required')
 payment_parser.add_argument('Authorization', type=str, location='headers', required=True, help='Authorization Token is required')
 
+order_id = None
 
 @payment_ns.route('/create-checkout-session', methods=['POST'])
 class CreateCheckoutSession(Resource):
+    
     #@payment_ns.marshal_list_with(payment_model)
     @payment_ns.expect(payment_parser)
     @payment_ns.response(303, "Redirect to Checkout")
     def post(self):   
         try:
-            #args = payment_parser.parse_args()
-            #print (args)
-            args = {"id":62,"user_id":42,"billing_address":"lorem ipsum","total_amount":30,"status":"pending","line_items":[{"product_id":56,"product_name":"Idadada","product_image":"./uploads/Screenshot_2023-06-08_113411.png","product_price":"10.00","qty":1},{"product_id":56,"product_name":"I","product_image":"./uploads/Screenshot_2023-06-08_113411.png","product_price":"10.00","qty":1},{"product_id":56,"product_name":"I","product_image":"./uploads/Screenshot_2023-06-08_113411.png","product_price":"10.00","qty":1}]}
+            global order_id  
+        # args = payment_parser.parse_args()
+            payload_str = request.data.decode('utf-8')
+            payload_json = json.loads(payload_str)       
+            args=payload_json
             line_itemsLst = []
-
-            for line_item in args['line_items']:
+            for line_item in args["line_items"]:
                 line_item_data = {
                     "price_data": {
                         "currency": "usd",
@@ -60,19 +66,48 @@ class CreateCheckoutSession(Resource):
                     "quantity": line_item['qty']
                 }
                 line_itemsLst.append(line_item_data)
-
-            print(line_itemsLst)
+            order_id = args['id']
+            # print(line_itemsLst)
 
             print("These are the line items:", line_itemsLst)
             checkout_session = stripe.checkout.Session.create(
             line_items= line_itemsLst,
-                            mode='payment',
-                            success_url='https://www.google.com/',
-                            cancel_url='https://www.google.com/',
-                        )
+            mode='payment',
+            success_url='https://www.google.com/',
+            cancel_url='https://www.google.com/',
+                                                    )
+            return(checkout_session.url)
         except Exception as e:
             return str(e), 500
 
-        return(checkout_session.url)
 
                     
+@payment_ns.route('/webhook')
+class Webhook(Resource):
+        
+    def post(self):
+        global order_id  
+        parser = reqparse.RequestParser()
+        parser.add_argument('id')
+        data = parser.parse_args()
+        event_id = data['id']
+
+        try:
+            event = stripe.Event.retrieve(event_id)
+        except stripe.error.StripeError as e:
+            return {'error': str(e)}, 400
+
+        if event.type == 'payment_intent.succeeded':
+            order = Orders.query.get(order_id)
+            order.status = "completed"
+            db.session.commit()
+            pass
+
+        elif event.type == 'payment_intent.payment_failed':
+            order = Orders.query.get(order_id)
+            order.status = "cancelled"
+            db.session.commit()
+            pass
+
+        return {'status': 'success'}, 200
+    
