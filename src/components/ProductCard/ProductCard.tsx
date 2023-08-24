@@ -90,7 +90,7 @@ const ProductCard: React.FC<PropsWithChildren<Props>> = (props) => {
                                 </Link>
                             ) : (
                                 <Link to={'login'} className={styles.link}>
-                                    <IonButton>
+                                    <IonButton id={styles.cartButton}>
                                         <IonIcon
                                             slot="start"
                                             icon={cart}
