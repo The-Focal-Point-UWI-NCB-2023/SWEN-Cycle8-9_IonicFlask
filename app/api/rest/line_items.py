@@ -19,9 +19,15 @@ line_item_parser.add_argument('order_id', type=int, required=True, help='Order I
 line_item_parser.add_argument('product_id', type=int, required=True, help='Product ID is required')
 line_item_parser.add_argument('qty', type=int, required=True, help='Quantity is required')
 
+auth_parser = reqparse.RequestParser()
+auth_parser.add_argument('Authorization', location='headers', required=True, help='Authorization Token')
+auth_parser.add_argument('X-CSRFToken', location='headers', required=False, help='CSRF Token')
+
+
 @line_items_ns.route('/')
 @line_items_ns.response(404, "Line Item not found")
 @line_items_ns.response(409, "Invalid field syntax")
+@line_items_ns.expect(auth_parser)
 class LineItemsResource(Resource):
 
     @line_items_ns.marshal_list_with(line_items_model)
@@ -47,6 +53,7 @@ class LineItemsResource(Resource):
 @line_items_ns.response(409, "Invalid field syntax")
 @line_items_ns.param("line_item_id", "A unique identifier associated with a line item")
 @line_items_ns.route('/<int:line_item_id>')
+@line_items_ns.expect(auth_parser)
 class LineItemDetailResource(Resource):
     @line_items_ns.marshal_list_with(line_items_model)
     def get(self, line_item_id):

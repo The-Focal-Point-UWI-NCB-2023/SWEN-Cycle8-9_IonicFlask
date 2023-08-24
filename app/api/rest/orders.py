@@ -27,6 +27,11 @@ orders_parser.add_argument('billing_address', required=True, help='Billing addre
 orders_parser.add_argument('total_amount', type=float, required=True, help='Total amount is required')
 orders_parser.add_argument('status', required=True, help='Status is required')
 orders_parser.add_argument('X-CSRFToken', location='headers', required=False, help='CSRF Token')
+orders_parser.add_argument('Authorization', location='headers', required=True, help='Authorization Token')
+
+auth_parser = reqparse.RequestParser()
+auth_parser.add_argument('Authorization', location='headers', required=True, help='Authorization Token')
+auth_parser.add_argument('X-CSRFToken', location='headers', required=False, help='CSRF Token')
 
 @orders_ns.response(404, "Order not found")
 @orders_ns.response(409, "Invalid field syntax")
@@ -34,6 +39,7 @@ orders_parser.add_argument('X-CSRFToken', location='headers', required=False, he
 class OrderListResource(Resource):
 
     @admin_required
+    @orders_ns.expect(auth_parser)
     @orders_ns.marshal_list_with(order_model)
     def get(self):
         orders = Orders.query.all()
@@ -60,6 +66,7 @@ class OrderListResource(Resource):
 class OrderResource(Resource):
     @admin_required
     @orders_ns.marshal_list_with(order_model)
+    @orders_ns.expect(auth_parser)
     def get(self, order_id):
         order = Orders.query.get(order_id)
         if order and current_user.role == 1:
@@ -80,6 +87,7 @@ class OrderResource(Resource):
 
     @admin_required
     @orders_ns.expect(orders_parser)
+    @orders_ns.expect(auth_parser)
     def put(self, order_id):
         order = Orders.query.get(order_id)
         if order:
@@ -94,6 +102,7 @@ class OrderResource(Resource):
             abort(404, message="Order not found")
 
     @admin_required
+    @orders_ns.expect(auth_parser)
     def delete(self, order_id):
         order = Orders.query.get(order_id)
         if order:

@@ -19,6 +19,7 @@ product_model = products_ns.model(
     },
 )
 
+
 product_parser = reqparse.RequestParser()
 product_parser.add_argument("name", type=str, required=True, help="Name is required")
 product_parser.add_argument(
@@ -36,9 +37,14 @@ product_parser.add_argument(
     "user_id", type=int, required=True, help="User ID is required"
 )
 
+auth_parser = reqparse.RequestParser()
+auth_parser.add_argument('Authorization', location='headers', required=True, help='Authorization Token')
+auth_parser.add_argument('X-CSRFToken', location='headers', required=False, help='CSRF Token')
+
 @products_ns.response(404, "Product not found")
 @products_ns.response(409, "Invalid field syntax")
 @products_ns.route("/")
+@products_ns.expect(auth_parser)
 class ProductsResource(Resource):
     @products_ns.marshal_list_with(product_model)
     def get(self):
@@ -50,6 +56,7 @@ class ProductsResource(Resource):
 
     @products_ns.expect(product_parser)
     @products_ns.marshal_with(product_model)
+    @products_ns.expect(auth_parser)
     @admin_required
     def post(self):
         args = product_parser.parse_args()
@@ -76,6 +83,7 @@ class ProductsResource(Resource):
 @products_ns.response(404, "Product not found")
 @products_ns.response(409, "Invalid field syntax")
 @products_ns.param("product_id", "A unique identifier associated with a product")
+@products_ns.expect(auth_parser)
 class ProductResource(Resource):
     @products_ns.marshal_with(product_model)
     def get(self, product_id):
@@ -118,6 +126,7 @@ class ProductResource(Resource):
 
     @admin_required
     @products_ns.response(204, "Product deleted")
+    @products_ns.expect(auth_parser)
     def delete(self, product_id):
         product = Products.query.get(product_id)
         if product:

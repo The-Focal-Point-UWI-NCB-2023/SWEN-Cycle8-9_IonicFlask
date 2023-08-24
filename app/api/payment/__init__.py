@@ -39,7 +39,9 @@ class CreateCheckoutSession(Resource):
     @payment_ns.response(303, "Redirect to Checkout")
     def post(self):   
         try:
-            args = payment_parser.parse_args()
+            #args = payment_parser.parse_args()
+            #print (args)
+            args = {"id":62,"user_id":42,"billing_address":"lorem ipsum","total_amount":30,"status":"pending","line_items":[{"product_id":56,"product_name":"Idadada","product_image":"./uploads/Screenshot_2023-06-08_113411.png","product_price":"10.00","qty":1},{"product_id":56,"product_name":"I","product_image":"./uploads/Screenshot_2023-06-08_113411.png","product_price":"10.00","qty":1},{"product_id":56,"product_name":"I","product_image":"./uploads/Screenshot_2023-06-08_113411.png","product_price":"10.00","qty":1}]}
             line_itemsLst = []
 
             for line_item in args['line_items']:

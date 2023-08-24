@@ -32,6 +32,11 @@ register_parser.add_argument('full_name', required=True, help='Full name')
 register_parser.add_argument('email', required=True, help='Email address')
 register_parser.add_argument('password', required=True, help='Password')
 
+auth_parser = reqparse.RequestParser()
+auth_parser.add_argument('Authorization', location='headers', required=True, help='Authorization Token')
+auth_parser.add_argument('X-CSRFToken', location='headers', required=False, help='CSRF Token')
+
+
 # ... Your other imports and setup ...
 encode_key = os.environ.get("SECRET_KEY")
 
@@ -114,9 +119,10 @@ def admin_required(func):
         if jwt_token:
             try:
                 decoded_payload = jwt.decode(jwt_token.split()[1], os.environ.get("SECRET_KEY"), algorithms=['HS256'])
-                user_role = decoded_payload.get('role')
+                print (decoded_payload)
+                user_role = (int(decoded_payload.get('role')))
                 
-                if user_role == 1:  # Assuming role 1 is for admins
+                if user_role == '1':  # Assuming role 1 is for admins
                     return func(*args, **kwargs)
                 else:
                     abort(403, message='Access denied. Admin role required.')
@@ -142,6 +148,7 @@ class AdminProtected(Resource):
 
 @api.doc(security='apiKey')
 @auth_ns.route('/test')
+@auth_ns.expect(auth_parser)
 class TestProtected(Resource):
     @requires_auth
     def get(self):
@@ -155,6 +162,7 @@ class CSRFTokenResource(Resource):
     
 
 @auth_ns.route('/isLoggedin')
+@auth_ns.expect(auth_parser)
 class IsLoggedIn(Resource):
     def get(self):
         header = request.headers.get('Authorization')
@@ -192,6 +200,7 @@ class IsLoggedIn(Resource):
             return response, 401
         
 @auth_ns.route('/isAdmin')
+@auth_ns.expect(auth_parser)
 class IsLoggedIn(Resource):
     @requires_auth
     def get(self):
@@ -222,6 +231,7 @@ class IsLoggedIn(Resource):
     
         
 @auth_ns.route('/CurrentUser')
+@auth_ns.expect(auth_parser)
 class CurrUser(Resource):
     @requires_auth
     def get(self):

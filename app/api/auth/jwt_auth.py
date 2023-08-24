@@ -49,6 +49,7 @@ token_parser.add_argument('id', type=int, required=True, help='User ID is requir
 token_parser.add_argument('email', required=True, help='Email is required')
 token_parser.add_argument('role', required=True, help='Role is required')
 token_parser.add_argument('password', required=True, help='Password is required')
+token_parser.add_argument('X-CSRFToken', location='headers', required=False, help='CSRF Token')
 
 # Define a route for generating tokens within the custom namespace
 @jwt_auth_ns.route('/gen')

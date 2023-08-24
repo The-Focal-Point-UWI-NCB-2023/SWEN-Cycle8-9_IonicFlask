@@ -24,11 +24,18 @@ user_parser.add_argument(
     "password", type=str, required=False, help="Password is required"
 )
 user_parser.add_argument("role", type=int, required=True, help="Role is required")
+user_parser.add_argument('X-CSRFToken', location='headers', required=False, help='CSRF Token')
+user_parser.add_argument('Authorization', location='headers', required=True, help='Authorization Token')
+
+auth_parser = reqparse.RequestParser()
+auth_parser.add_argument('Authorization', location='headers', required=True, help='Authorization Token')
+auth_parser.add_argument('X-CSRFToken', location='headers', required=False, help='CSRF Token')
 
 
 @users_ns.response(409, "Invalid field syntax")
 @users_ns.response(404, "User not found")
 @users_ns.route("/")
+@users_ns.expect(auth_parser)
 class UsersResource(Resource):
     @admin_required
     @users_ns.marshal_list_with(user_model)
@@ -43,6 +50,8 @@ class UsersResource(Resource):
     @users_ns.marshal_with(user_model)
     def post(self):
         args = user_parser.parse_args()
+        csrf_token = args.pop('X-CSRFToken', None)
+        auth_token = args.pop('Authorization', None)
         new_user = Users(**args)
         try:
             db.session.add(new_user)
