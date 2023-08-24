@@ -3,19 +3,10 @@
     align-items: center;
     justify-content: center;
     background-color: var(--ion-color-light-tint);
-    width: 50%;
+    width: 60%;
     height: auto;
     margin-bottom: 20px;
-    //border: solid;
-}
-
-.img {
-    max-width: 80%;
-    height: auto;
-    margin-left: auto;
-    margin-right: auto;
     border: solid;
-    background-color: --var(--ion-color-primary);
 }
 
 .content {
@@ -24,6 +15,18 @@
     max-width: fit-content;
     align-items: center;
     justify-content: center;
+}
+
+.coverImage {
+    height: 160px;
+    background-color: white;
+    background-position: center center;
+    background-size: contain;
+    background-repeat: no-repeat;
+    max-width: 80%;
+    height: auto;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 ion-card {
@@ -48,14 +51,8 @@ ion-col {
     justify-content: center;
 }
 
-// @media screen and (max-width: 425px) {
-//     .container {
-//         display: block;
-//         align-items: center;
-//         justify-content: center;
-//         background-color: var(--ion-color-light-tint);
-//         width: 80%;
-//         height: fit-content;
-//         margin-bottom: 20px;
-//     }
-// }
+@media screen and (max-width: 425px) {
+    .container {
+        width: 80%;
+    }
+}

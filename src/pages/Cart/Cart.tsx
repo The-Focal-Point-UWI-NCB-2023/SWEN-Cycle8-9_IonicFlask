@@ -102,7 +102,7 @@ const Cart: React.FC = () => {
                         <IonCol>
                             <IonImg
                                 src={'../../../uploads/' + prod.image + '.png'}
-                                className={styles.cartImg}
+                                className={styles.coverImage}
                             />
                         </IonCol>
                         <IonCol>
