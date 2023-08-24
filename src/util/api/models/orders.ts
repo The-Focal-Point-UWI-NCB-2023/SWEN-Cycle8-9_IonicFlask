@@ -3,7 +3,7 @@ import { LineItem, parseLineItemComponent } from './line_items'
 import { getLineItemById } from './line_items'
 
 export interface Order {
-    id:number
+    id: number
     user_id: number
     billing_address: string
     total_amount: number
@@ -11,10 +11,9 @@ export interface Order {
 }
 
 export interface OrderWithLineItems {
-    orderData: Order;
-    lineItems: LineItem;
+    orderData: Order
+    lineItems: LineItem
 }
-
 
 export async function getOrders() {
     try {
@@ -36,34 +35,25 @@ export async function getOrders() {
     }
 }
 
-
-
-export async function getOrdersWithLineItems(data: Order[]){
+export async function getOrdersWithLineItems(data: Order[]) {
     try {
-        
-        const ordersWithLineItems = [];
-        
+        const ordersWithLineItems = []
+
         for (let x = 0; x < data.length; x++) {
-            const lineItems = await getLineItemById(data[x].id.toString()); 
+            const lineItems = await getLineItemById(data[x].id.toString())
 
             ordersWithLineItems.push({
                 orderData: data[x],
                 lineItems: lineItems,
-            });
+            })
         }
         console.log(ordersWithLineItems)
-        return ordersWithLineItems;
+        return ordersWithLineItems
     } catch (error) {
-        console.error('Error fetching orders with line items:', error);
-        throw error;
+        console.error('Error fetching orders with line items:', error)
+        throw error
     }
 }
-
-
-
-
-
-
 
 export async function createOrder(orderData: Order) {
     try {

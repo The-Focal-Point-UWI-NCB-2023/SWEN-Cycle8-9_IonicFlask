@@ -112,8 +112,7 @@ const Router: React.FC = () => {
                       component={Cart} /> */}
 
                     {/* Admin */}
-                    
-                    
+
                     <Route
                         exact
                         path="/admin"

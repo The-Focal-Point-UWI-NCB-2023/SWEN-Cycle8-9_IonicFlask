@@ -110,7 +110,7 @@ export const order_headers = [
     'status',
     'line_items',
 ]
- 
+
 export const test_orders = [
     {
         id: 1,
@@ -122,7 +122,7 @@ export const test_orders = [
             { order_id: 1, product_id: 101, qty: 2 },
             { order_id: 1, product_id: 102, qty: 1 },
             // Add more line items for order 1
-        ]
+        ],
     },
     {
         id: 2,
@@ -134,7 +134,7 @@ export const test_orders = [
             { order_id: 2, product_id: 201, qty: 3 },
             { order_id: 2, product_id: 202, qty: 1 },
             // Add more line items for order 2
-        ]
+        ],
     },
     {
         id: 3,
@@ -146,7 +146,7 @@ export const test_orders = [
             { order_id: 3, product_id: 301, qty: 1 },
             { order_id: 3, product_id: 302, qty: 2 },
             // Add more line items for order 3
-        ]
+        ],
     },
     {
         id: 4,
@@ -157,7 +157,7 @@ export const test_orders = [
         line_items: [
             { order_id: 4, product_id: 401, qty: 1 },
             // Add more line items for order 4
-        ]
+        ],
     },
     {
         id: 5,
@@ -169,6 +169,6 @@ export const test_orders = [
             { order_id: 5, product_id: 501, qty: 2 },
             { order_id: 5, product_id: 502, qty: 3 },
             // Add more line items for order 5
-        ]
+        ],
     },
 ]

@@ -1,28 +1,31 @@
-import { IonCol, IonRow } from "@ionic/react"
-import { order_headers } from "../../pages/Admin/AdminFunctions"
-import styles from "./AdminComponents.module.scss"
-import { Order, getOrders } from "../../util/api/models/orders";
-import { useEffect, useState } from "react";
-import {LineItem,createLineItem,deleteLineItem,getLineItemById,getLineItems,updateLineItem,} from '../../util/api/models/line_items'
-import { test_orders } from "../../pages/Admin/AdminFunctions";
-import { getOrdersWithLineItems } from "../../util/api/models/orders";
-import { OrderWithLineItems } from "../../util/api/models/orders";
+import { IonCol, IonRow } from '@ionic/react'
+import { order_headers } from '../../pages/Admin/AdminFunctions'
+import styles from './AdminComponents.module.scss'
+import { Order, getOrders } from '../../util/api/models/orders'
+import { useEffect, useState } from 'react'
+import {
+    LineItem,
+    createLineItem,
+    deleteLineItem,
+    getLineItemById,
+    getLineItems,
+    updateLineItem,
+} from '../../util/api/models/line_items'
+import { test_orders } from '../../pages/Admin/AdminFunctions'
+import { getOrdersWithLineItems } from '../../util/api/models/orders'
+import { OrderWithLineItems } from '../../util/api/models/orders'
 export const AdminOrders: React.FC = () => {
+    const [orderList, setOrders] = useState<Order[]>([])
+    const [orderAndLineItemslst, setorderAndLineItemslst] = useState<
+        OrderWithLineItems[]
+    >([])
 
-
-
-const [orderList, setOrders] = useState<Order[]>([])
-const [orderAndLineItemslst, setorderAndLineItemslst] = useState<OrderWithLineItems[]>([])
-
-const [lineitmes, setLineItems] = useState<LineItem>()
+    const [lineitmes, setLineItems] = useState<LineItem>()
 
     useEffect(() => {
         fetchOrders()
 
         console.log('Hello')
-       
-        
-        
     }, [])
     //Orders Fetch
 
@@ -36,8 +39,6 @@ const [lineitmes, setLineItems] = useState<LineItem>()
             console.error('Error fetching orders:', error)
         }
     }
-
-
 
     //Line Items Fetch
 
@@ -114,48 +115,65 @@ const [lineitmes, setLineItems] = useState<LineItem>()
             </IonRow>
 
             {orderAndLineItemslst.length > 0 ? (
-            orderAndLineItemslst.map((order, rowIndex) => (
-                <IonRow key={`user_${rowIndex}`} className={styles.userRow}>
-                    <div className={styles.orderInfo}>
-                        {order_headers.map((header, colIndex) => (
-                            <IonCol
-                        size="2"
-                        size-sm="2"
-                        size-md="2"
-                        size-lg="2"
-                        key={`col_${rowIndex}_${header}`}
-                    >
-                       {header === 'total_amount'
-                            ? order.orderData[header] !== undefined
-                                ? `$${order.orderData[header]}`
-                                : ''
-                            : header === 'line_items'
-                            ? order.lineItems !== undefined
-                                ?   
-                                <>
-                                        <IonCol className = {styles.lineItem}key={`line_${rowIndex}`}>
-                                        <IonRow>
-                                            Product ID: {order.lineItems.product_id}
-                                        </IonRow>
-                                        <IonRow>
-                                            Order ID: {order.lineItems.order_id }
-                                            </IonRow>
-                                        <IonRow>
-                                            Quantity: {order.lineItems.qty}
-                                            </IonRow>
-                                        </IonCol>
-                                </>
-                                : ''
-                            : order.orderData[header]}
-                        </IonCol>
-                ))}
-            </div>
-        </IonRow>
-    ))
-) : (
-    <p>No orders available.</p>
-)}
-
+                orderAndLineItemslst.map((order, rowIndex) => (
+                    <IonRow key={`user_${rowIndex}`} className={styles.userRow}>
+                        <div className={styles.orderInfo}>
+                            {order_headers.map((header, colIndex) => (
+                                <IonCol
+                                    size="2"
+                                    size-sm="2"
+                                    size-md="2"
+                                    size-lg="2"
+                                    key={`col_${rowIndex}_${header}`}
+                                >
+                                    {header === 'total_amount' ? (
+                                        order.orderData[header] !==
+                                        undefined ? (
+                                            `$${order.orderData[header]}`
+                                        ) : (
+                                            ''
+                                        )
+                                    ) : header === 'line_items' ? (
+                                        order.lineItems !== undefined ? (
+                                            <>
+                                                <IonCol
+                                                    className={styles.lineItem}
+                                                    key={`line_${rowIndex}`}
+                                                >
+                                                    <IonRow>
+                                                        Product ID:{' '}
+                                                        {
+                                                            order.lineItems
+                                                                .product_id
+                                                        }
+                                                    </IonRow>
+                                                    <IonRow>
+                                                        Order ID:{' '}
+                                                        {
+                                                            order.lineItems
+                                                                .order_id
+                                                        }
+                                                    </IonRow>
+                                                    <IonRow>
+                                                        Quantity:{' '}
+                                                        {order.lineItems.qty}
+                                                    </IonRow>
+                                                </IonCol>
+                                            </>
+                                        ) : (
+                                            ''
+                                        )
+                                    ) : (
+                                        order.orderData[header]
+                                    )}
+                                </IonCol>
+                            ))}
+                        </div>
+                    </IonRow>
+                ))
+            ) : (
+                <p>No orders available.</p>
+            )}
         </>
     )
 }
