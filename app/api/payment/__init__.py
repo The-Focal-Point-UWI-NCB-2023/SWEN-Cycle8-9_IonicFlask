@@ -1,3 +1,4 @@
+import json
 from app.api import Namespace, Resource, fields, reqparse,abort,os,Resource
 from flask import Flask, request, redirect
 from decimal import Decimal
@@ -22,7 +23,7 @@ payment_model = payment_ns.model('CreateCheckoutSession', {
 
 payment_parser = reqparse.RequestParser()
 
-payment_parser.add_argument('success_url', type=str, required=True, help='Success url is required')
+payment_parser.add_argument('success_url', type=str, required=False, help='Success url is required')
 payment_parser.add_argument('cancel_url', type=str, required=True,  help='Cancel url is required')
 payment_parser.add_argument('name', type=str, required=True, action='append', help='Name of the product is required')
 payment_parser.add_argument('description', type=str, required=True, action='append',  help='Description of the product is required')
@@ -34,15 +35,18 @@ payment_parser.add_argument('X-CSRFToken', type=str, location='headers', require
 
 @payment_ns.route('/create-checkout-session', methods=['POST'])
 class CreateCheckoutSession(Resource):
+    
     #@payment_ns.marshal_list_with(payment_model)
     @payment_ns.expect(payment_parser)
     @payment_ns.response(303, "Redirect to Checkout")
     def post(self):   
         try:
-            args = payment_parser.parse_args()
+        # args = payment_parser.parse_args()
+            payload_str = request.data.decode('utf-8')
+            payload_json = json.loads(payload_str)       
+            args=payload_json
             line_itemsLst = []
-
-            for line_item in args['line_items']:
+            for line_item in args["line_items"]:
                 line_item_data = {
                     "price_data": {
                         "currency": "usd",
@@ -58,7 +62,7 @@ class CreateCheckoutSession(Resource):
                 }
                 line_itemsLst.append(line_item_data)
 
-            print(line_itemsLst)
+            # print(line_itemsLst)
 
             print("These are the line items:", line_itemsLst)
             checkout_session = stripe.checkout.Session.create(
@@ -66,10 +70,10 @@ class CreateCheckoutSession(Resource):
                             mode='payment',
                             success_url='https://www.google.com/',
                             cancel_url='https://www.google.com/',
-                        )
+                    )
+            return(checkout_session.url)
         except Exception as e:
             return str(e), 500
 
-        return(checkout_session.url)
 
                     

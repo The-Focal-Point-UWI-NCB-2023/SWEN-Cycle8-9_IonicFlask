@@ -58,21 +58,21 @@ const Cart: React.FC = () => {
             {
                 product_id: 56,
                 product_name: 'I',
-                product_image: './uploads\\Screenshot_2023-06-08_113411.png',
+                product_image: './uploads/Screenshot_2023-06-08_113411.png',
                 product_price: '10.00',
                 qty: 1,
             },
             {
                 product_id: 56,
                 product_name: 'I',
-                product_image: './uploads\\Screenshot_2023-06-08_113411.png',
+                product_image: './uploads/Screenshot_2023-06-08_113411.png',
                 product_price: '10.00',
                 qty: 1,
             },
             {
                 product_id: 56,
                 product_name: 'I',
-                product_image: './uploads\\Screenshot_2023-06-08_113411.png',
+                product_image: './uploads/Screenshot_2023-06-08_113411.png',
                 product_price: '10.00',
                 qty: 1,
             },
@@ -91,16 +91,19 @@ const Cart: React.FC = () => {
         setShowDeleteConfirmation(false)
     }
 
-    // useEffect(() => {
-    //     ( async () => {
-    //         fetchCurrentUser();
-    //         const subtotal = parsedLineItems
-    //             .slice(0, 4)
-    //             .reduce((acc, product) => acc + parseFloat(product.product_price), 0)
-    //         setTotal(subtotal)
-    //         populateOrder();
-    //     })();
-    // }, [setLineItems])
+    useEffect(() => {
+        ;(async () => {
+            fetchCurrentUser()
+            const subtotal = parsedLineItems
+                .slice(0, 4)
+                .reduce(
+                    (acc, product) => acc + parseFloat(product.product_price),
+                    0
+                )
+            setTotal(subtotal)
+            populateOrder()
+        })()
+    }, [setLineItems])
 
     const handleQuantityChange = (
         event: React.ChangeEvent<HTMLInputElement>
@@ -121,7 +124,16 @@ const Cart: React.FC = () => {
 
     async function handleCheckout() {
         try {
-            const fetchedURL = await makePayment()
+            const cartData = {
+                id: 62,
+                user_id: currentUser.id,
+                billing_address: 'lorem ipsum',
+                total_amount: total,
+                status: 'pending',
+                line_items: parsedLineItems,
+                // Other data you want to include
+            }
+            const fetchedURL = await makePayment(cartData)
             setStripeLink(fetchedURL)
             window.location.href = fetchedURL
         } catch (error) {
