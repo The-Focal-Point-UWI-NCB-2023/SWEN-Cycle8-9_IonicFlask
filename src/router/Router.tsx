@@ -104,7 +104,7 @@ const Router: React.FC = () => {
                             return isAuthed ? (
                                 <Cart />
                             ) : (
-                                <Redirect exact from="/" to="/landing" />
+                                <Redirect exact from="/" to="/login" />
                             )
                         }}
                     />
