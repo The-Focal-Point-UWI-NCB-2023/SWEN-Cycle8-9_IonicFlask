@@ -126,6 +126,37 @@ const updatedLineItemData = {
     qty: 42,
 }
 
+export function parseLineItemComponent(input: string): LineItem[] | null {
+    // Remove brackets and split into parts
+    const parts = input.replace(/\[|\]/g, '').split(' ');
+
+    // Ensure the correct format
+    if (parts.length !== 3 || parts[0] !== '<Item(s)' || parts[2] !== '>') {
+        return null;
+    }
+
+    // Parse the quantity
+    const quantity = parseInt(parts[1]);
+
+    if (isNaN(quantity)) {
+        return null;
+    }
+
+    // Create and return the list of LineItem
+    const lineItems: LineItem[] = [];
+
+    for (let i = 0; i < quantity; i++) {
+        const lineItem: LineItem = {
+            order_id: i + 1,  // Assuming the order IDs start from 1
+            product_id: i + 1,  // Assuming the product IDs start from 1
+            qty: 1,  // Assuming each line item quantity is 1
+        };
+        lineItems.push(lineItem);
+    }
+
+    return lineItems;
+}
+
 // Call the functions to interact with line items
 // getLineItems();
 // createLineItem(lineItemData);
