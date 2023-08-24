@@ -57,7 +57,7 @@ const Register: React.FC = () => {
 
     return (
         <Main>
-            <h2>Register</h2>
+            <h2>Register a New Account</h2>
 
             <div className={styles.container}>
                 <IonImg className={styles.img} src="/thefocalpoints_Logo.jpg" />
@@ -66,51 +66,54 @@ const Register: React.FC = () => {
                     <div className={styles.formGroup}>
                         <p>Create a Focal Frames account today!</p>
                         <IonList>
-                            {/* <IonItem> */}
-                            <IonInput
-                                label="Name"
-                                label-placement="floating"
-                                helperText="Enter your full name"
-                                fill="outline"
-                                type="text"
-                                placeholder="Name"
-                                value={name}
-                                onIonChange={(e) => setName(e.detail.value!)}
-                                required
-                            />
-
-                            {/* </IonItem> */}
-                            {/* <IonItem> */}
-                            <br />
-                            <IonInput
-                                label="Email"
-                                label-placement="floating"
-                                helperText="Enter a valid email"
-                                fill="outline"
-                                type="email"
-                                inputmode="email"
-                                placeholder="Email"
-                                value={email}
-                                onIonChange={(e) => setEmail(e.detail.value!)}
-                                required
-                            />
-                            {/* </IonItem>
-                            <IonItem> */}
-                            <br />
-                            <IonInput
-                                label="Password"
-                                label-placement="floating"
-                                helperText="Type a strong password"
-                                fill="outline"
-                                type="password"
-                                placeholder="Password"
-                                value={password}
-                                onIonChange={(e) =>
-                                    setPassword(e.detail.value!)
-                                }
-                                required
-                            />
-                            {/* </IonItem> */}
+                            <IonItem>
+                                <IonInput
+                                    label="Name"
+                                    label-placement="floating"
+                                    helperText="Enter your full name"
+                                    fill="outline"
+                                    type="text"
+                                    placeholder="Name"
+                                    value={name}
+                                    onIonChange={(e) =>
+                                        setName(e.detail.value!)
+                                    }
+                                    required
+                                />
+                            </IonItem>
+                            <IonItem>
+                                <br />
+                                <IonInput
+                                    label="Email"
+                                    label-placement="floating"
+                                    helperText="Enter a valid email"
+                                    fill="outline"
+                                    type="email"
+                                    inputmode="email"
+                                    placeholder="Email"
+                                    value={email}
+                                    onIonChange={(e) =>
+                                        setEmail(e.detail.value!)
+                                    }
+                                    required
+                                />
+                            </IonItem>
+                            <IonItem>
+                                <br />
+                                <IonInput
+                                    label="Password"
+                                    label-placement="floating"
+                                    helperText="Type a strong password"
+                                    fill="outline"
+                                    type="password"
+                                    placeholder="Password"
+                                    value={password}
+                                    onIonChange={(e) =>
+                                        setPassword(e.detail.value!)
+                                    }
+                                    required
+                                />
+                            </IonItem>
 
                             {/* <IonItem>
                             <IonInput name="password_confirmation" type="password" placeholder="Confirm Password" required />
