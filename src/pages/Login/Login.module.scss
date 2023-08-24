@@ -1,0 +1,57 @@
+h2,
+p {
+    text-align: center;
+}
+
+.container {
+    display: flexbox;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--ion-color-light-tint);
+    border-radius: 20px;
+    border: solid;
+    width: 50%;
+    margin: auto;
+}
+
+.formGroup {
+    align-items: center;
+    justify-content: center;
+    place-content: center;
+    padding: 20px;
+}
+
+ion-list {
+    margin: auto;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+ion-input {
+    width: 90%;
+    margin: 10px;
+    padding: 10px;
+}
+
+ion-button {
+    max-width: fit-content;
+    max-height: fit-content;
+}
+
+.register {
+    text-align: center;
+    font-size: medium;
+}
+
+@media screen and (max-width: 562px) {
+    .container {
+        width: 80%;
+        height: fit-content;
+        display: flex;
+        flex: auto;
+        flex-flow: row wrap;
+        flex: auto;
+    }
+}

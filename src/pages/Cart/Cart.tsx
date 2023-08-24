@@ -17,9 +17,11 @@ import {
     IonTitle,
     IonAlert,
     useIonViewWillEnter,
+    IonBreadcrumb,
+    IonBreadcrumbs,
 } from '@ionic/react'
 import { productItems } from '../Products/ProuductItemLoader'
-import { cart, eye, trash } from 'ionicons/icons'
+import { caretBackCircleOutline, cart, eye, trash } from 'ionicons/icons'
 import { props } from 'cypress/types/bluebird'
 import { Link } from 'react-router-dom'
 import { makePayment } from '../../util/api/payments/payment'
@@ -156,6 +158,13 @@ const Cart: React.FC = () => {
 
     return (
         <Main>
+            <IonBreadcrumbs>
+                <IonBreadcrumb routerLink="/">Home</IonBreadcrumb>
+                <IonBreadcrumb routerLink="/products">Products</IonBreadcrumb>
+                <IonBreadcrumb routerLink="#"> My Cart</IonBreadcrumb>
+            </IonBreadcrumbs>
+            <br />
+
             <IonGrid className={styles.container}>
                 <h2>Your Shopping Cart</h2>
                 <IonRow className={styles.cartRowTotal}>
@@ -169,12 +178,21 @@ const Cart: React.FC = () => {
                         CHECKOUT
                     </IonButton>
                 </IonRow>
+
+                <IonButton routerLink="/products">
+                    <IonIcon
+                        slot="start"
+                        icon={caretBackCircleOutline}
+                    ></IonIcon>
+                    Back to Shopping
+                </IonButton>
+
                 {parsedLineItems.map((prod, index) => (
                     <IonRow className={styles.cartRow}>
                         <IonCol>
                             <IonImg
                                 src={prod.product_image}
-                                className={styles.cartImg}
+                                className={styles.coverImage}
                             />
                         </IonCol>
                         <IonCol>
@@ -248,6 +266,13 @@ const Cart: React.FC = () => {
                         CHECKOUT
                     </IonButton>
                 </IonRow>
+                <IonButton routerLink="/products">
+                    <IonIcon
+                        slot="start"
+                        icon={caretBackCircleOutline}
+                    ></IonIcon>
+                    Back to Shopping
+                </IonButton>
             </IonGrid>
         </Main>
     )

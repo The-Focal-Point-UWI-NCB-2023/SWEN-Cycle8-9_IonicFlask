@@ -1,12 +1,19 @@
 .container {
     display: flex;
-    width: 60%;
     justify-content: center;
     flex-direction: column;
     align-items: center;
     margin-bottom: 20px;
     font-size: xx-large;
     padding: 10px;
+
+    .coverImage {
+        height: 160px;
+        background-color: white;
+        background-position: center center;
+        background-size: contain;
+        background-repeat: no-repeat;
+    }
 
     .cartRowTotal {
         align-items: center;
@@ -27,6 +34,7 @@
     }
 
     .cartRow {
+        width: 50%;
         padding: 10px;
         border: 2px solid var(--ion-color-light-shade);
         background-color: var(--ion-color-light);

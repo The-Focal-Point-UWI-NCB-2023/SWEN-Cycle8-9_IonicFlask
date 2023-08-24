@@ -75,7 +75,7 @@ class Register(Resource):
         full_name = user_data['full_name']
         email = user_data['email']
         password = user_data['password']
-        role = 0  # Setting the role to user for now
+        role = 1  # Setting the role to user for now
         existing_user = Users.query.filter_by(email=email).first()
         if existing_user:
 
