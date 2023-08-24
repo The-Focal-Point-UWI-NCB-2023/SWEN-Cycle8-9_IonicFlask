@@ -145,15 +145,15 @@ class UserOrderResource(Resource):
                         'qty': item.qty
                     }
                     line_items.append(line_item_details)
-            specific_order = {
-                'id': order.id,
-                'user_id': order.user_id,
-                'billing_address': order.billing_address,
-                'total_amount': str(order.total_amount),
-                'status': order.status,
-                'line_items': line_items  # Return line_items as a list, not a string
-            }
-            return specific_order
+            # specific_order = {
+            #     'id': order.id,
+            #     'user_id': order.user_id,
+            #     'billing_address': order.billing_address,
+            #     'total_amount': str(order.total_amount),
+            #     'status': order.status,
+            #     'line_items': line_items  # Return line_items as a list, not a string
+            # }
+            return line_items
         else:
             abort(404, message="Order not found for the specified user")
 

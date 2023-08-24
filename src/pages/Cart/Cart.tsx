@@ -16,6 +16,7 @@ import {
     IonInput,
     IonTitle,
     IonAlert,
+    useIonViewWillEnter,
 } from '@ionic/react'
 import { productItems } from '../Products/ProuductItemLoader'
 import { cart, eye, trash } from 'ionicons/icons'
@@ -39,14 +40,11 @@ const Cart: React.FC = () => {
         try {
             const fetchedCurrentUser = await current_User()
             setCurrentUser(fetchedCurrentUser)
+            console.log(currentUser)
         } catch (error) {
             console.log(error)
         }
     }
-
-    useEffect(() => {
-        fetchCurrentUser()
-    }, [])
 
     const [stripeLink, setStripeLink] = useState()
 
@@ -93,16 +91,16 @@ const Cart: React.FC = () => {
         setShowDeleteConfirmation(false)
     }
 
-    useEffect(() => {
-        const subtotal = parsedLineItems
-            .slice(0, 4)
-            .reduce(
-                (acc, product) => acc + parseFloat(product.product_price),
-                0
-            )
-        setTotal(subtotal)
-        populateOrder()
-    }, [currentUser])
+    // useEffect(() => {
+    //     ( async () => {
+    //         fetchCurrentUser();
+    //         const subtotal = parsedLineItems
+    //             .slice(0, 4)
+    //             .reduce((acc, product) => acc + parseFloat(product.product_price), 0)
+    //         setTotal(subtotal)
+    //         populateOrder();
+    //     })();
+    // }, [setLineItems])
 
     const handleQuantityChange = (
         event: React.ChangeEvent<HTMLInputElement>
@@ -134,13 +132,15 @@ const Cart: React.FC = () => {
     async function populateOrder() {
         try {
             const userOrder = await getOrderByUserID(currentUser.id)
-            console.log('User Order Data:', userOrder) // Add this log
+            // console.log("User Order Data:", userOrder); // Add this log
             setLineItems(userOrder)
             console.log('After:', userLineItems) // Add this log
         } catch (error) {
             console.error('Error fetching products:', error)
         }
     }
+    // fetchCurrentUser()
+    // populateOrder()
 
     return (
         <Main>
