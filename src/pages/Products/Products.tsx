@@ -36,7 +36,10 @@ const Products: React.FC = () => {
     async function fetchProducts() {
         try {
             const fetchedProducts = await getProducts()
-            setProducts(fetchedProducts)
+            const publishedProducts = fetchedProducts.filter(
+                (product) => product.status === 'published'
+            )
+            setProducts(publishedProducts)
         } catch (error) {
             console.error('Error fetching products:', error)
         }

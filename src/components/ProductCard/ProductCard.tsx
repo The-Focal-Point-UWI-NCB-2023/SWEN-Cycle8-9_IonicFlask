@@ -81,7 +81,7 @@ const ProductCard: React.FC<PropsWithChildren<Props>> = (props) => {
                         <div
                             style={{
                                 backgroundImage: `url(${
-                                    '../../../uploads/' + props.image + '.png'
+                                    '../../../uploads/' + props.image
                                 })`,
                             }}
                             className={styles.coverImage}

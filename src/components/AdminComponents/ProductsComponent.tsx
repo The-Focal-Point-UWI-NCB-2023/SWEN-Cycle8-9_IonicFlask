@@ -136,7 +136,7 @@ export const AdminProducts: React.FC = () => {
                                         `$${prod[header]}`
                                     ) : header === 'image' ? (
                                         <img
-                                            src={`${prod[header]}`}
+                                            src={`./uploads/${prod[header]}`}
                                             alt="Product"
                                             className={styles.productImage}
                                         />

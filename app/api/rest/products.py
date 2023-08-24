@@ -62,8 +62,9 @@ class ProductsResource(Resource):
             image_path = os.path.join('./uploads', filename)
             image_path = image_path.replace('\\', '/')
             image_file.save(image_path)
+            relative_filename = image_path.replace('./uploads/', '')
 
-            args['image'] = image_path  # Update the 'image' field to the image path
+            args['image'] = relative_filename  # Update the 'image' field to the image path
 
         new_product = Products(**args)
         try:
