@@ -1,26 +1,16 @@
 import { getCsrfToken, api_url_rest } from '../../constants'
 
-export async function makePayment() {
-    const payload = {
-        line_items: [
-            {
-                price_data: {
-                    currency: 'usd',
-                    product_data: {
-                        name: 'Book1',
-                        description: 'A Book',
-                        images: 'https://i.imgur.com/EHyR2nP.png',
-                    },
-                    unit_amount_decimal: '5899',
-                },
-                quantity: 1,
-            },
-        ],
+export async function makePayment(cartData) {
+    const requestData = {
         success_url: 'https://www.google.com/',
         cancel_url: 'https://www.google.com/',
+        name: 'Product Name',
+        description: 'Product Description',
+        images: ['https://i.imgur.com/4Iac5ON.jpeg'],
+        unit_amount_decimal: '1000', // Example unit amount in decimal
+        quantity: 1,
     }
 
-    const test_body = JSON.stringify(payload)
     try {
         const csrfToken = await getCsrfToken()
         const response = await fetch(
@@ -33,9 +23,12 @@ export async function makePayment() {
                 },
                 credentials: 'include',
                 mode: 'cors',
-                body: test_body,
+                body: JSON.stringify(cartData),
             }
         )
+        const data = await response.json()
+        console.log(cartData)
+        return data
     } catch (error) {
         console.error('Error creating payment:', error)
         throw error
