@@ -71,7 +71,6 @@ const Router: React.FC = () => {
                     {/* Register */}
                     <Route exact path="/register" component={Register} />
 
-                    <Route exact path="/admin" component={Admin} />
 
                     {/* Login */}
                     <Route
@@ -113,7 +112,7 @@ const Router: React.FC = () => {
 
                     {/* Admin */}
 
-                    {/*
+                    
                     <Route
                         exact
                         path="/admin"

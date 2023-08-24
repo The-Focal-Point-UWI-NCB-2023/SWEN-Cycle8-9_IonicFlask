@@ -103,46 +103,72 @@ export const products: Product[] = [
 
 import { LineItem } from '../../util/api/models/line_items'
 export const order_headers = [
-    'order_id',
+    'id',
+    'user_id',
     'billing_address',
     'total_amount',
     'status',
+    'line_items',
 ]
-
-export const orders = [
+ 
+export const test_orders = [
     {
-        OrderID: 1,
-        UserID: 123,
-        BillingAddress: '123 Main St, City',
-        TotalAmount: 100.5,
-        Status: 'Pending',
+        id: 1,
+        user_id: 123,
+        billing_address: '123 Main St, City',
+        total_amount: 100.5,
+        status: 'Pending',
+        line_items: [
+            { order_id: 1, product_id: 101, qty: 2 },
+            { order_id: 1, product_id: 102, qty: 1 },
+            // Add more line items for order 1
+        ]
     },
     {
-        OrderID: 2,
-        UserID: 456,
-        BillingAddress: '456 Elm St, Town',
-        TotalAmount: 75.25,
-        Status: 'Shipped',
+        id: 2,
+        user_id: 456,
+        billing_address: '456 Elm St, Town',
+        total_amount: 75.25,
+        status: 'Shipped',
+        line_items: [
+            { order_id: 2, product_id: 201, qty: 3 },
+            { order_id: 2, product_id: 202, qty: 1 },
+            // Add more line items for order 2
+        ]
     },
     {
-        OrderID: 3,
-        UserID: 789,
-        BillingAddress: '789 Oak St, Village',
-        TotalAmount: 250.0,
-        Status: 'Delivered',
+        id: 3,
+        user_id: 789,
+        billing_address: '789 Oak St, Village',
+        total_amount: 250.0,
+        status: 'Delivered',
+        line_items: [
+            { order_id: 3, product_id: 301, qty: 1 },
+            { order_id: 3, product_id: 302, qty: 2 },
+            // Add more line items for order 3
+        ]
     },
     {
-        OrderID: 4,
-        UserID: 123,
-        BillingAddress: '321 Pine St, Hamlet',
-        TotalAmount: 50.75,
-        Status: 'Pending',
+        id: 4,
+        user_id: 123,
+        billing_address: '321 Pine St, Hamlet',
+        total_amount: 50.75,
+        status: 'Pending',
+        line_items: [
+            { order_id: 4, product_id: 401, qty: 1 },
+            // Add more line items for order 4
+        ]
     },
     {
-        OrderID: 5,
-        UserID: 456,
-        BillingAddress: '654 Birch St, Countryside',
-        TotalAmount: 150.2,
-        Status: 'Shipped',
+        id: 5,
+        user_id: 456,
+        billing_address: '654 Birch St, Countryside',
+        total_amount: 150.2,
+        status: 'Shipped',
+        line_items: [
+            { order_id: 5, product_id: 501, qty: 2 },
+            { order_id: 5, product_id: 502, qty: 3 },
+            // Add more line items for order 5
+        ]
     },
 ]

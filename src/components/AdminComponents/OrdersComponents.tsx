@@ -4,14 +4,16 @@ import styles from "./AdminComponents.module.scss"
 import { Order, getOrders } from "../../util/api/models/orders";
 import { useEffect, useState } from "react";
 import {LineItem,createLineItem,deleteLineItem,getLineItemById,getLineItems,updateLineItem,} from '../../util/api/models/line_items'
+import { test_orders } from "../../pages/Admin/AdminFunctions";
 
 export const AdminOrders: React.FC = () => {
 
 const [orderList, setOrders] = useState<Order[]>([])
-const [lineitmess, setLineItems] = useState<LineItem>()
+const [lineitmes, setLineItems] = useState<LineItem>()
 
     useEffect(() => {
         fetchOrders()
+        
     }, [])
     //Orders Fetch
 
@@ -79,36 +81,53 @@ const [lineitmess, setLineItems] = useState<LineItem>()
 
     return (
         <>
-            <IonRow className={styles.headerRow}>
-                {order_headers.map((header, index) => (
-                    <IonCol
-                        key={`header_${index}`}
-                        className={styles.headerCol}
-                    >
-                        {header
-                            .split('_')
-                            .map(
-                                (word) =>
-                                    word.charAt(0).toUpperCase() + word.slice(1)
-                            )
-                            .join(' ')}
-                    </IonCol>
-                ))}
-            </IonRow>
+           <IonRow className={styles.headerRow}>
+                            {order_headers.map((header, index) => (
+                                <IonCol
+                                    size-sm="2"
+                                    key={`header_${index}`}
+                                    className={styles.headerCol}
+                                >
+                                    {header
+                                        .split('_')
+                                        .map(
+                                            (word) =>
+                                                word.charAt(0).toUpperCase() +
+                                                word.slice(1)
+                                        )
+                                        .join(' ')}
+                                </IonCol>
+                            ))}
+                        </IonRow>
 
-            <div className={styles.orderInfo}>
-                {orderList.map((order, rowIndex) => (
-                    <IonRow key={`user_${rowIndex}`} className={styles.userRow}>
-                        {order_headers.map((header) => (
-                            <IonCol key={`col_${rowIndex}_${header}`}>
-                                {header === 'total_amount'
-                                    ? `$${order[header]}`
-                                    : order[header]}{' '}
-                            </IonCol>
+                        {orderList.slice(0,-1).map((order, rowIndex) => (
+                            <IonRow
+                                key={`user_${rowIndex}`}
+                                className={styles.userRow}
+                            >
+                                <div className={styles.orderInfo}>
+                                    {order_headers.map((header) => (
+                                        <IonCol
+                                            size="2"
+                                            size-sm="2"
+                                            size-md="2"
+                                            size-lg="2"
+                                            key={`col_${rowIndex}_${header}`}
+                                        >
+                                            {header === 'total_amount'
+                                                ? `$${order[header]}`
+                                                : header === 'line_items'
+                                                ? order[header].map((lineItem, lineIndex) => (
+                                                    <div key={`line_${lineIndex}`}>
+                                                        Product ID: {lineItem.product_id}, Quantity: {lineItem.qty}
+                                                    </div>
+                                                ))
+                                                : order[header]}{' '}
+                                        </IonCol>
+                                    ))}
+                                </div>
+                            </IonRow>
                         ))}
-                    </IonRow>
-                ))}
-            </div>
         </>
     )
 }
