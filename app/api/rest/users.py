@@ -65,6 +65,7 @@ class UsersResource(Resource):
 @users_ns.response(409, "Invalid field syntax")
 @users_ns.response(404, "User not found")
 @users_ns.param("user_id", "A unique identifier associated with a user")
+@users_ns.expect(auth_parser)
 class UserResource(Resource):
     @admin_required
     @users_ns.marshal_with(user_model)
@@ -96,6 +97,7 @@ class UserResource(Resource):
     @admin_required
     @users_ns.response(204, "User deleted")
     @users_ns.marshal_with(user_model)
+    @users_ns.expect(auth_parser)
     def delete(self, user_id):
         user = Users.query.get(user_id)
         if user:

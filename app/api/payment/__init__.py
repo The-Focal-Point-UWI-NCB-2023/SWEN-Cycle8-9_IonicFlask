@@ -30,6 +30,7 @@ payment_parser.add_argument('images', type=str, required=True, action='append', 
 payment_parser.add_argument('unit_amount_decimal', type=str, required=True, action='append', help='Unit amount in decimal format is required')
 payment_parser.add_argument('quantity', type=int, required=True, action='append', help='Quantity of the item is required')
 payment_parser.add_argument('X-CSRFToken', type=str, location='headers', required=True, help='CSRF Token is required')
+payment_parser.add_argument('Authorization', type=str, location='headers', required=True, help='Authorization Token is required')
 
 
 @payment_ns.route('/create-checkout-session', methods=['POST'])

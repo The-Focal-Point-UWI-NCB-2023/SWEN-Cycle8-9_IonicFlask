@@ -137,6 +137,7 @@ def admin_required(func):
 # @admin_required
 @api.doc(security='apiKey')
 @auth_ns.route('/admin')
+@auth_ns.expect(auth_parser)
 class AdminProtected(Resource):
     @admin_required
     def get(self):
