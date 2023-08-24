@@ -122,7 +122,7 @@ def admin_required(func):
                 print (decoded_payload)
                 user_role = (int(decoded_payload.get('role')))
                 
-                if user_role == '1':  # Assuming role 1 is for admins
+                if user_role == 1:  # Assuming role 1 is for admins
                     return func(*args, **kwargs)
                 else:
                     abort(403, message='Access denied. Admin role required.')
