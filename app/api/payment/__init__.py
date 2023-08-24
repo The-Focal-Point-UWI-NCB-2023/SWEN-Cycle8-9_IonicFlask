@@ -72,8 +72,8 @@ class CreateCheckoutSession(Resource):
             checkout_session = stripe.checkout.Session.create(
             line_items= line_itemsLst,
             mode='payment',
-            success_url='https://www.google.com/',
-            cancel_url='https://www.google.com/',
+            success_url='http://localhost:8100/success',
+            cancel_url='http://localhost:8100/failure',
                                                     )
             return(checkout_session.url)
         except Exception as e:
