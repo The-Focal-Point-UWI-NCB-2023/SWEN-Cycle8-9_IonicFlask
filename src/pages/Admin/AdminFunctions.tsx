@@ -1,93 +1,104 @@
 export const userHeaders: string[] = ['full_name', 'email', 'role', 'Actions']
-
 export const test_users = [
-    {
-        Name: 'Admin User',
-        Email: 'admin@example.com',
-        Password: 'admin123',
-        Role: 'admin',
-    },
-    {
-        Name: 'Regular User 1',
-        Email: 'user1@example.com',
-        Password: 'user123',
-        Role: 'regular',
-    },
-    {
-        Name: 'Regular User 2',
-        Email: 'user2@example.com',
-        Password: 'user456',
-        Role: 'regular',
-    },
-    {
-        Name: 'Admin User 2',
-        Email: 'admin2@example.com',
-        Password: 'admin456',
-        Role: 'admin',
-    },
-    {
-        Name: 'Regular User 3',
-        Email: 'user3@example.com',
-        Password: 'user789',
-        Role: 'regular',
-    },
-]
-
-export const prodHeaders = ['image', 'name', 'description', 'price', 'Actions']
-export const products = [
-    {
-        id: 0,
-        Title: 'Cowrie Shield Earring',
-        Image: 'earring1.jpeg',
-        Description:
-            'A Kenyan inspired handmade beaded earring. It can also be worn as a ring or bracelet.',
-        Price: 2000,
-    },
-    {
+    {   
         id: 1,
-        Title: 'Double Beaded Rings',
-        Image: 'earring4.jpeg',
-        Description: 'Handmade double hooped beaded earring.',
-        Price: 1500,
+        full_name: 'Admin User',
+        email: 'admin@example.com',      
+        role: 'admin',
     },
     {
         id: 2,
-        Title: 'Drop Cowrie Earrings',
-        Image: 'earring3.jpeg',
-        Description: 'Drop earrings made with cowrie shells and glass beads',
-        Price: 2000,
+        full_name: 'Regular User 1',
+        email: 'user1@example.com',
+        role: 'regular',
     },
-    {
+    {   
         id: 3,
-        Title: 'Gem stone Bracelets',
-        Image: 'bracelet.jpeg',
-        Description: 'Bracelet set of 2, made from aventurine gem stones',
-        Price: 2500,
+        full_name: 'Regular User 2',
+        email: 'user2@example.com',
+        role: 'regular',
     },
-    {
+    {   
         id: 4,
-        Title: 'Embroidered Spideys',
-        Image: 'embroid_tshirt.jpg',
-        Description:
-            'Machine embroidered sweatshirt, stitched is a scene from Spiderman and a viral meme',
-        Price: 5000,
+        full_name: 'Admin User 2',
+        email: 'admin2@example.com',
+        role: 'admin',
     },
     {
         id: 5,
-        Title: 'Crocheted shroom',
-        Image: 'bag.jpg',
-        Description: 'Crocheted mushroom shoulder bag',
-        Price: 4500,
+        full_name: 'Regular User 3',
+        email: 'user3@example.com',
+        role: 'regular',
     },
 ]
 
+export const prodHeaders = ['image', 'full_name', 'description', 'price', 'Actions']
+
+import { Product } from "../../util/api/models/products";
+
+export const products: Product[] = [
+    {
+      id: 0,
+      name: 'Cowrie Shield Earring',
+      image: 'earring1.jpeg',
+      description: 'A Kenyan inspired handmade beaded earring. It can also be worn as a ring or bracelet.',
+      price: 2000,
+      status: 'Available',
+      user_id: 123, // Replace with actual user ID
+    },
+    {
+      id: 1,
+      name: 'Double Beaded Rings',
+      image: 'earring4.jpeg',
+      description: 'Handmade double hooped beaded earring.',
+      price: 1500,
+      status: 'Available',
+      user_id: 123, // Replace with actual user ID
+    },
+    {
+      id: 2,
+      name: 'Drop Cowrie Earrings',
+      image: 'earring3.jpeg',
+      description: 'Drop earrings made with cowrie shells and glass beads.',
+      price: 2000,
+      status: 'Available',
+      user_id: 123, // Replace with actual user ID
+    },
+    {
+      id: 3,
+      name: 'Gem stone Bracelets',
+      image: 'bracelet.jpeg',
+      description: 'Bracelet set of 2, made from aventurine gem stones.',
+      price: 2500,
+      status: 'Available',
+      user_id: 123, // Replace with actual user ID
+    },
+    {
+      id: 4,
+      name: 'Embroidered Spideys',
+      image: 'embroid_tshirt.jpg',
+      description: 'Machine embroidered sweatshirt, stitched with a scene from Spiderman and a viral meme.',
+      price: 5000,
+      status: 'Available',
+      user_id: 123, // Replace with actual user ID
+    },
+    {
+      id: 5,
+      name: 'Crocheted shroom',
+      image: 'bag.jpg',
+      description: 'Crocheted mushroom shoulder bag.',
+      price: 4500,
+      status: 'Available',
+      user_id: 123, // Replace with actual user ID
+    },
+  ];
+  
+import { LineItem } from "../../util/api/models/line_items";
 export const order_headers = [
-    'id',
-    'user_id',
+    'order_id',
     'billing_address',
     'total_amount',
     'status',
-    'line_items',
 ]
 
 export const orders = [
